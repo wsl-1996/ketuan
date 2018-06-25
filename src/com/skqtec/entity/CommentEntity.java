@@ -1,0 +1,155 @@
+package com.skqtec.entity;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "COMMENT", schema = "ketuanDB", catalog = "")
+public class CommentEntity {
+    private int id;
+    private String commentContent;
+    private String attachImgs;
+    private int userId;
+    private Integer productId;
+    private Integer groupId;
+    private Integer starLevel;
+    private String reply;
+    private String evaluateLabel;
+
+    public void setProductId(int productId) {
+        this.productId = productId;
+    }
+
+    public void setGroupId(int groupId) {
+        this.groupId = groupId;
+    }
+
+    public void setStarLevel(int starLevel) {
+        this.starLevel = starLevel;
+    }
+
+    @Id
+    @Column(name = "id")
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    @Basic
+    @Column(name = "comment_content")
+    public String getCommentContent() {
+        return commentContent;
+    }
+
+    public void setCommentContent(String commentContent) {
+        this.commentContent = commentContent;
+    }
+
+    @Basic
+    @Column(name = "attach_imgs")
+    public String getAttachImgs() {
+        return attachImgs;
+    }
+
+    public void setAttachImgs(String attachImgs) {
+        this.attachImgs = attachImgs;
+    }
+
+    @Basic
+    @Column(name = "USER_id")
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    @Basic
+    @Column(name = "PRODUCT_id")
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
+    }
+
+    @Basic
+    @Column(name = "GROUP_id")
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
+    }
+
+    @Basic
+    @Column(name = "star_level")
+    public Integer getStarLevel() {
+        return starLevel;
+    }
+
+    public void setStarLevel(Integer starLevel) {
+        this.starLevel = starLevel;
+    }
+
+    @Basic
+    @Column(name = "reply")
+    public String getReply() {
+        return reply;
+    }
+
+    public void setReply(String reply) {
+        this.reply = reply;
+    }
+
+    @Basic
+    @Column(name = "evaluate_label")
+    public String getEvaluateLabel() {
+        return evaluateLabel;
+    }
+
+    public void setEvaluateLabel(String evaluateLabel) {
+        this.evaluateLabel = evaluateLabel;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CommentEntity that = (CommentEntity) o;
+
+        if (id != that.id) return false;
+        if (userId != that.userId) return false;
+        if (commentContent != null ? !commentContent.equals(that.commentContent) : that.commentContent != null)
+            return false;
+        if (attachImgs != null ? !attachImgs.equals(that.attachImgs) : that.attachImgs != null) return false;
+        if (productId != null ? !productId.equals(that.productId) : that.productId != null) return false;
+        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
+        if (starLevel != null ? !starLevel.equals(that.starLevel) : that.starLevel != null) return false;
+        if (reply != null ? !reply.equals(that.reply) : that.reply != null) return false;
+        if (evaluateLabel != null ? !evaluateLabel.equals(that.evaluateLabel) : that.evaluateLabel != null)
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + (commentContent != null ? commentContent.hashCode() : 0);
+        result = 31 * result + (attachImgs != null ? attachImgs.hashCode() : 0);
+        result = 31 * result + userId;
+        result = 31 * result + (productId != null ? productId.hashCode() : 0);
+        result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
+        result = 31 * result + (starLevel != null ? starLevel.hashCode() : 0);
+        result = 31 * result + (reply != null ? reply.hashCode() : 0);
+        result = 31 * result + (evaluateLabel != null ? evaluateLabel.hashCode() : 0);
+        return result;
+    }
+}
