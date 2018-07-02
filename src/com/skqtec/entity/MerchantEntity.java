@@ -5,7 +5,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "MERCHANT", schema = "ketuanDB", catalog = "")
 public class MerchantEntity {
-    private int id;
+    private String id;
     private String name;
     private String address;
     private String phone;
@@ -15,11 +15,11 @@ public class MerchantEntity {
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -90,7 +90,7 @@ public class MerchantEntity {
 
         MerchantEntity that = (MerchantEntity) o;
 
-        if (id != that.id) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (address != null ? !address.equals(that.address) : that.address != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
@@ -103,7 +103,7 @@ public class MerchantEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (phone != null ? phone.hashCode() : 0);

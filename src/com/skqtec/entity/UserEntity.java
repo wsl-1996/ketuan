@@ -5,43 +5,31 @@ import javax.persistence.*;
 @Entity
 @Table(name = "USER", schema = "ketuanDB", catalog = "")
 public class UserEntity {
-    private int id;
+    private String id;
     private String phone;
     private String nickname;
     private String email;
     private String children;
-    private Integer inviteUserId;
-    private Integer grade;
+    private String inviteUserId;
+    private int grade;
     private String headImgUrl;
-    private int primarySendaddressId;
+    private String primarySendaddressId;
     private double balance;
     private String openid;
-    private Integer sex;
+    private int sex;
     private String province;
     private String city;
     private String country;
     private String privilege;
     private String unionid;
 
-    public void setInviteUserId(int inviteUserId) {
-        this.inviteUserId = inviteUserId;
-    }
-
-    public void setGrade(int grade) {
-        this.grade = grade;
-    }
-
-    public void setSex(int sex) {
-        this.sex = sex;
-    }
-
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -87,21 +75,21 @@ public class UserEntity {
 
     @Basic
     @Column(name = "invite_USER_id")
-    public Integer getInviteUserId() {
+    public String getInviteUserId() {
         return inviteUserId;
     }
 
-    public void setInviteUserId(Integer inviteUserId) {
+    public void setInviteUserId(String inviteUserId) {
         this.inviteUserId = inviteUserId;
     }
 
     @Basic
     @Column(name = "grade")
-    public Integer getGrade() {
+    public int getGrade() {
         return grade;
     }
 
-    public void setGrade(Integer grade) {
+    public void setGrade(int grade) {
         this.grade = grade;
     }
 
@@ -117,11 +105,11 @@ public class UserEntity {
 
     @Basic
     @Column(name = "primary_SENDADDRESS_id")
-    public int getPrimarySendaddressId() {
+    public String getPrimarySendaddressId() {
         return primarySendaddressId;
     }
 
-    public void setPrimarySendaddressId(int primarySendaddressId) {
+    public void setPrimarySendaddressId(String primarySendaddressId) {
         this.primarySendaddressId = primarySendaddressId;
     }
 
@@ -147,11 +135,11 @@ public class UserEntity {
 
     @Basic
     @Column(name = "sex")
-    public Integer getSex() {
+    public int getSex() {
         return sex;
     }
 
-    public void setSex(Integer sex) {
+    public void setSex(int sex) {
         this.sex = sex;
     }
 
@@ -212,18 +200,19 @@ public class UserEntity {
 
         UserEntity that = (UserEntity) o;
 
-        if (id != that.id) return false;
-        if (primarySendaddressId != that.primarySendaddressId) return false;
+        if (grade != that.grade) return false;
         if (Double.compare(that.balance, balance) != 0) return false;
+        if (sex != that.sex) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (phone != null ? !phone.equals(that.phone) : that.phone != null) return false;
         if (nickname != null ? !nickname.equals(that.nickname) : that.nickname != null) return false;
         if (email != null ? !email.equals(that.email) : that.email != null) return false;
         if (children != null ? !children.equals(that.children) : that.children != null) return false;
         if (inviteUserId != null ? !inviteUserId.equals(that.inviteUserId) : that.inviteUserId != null) return false;
-        if (grade != null ? !grade.equals(that.grade) : that.grade != null) return false;
         if (headImgUrl != null ? !headImgUrl.equals(that.headImgUrl) : that.headImgUrl != null) return false;
+        if (primarySendaddressId != null ? !primarySendaddressId.equals(that.primarySendaddressId) : that.primarySendaddressId != null)
+            return false;
         if (openid != null ? !openid.equals(that.openid) : that.openid != null) return false;
-        if (sex != null ? !sex.equals(that.sex) : that.sex != null) return false;
         if (province != null ? !province.equals(that.province) : that.province != null) return false;
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
@@ -237,19 +226,19 @@ public class UserEntity {
     public int hashCode() {
         int result;
         long temp;
-        result = id;
+        result = id != null ? id.hashCode() : 0;
         result = 31 * result + (phone != null ? phone.hashCode() : 0);
         result = 31 * result + (nickname != null ? nickname.hashCode() : 0);
         result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (children != null ? children.hashCode() : 0);
         result = 31 * result + (inviteUserId != null ? inviteUserId.hashCode() : 0);
-        result = 31 * result + (grade != null ? grade.hashCode() : 0);
+        result = 31 * result + grade;
         result = 31 * result + (headImgUrl != null ? headImgUrl.hashCode() : 0);
-        result = 31 * result + primarySendaddressId;
+        result = 31 * result + (primarySendaddressId != null ? primarySendaddressId.hashCode() : 0);
         temp = Double.doubleToLongBits(balance);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (openid != null ? openid.hashCode() : 0);
-        result = 31 * result + (sex != null ? sex.hashCode() : 0);
+        result = 31 * result + sex;
         result = 31 * result + (province != null ? province.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
         result = 31 * result + (country != null ? country.hashCode() : 0);

@@ -5,26 +5,26 @@ import javax.persistence.Id;
 import java.io.Serializable;
 
 public class SendaddressEntityPK implements Serializable {
-    private int id;
-    private int userId;
+    private String id;
+    private String userId;
 
     @Column(name = "id")
     @Id
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Column(name = "USER_id")
     @Id
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -35,16 +35,16 @@ public class SendaddressEntityPK implements Serializable {
 
         SendaddressEntityPK that = (SendaddressEntityPK) o;
 
-        if (id != that.id) return false;
-        if (userId != that.userId) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
-        result = 31 * result + userId;
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         return result;
     }
 }

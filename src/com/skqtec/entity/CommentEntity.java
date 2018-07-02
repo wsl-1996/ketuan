@@ -5,35 +5,23 @@ import javax.persistence.*;
 @Entity
 @Table(name = "COMMENT", schema = "ketuanDB", catalog = "")
 public class CommentEntity {
-    private int id;
+    private String id;
     private String commentContent;
     private String attachImgs;
-    private int userId;
-    private Integer productId;
-    private Integer groupId;
-    private Integer starLevel;
+    private String userId;
+    private String productId;
+    private String groupId;
+    private int starLevel;
     private String reply;
     private String evaluateLabel;
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
-
-    public void setStarLevel(int starLevel) {
-        this.starLevel = starLevel;
-    }
-
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -59,41 +47,41 @@ public class CommentEntity {
 
     @Basic
     @Column(name = "USER_id")
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
     @Basic
     @Column(name = "PRODUCT_id")
-    public Integer getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(Integer productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
     @Basic
     @Column(name = "GROUP_id")
-    public Integer getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(Integer groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
     @Basic
     @Column(name = "star_level")
-    public Integer getStarLevel() {
+    public int getStarLevel() {
         return starLevel;
     }
 
-    public void setStarLevel(Integer starLevel) {
+    public void setStarLevel(int starLevel) {
         this.starLevel = starLevel;
     }
 
@@ -124,14 +112,14 @@ public class CommentEntity {
 
         CommentEntity that = (CommentEntity) o;
 
-        if (id != that.id) return false;
-        if (userId != that.userId) return false;
+        if (starLevel != that.starLevel) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (commentContent != null ? !commentContent.equals(that.commentContent) : that.commentContent != null)
             return false;
         if (attachImgs != null ? !attachImgs.equals(that.attachImgs) : that.attachImgs != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (productId != null ? !productId.equals(that.productId) : that.productId != null) return false;
         if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
-        if (starLevel != null ? !starLevel.equals(that.starLevel) : that.starLevel != null) return false;
         if (reply != null ? !reply.equals(that.reply) : that.reply != null) return false;
         if (evaluateLabel != null ? !evaluateLabel.equals(that.evaluateLabel) : that.evaluateLabel != null)
             return false;
@@ -141,13 +129,13 @@ public class CommentEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (commentContent != null ? commentContent.hashCode() : 0);
         result = 31 * result + (attachImgs != null ? attachImgs.hashCode() : 0);
-        result = 31 * result + userId;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (productId != null ? productId.hashCode() : 0);
         result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
-        result = 31 * result + (starLevel != null ? starLevel.hashCode() : 0);
+        result = 31 * result + starLevel;
         result = 31 * result + (reply != null ? reply.hashCode() : 0);
         result = 31 * result + (evaluateLabel != null ? evaluateLabel.hashCode() : 0);
         return result;

@@ -6,26 +6,22 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "MESSAGE", schema = "ketuanDB", catalog = "")
 public class MessageEntity {
-    private int id;
+    private String id;
     private int messageType;
     private int contentType;
     private Timestamp time;
-    private int fromUserId;
-    private int toUserId;
+    private String fromUserId;
+    private String toUserId;
     private int state;
     private String content;
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -61,21 +57,21 @@ public class MessageEntity {
 
     @Basic
     @Column(name = "from_USER_id")
-    public int getFromUserId() {
+    public String getFromUserId() {
         return fromUserId;
     }
 
-    public void setFromUserId(int fromUserId) {
+    public void setFromUserId(String fromUserId) {
         this.fromUserId = fromUserId;
     }
 
     @Basic
     @Column(name = "to_USER_id")
-    public int getToUserId() {
+    public String getToUserId() {
         return toUserId;
     }
 
-    public void setToUserId(int toUserId) {
+    public void setToUserId(String toUserId) {
         this.toUserId = toUserId;
     }
 
@@ -95,8 +91,8 @@ public class MessageEntity {
         return content;
     }
 
-    public void setContent(byte[] content) {
-        this.content = new String (content);
+    public void setContent(String content) {
+        this.content = content;
     }
 
     @Override
@@ -106,28 +102,28 @@ public class MessageEntity {
 
         MessageEntity that = (MessageEntity) o;
 
-        if (id != that.id) return false;
         if (messageType != that.messageType) return false;
         if (contentType != that.contentType) return false;
-        if (fromUserId != that.fromUserId) return false;
-        if (toUserId != that.toUserId) return false;
         if (state != that.state) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (time != null ? !time.equals(that.time) : that.time != null) return false;
-        if (!content.equals(that.content)) return false;
+        if (fromUserId != null ? !fromUserId.equals(that.fromUserId) : that.fromUserId != null) return false;
+        if (toUserId != null ? !toUserId.equals(that.toUserId) : that.toUserId != null) return false;
+        if (content != null ? !content.equals(that.content) : that.content != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + messageType;
         result = 31 * result + contentType;
         result = 31 * result + (time != null ? time.hashCode() : 0);
-        result = 31 * result + fromUserId;
-        result = 31 * result + toUserId;
+        result = 31 * result + (fromUserId != null ? fromUserId.hashCode() : 0);
+        result = 31 * result + (toUserId != null ? toUserId.hashCode() : 0);
         result = 31 * result + state;
-        result = 31 * result + content.hashCode();
+        result = 31 * result + (content != null ? content.hashCode() : 0);
         return result;
     }
 }

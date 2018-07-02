@@ -5,18 +5,18 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TRACK", schema = "ketuanDB", catalog = "")
 public class TrackEntity {
-    private int id;
+    private String id;
     private String trackNumber;
     private String trackCode;
     private String track;
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -57,7 +57,7 @@ public class TrackEntity {
 
         TrackEntity that = (TrackEntity) o;
 
-        if (id != that.id) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (trackNumber != null ? !trackNumber.equals(that.trackNumber) : that.trackNumber != null) return false;
         if (trackCode != null ? !trackCode.equals(that.trackCode) : that.trackCode != null) return false;
         if (track != null ? !track.equals(that.track) : that.track != null) return false;
@@ -67,7 +67,7 @@ public class TrackEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (trackNumber != null ? trackNumber.hashCode() : 0);
         result = 31 * result + (trackCode != null ? trackCode.hashCode() : 0);
         result = 31 * result + (track != null ? track.hashCode() : 0);

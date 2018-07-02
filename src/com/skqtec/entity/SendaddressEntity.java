@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "SENDADDRESS", schema = "ketuanDB", catalog = "")
 @IdClass(SendaddressEntityPK.class)
 public class SendaddressEntity {
-    private int id;
+    private String id;
     private String country;
     private String province;
     private String city;
@@ -15,16 +15,16 @@ public class SendaddressEntity {
     private String addressDetail;
     private String sendName;
     private String sendPhone;
-    private int userId;
+    private String userId;
     private String zip;
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -110,11 +110,11 @@ public class SendaddressEntity {
 
     @Id
     @Column(name = "USER_id")
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -135,8 +135,7 @@ public class SendaddressEntity {
 
         SendaddressEntity that = (SendaddressEntity) o;
 
-        if (id != that.id) return false;
-        if (userId != that.userId) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
         if (province != null ? !province.equals(that.province) : that.province != null) return false;
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
@@ -146,6 +145,7 @@ public class SendaddressEntity {
             return false;
         if (sendName != null ? !sendName.equals(that.sendName) : that.sendName != null) return false;
         if (sendPhone != null ? !sendPhone.equals(that.sendPhone) : that.sendPhone != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (zip != null ? !zip.equals(that.zip) : that.zip != null) return false;
 
         return true;
@@ -153,7 +153,7 @@ public class SendaddressEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (province != null ? province.hashCode() : 0);
         result = 31 * result + (city != null ? city.hashCode() : 0);
@@ -162,7 +162,7 @@ public class SendaddressEntity {
         result = 31 * result + (addressDetail != null ? addressDetail.hashCode() : 0);
         result = 31 * result + (sendName != null ? sendName.hashCode() : 0);
         result = 31 * result + (sendPhone != null ? sendPhone.hashCode() : 0);
-        result = 31 * result + userId;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (zip != null ? zip.hashCode() : 0);
         return result;
     }

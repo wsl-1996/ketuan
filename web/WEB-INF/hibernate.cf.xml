@@ -6,9 +6,8 @@
     <session-factory>
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.pool_size">5</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/hibernatetest</property>
-        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.pool_size">10</property>
+        <property name="hibernate.connection.url">jdbc:mysql://121.196.202.96:3306/ketuanDB</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.format_sql">true</property>
         <property name="hibernate.generate_statistics">true</property>
@@ -20,5 +19,17 @@
         <property name="connection.autocommit">true</property>
 
         <mapping></mapping>
+        <mapping class="com.skqtec.entity.CashbackEntity"/>
+        <mapping class="com.skqtec.entity.CashbackCalculateStandEntity"/>
+        <mapping class="com.skqtec.entity.CommentEntity"/>
+        <mapping class="com.skqtec.entity.GroupEntity"/>
+        <mapping class="com.skqtec.entity.ImageEntity"/>
+        <mapping class="com.skqtec.entity.MerchantEntity"/>
+        <mapping class="com.skqtec.entity.MessageEntity"/>
+        <mapping class="com.skqtec.entity.OrderEntity"/>
+        <mapping class="com.skqtec.entity.ProductEntity"/>
+        <mapping class="com.skqtec.entity.SendaddressEntity"/>
+        <mapping class="com.skqtec.entity.TrackEntity"/>
+        <mapping class="com.skqtec.entity.UserEntity"/>
     </session-factory>
 </hibernate-configuration>

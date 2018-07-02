@@ -5,17 +5,17 @@ import javax.persistence.*;
 @Entity
 @Table(name = "IMAGE", schema = "ketuanDB", catalog = "")
 public class ImageEntity {
-    private int id;
+    private String id;
     private String url;
     private String discription;
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -46,7 +46,7 @@ public class ImageEntity {
 
         ImageEntity that = (ImageEntity) o;
 
-        if (id != that.id) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (url != null ? !url.equals(that.url) : that.url != null) return false;
         if (discription != null ? !discription.equals(that.discription) : that.discription != null) return false;
 
@@ -55,7 +55,7 @@ public class ImageEntity {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (url != null ? url.hashCode() : 0);
         result = 31 * result + (discription != null ? discription.hashCode() : 0);
         return result;

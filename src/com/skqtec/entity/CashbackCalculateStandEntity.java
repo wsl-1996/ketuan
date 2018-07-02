@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "CASHBACK_CALCULATE_STAND", schema = "ketuanDB", catalog = "")
 public class CashbackCalculateStandEntity {
-    private int id;
+    private String id;
     private int suitLevel;
     private int suitType;
     private double calculateRate;
@@ -15,11 +15,11 @@ public class CashbackCalculateStandEntity {
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -80,11 +80,11 @@ public class CashbackCalculateStandEntity {
 
         CashbackCalculateStandEntity that = (CashbackCalculateStandEntity) o;
 
-        if (id != that.id) return false;
         if (suitLevel != that.suitLevel) return false;
         if (suitType != that.suitType) return false;
         if (Double.compare(that.calculateRate, calculateRate) != 0) return false;
         if (Double.compare(that.cashbackLimit, cashbackLimit) != 0) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (periodDate != null ? !periodDate.equals(that.periodDate) : that.periodDate != null) return false;
 
         return true;
@@ -94,7 +94,7 @@ public class CashbackCalculateStandEntity {
     public int hashCode() {
         int result;
         long temp;
-        result = id;
+        result = id != null ? id.hashCode() : 0;
         result = 31 * result + suitLevel;
         result = 31 * result + suitType;
         temp = Double.doubleToLongBits(calculateRate);

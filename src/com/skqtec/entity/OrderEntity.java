@@ -6,10 +6,10 @@ import java.sql.Timestamp;
 @Entity
 @Table(name = "ORDER", schema = "ketuanDB", catalog = "")
 public class OrderEntity {
-    private int id;
-    private int productId;
-    private Integer groupId;
-    private int userId;
+    private String id;
+    private String productId;
+    private String groupId;
+    private String userId;
     private int state;
     private String sendName;
     private String sendAddress;
@@ -17,52 +17,53 @@ public class OrderEntity {
     private String sendTel;
     private Timestamp orderTime;
     private String paymethod;
-    private String meno;   //备忘
+    private String meno;
     private double totalPrice;
     private String trackCode;
-    private int trackId;
-
-    public void setGroupId(int groupId) {
-        this.groupId = groupId;
-    }
+    private String trackId;
+    private Timestamp payTime;
+    private Timestamp deliverTime;
+    private Timestamp receiptTime;
+    private double productPrice;
+    private double carriagePrice;
 
     @Id
     @Column(name = "id")
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
     @Basic
     @Column(name = "PRODUCT_id")
-    public int getProductId() {
+    public String getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(String productId) {
         this.productId = productId;
     }
 
     @Basic
     @Column(name = "GROUP_id")
-    public Integer getGroupId() {
+    public String getGroupId() {
         return groupId;
     }
 
-    public void setGroupId(Integer groupId) {
+    public void setGroupId(String groupId) {
         this.groupId = groupId;
     }
 
     @Basic
     @Column(name = "USER_id")
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 
@@ -168,12 +169,62 @@ public class OrderEntity {
 
     @Basic
     @Column(name = "track_id")
-    public int getTrackId() {
+    public String getTrackId() {
         return trackId;
     }
 
-    public void setTrackId(int trackId) {
+    public void setTrackId(String trackId) {
         this.trackId = trackId;
+    }
+
+    @Basic
+    @Column(name = "pay_time")
+    public Timestamp getPayTime() {
+        return payTime;
+    }
+
+    public void setPayTime(Timestamp payTime) {
+        this.payTime = payTime;
+    }
+
+    @Basic
+    @Column(name = "deliver_time")
+    public Timestamp getDeliverTime() {
+        return deliverTime;
+    }
+
+    public void setDeliverTime(Timestamp deliverTime) {
+        this.deliverTime = deliverTime;
+    }
+
+    @Basic
+    @Column(name = "receipt_time")
+    public Timestamp getReceiptTime() {
+        return receiptTime;
+    }
+
+    public void setReceiptTime(Timestamp receiptTime) {
+        this.receiptTime = receiptTime;
+    }
+
+    @Basic
+    @Column(name = "product_price")
+    public double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(double productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    @Basic
+    @Column(name = "carriage_price")
+    public double getCarriagePrice() {
+        return carriagePrice;
+    }
+
+    public void setCarriagePrice(double carriagePrice) {
+        this.carriagePrice = carriagePrice;
     }
 
     @Override
@@ -183,13 +234,14 @@ public class OrderEntity {
 
         OrderEntity that = (OrderEntity) o;
 
-        if (id != that.id) return false;
-        if (productId != that.productId) return false;
-        if (userId != that.userId) return false;
         if (state != that.state) return false;
         if (Double.compare(that.totalPrice, totalPrice) != 0) return false;
-        if (trackId != that.trackId) return false;
+        if (Double.compare(that.productPrice, productPrice) != 0) return false;
+        if (Double.compare(that.carriagePrice, carriagePrice) != 0) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
+        if (productId != null ? !productId.equals(that.productId) : that.productId != null) return false;
         if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) return false;
+        if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
         if (sendName != null ? !sendName.equals(that.sendName) : that.sendName != null) return false;
         if (sendAddress != null ? !sendAddress.equals(that.sendAddress) : that.sendAddress != null) return false;
         if (sendZip != null ? !sendZip.equals(that.sendZip) : that.sendZip != null) return false;
@@ -198,6 +250,10 @@ public class OrderEntity {
         if (paymethod != null ? !paymethod.equals(that.paymethod) : that.paymethod != null) return false;
         if (meno != null ? !meno.equals(that.meno) : that.meno != null) return false;
         if (trackCode != null ? !trackCode.equals(that.trackCode) : that.trackCode != null) return false;
+        if (trackId != null ? !trackId.equals(that.trackId) : that.trackId != null) return false;
+        if (payTime != null ? !payTime.equals(that.payTime) : that.payTime != null) return false;
+        if (deliverTime != null ? !deliverTime.equals(that.deliverTime) : that.deliverTime != null) return false;
+        if (receiptTime != null ? !receiptTime.equals(that.receiptTime) : that.receiptTime != null) return false;
 
         return true;
     }
@@ -206,10 +262,10 @@ public class OrderEntity {
     public int hashCode() {
         int result;
         long temp;
-        result = id;
-        result = 31 * result + productId;
+        result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (productId != null ? productId.hashCode() : 0);
         result = 31 * result + (groupId != null ? groupId.hashCode() : 0);
-        result = 31 * result + userId;
+        result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + state;
         result = 31 * result + (sendName != null ? sendName.hashCode() : 0);
         result = 31 * result + (sendAddress != null ? sendAddress.hashCode() : 0);
@@ -221,7 +277,14 @@ public class OrderEntity {
         temp = Double.doubleToLongBits(totalPrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (trackCode != null ? trackCode.hashCode() : 0);
-        result = 31 * result + trackId;
+        result = 31 * result + (trackId != null ? trackId.hashCode() : 0);
+        result = 31 * result + (payTime != null ? payTime.hashCode() : 0);
+        result = 31 * result + (deliverTime != null ? deliverTime.hashCode() : 0);
+        result = 31 * result + (receiptTime != null ? receiptTime.hashCode() : 0);
+        temp = Double.doubleToLongBits(productPrice);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(carriagePrice);
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
 }

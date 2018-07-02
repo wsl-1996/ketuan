@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -68,9 +69,10 @@ public class ImageRepositoryImpl implements  ImageRepository{
     public Integer save(ImageEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
-        Integer result = (Integer) session.save(entity);
+        Serializable pKey = session.save(entity);
+
         transaction.commit();
-        return  result;
+        return  0;
     }
 
     public void saveOrUpdate(ImageEntity entity) {
