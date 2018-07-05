@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
@@ -72,7 +73,7 @@ public class images {
     @RequestMapping(value = "/upload",method = RequestMethod.POST)
     public @ResponseBody String upload(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
+        List<String> ids = new ArrayList<String>();
         String uploadPath = request.getRealPath("/")+"imagesDir\\";
         File tempPathFile = new File("d:\\tempPath\\");
         try {
@@ -98,6 +99,7 @@ public class images {
                     ImageEntity image = new ImageEntity();
                     String discription = fileName;
                     String uuid = UUID.randomUUID().toString().replace("-", "");
+                    ids.add(uuid);
                     image.setId(uuid);
                     String imageName = uuid+".png";
                     String url = "http://www.ketuan.com/imagesDir/"+imageName;
@@ -113,7 +115,7 @@ public class images {
         } catch (Exception e) {
             logger.error(e,e.fillInStackTrace());
         }
-        return "";
+        return JSON.toJSONString(ids);
     }
 
     /**
