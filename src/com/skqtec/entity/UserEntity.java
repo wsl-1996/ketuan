@@ -13,7 +13,6 @@ public class UserEntity {
     private String inviteUserId;
     private int grade;
     private String headImgUrl;
-    private String primarySendaddressId;
     private double balance;
     private String openid;
     private int sex;
@@ -22,6 +21,7 @@ public class UserEntity {
     private String country;
     private String privilege;
     private String unionid;
+    private String firstDeliverAddress;
 
     @Id
     @Column(name = "id")
@@ -104,16 +104,6 @@ public class UserEntity {
     }
 
     @Basic
-    @Column(name = "primary_SENDADDRESS_id")
-    public String getPrimarySendaddressId() {
-        return primarySendaddressId;
-    }
-
-    public void setPrimarySendaddressId(String primarySendaddressId) {
-        this.primarySendaddressId = primarySendaddressId;
-    }
-
-    @Basic
     @Column(name = "balance")
     public double getBalance() {
         return balance;
@@ -193,6 +183,16 @@ public class UserEntity {
         this.unionid = unionid;
     }
 
+    @Basic
+    @Column(name = "first_deliver_address")
+    public String getFirstDeliverAddress() {
+        return firstDeliverAddress;
+    }
+
+    public void setFirstDeliverAddress(String firstDeliverAddress) {
+        this.firstDeliverAddress = firstDeliverAddress;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -210,14 +210,14 @@ public class UserEntity {
         if (children != null ? !children.equals(that.children) : that.children != null) return false;
         if (inviteUserId != null ? !inviteUserId.equals(that.inviteUserId) : that.inviteUserId != null) return false;
         if (headImgUrl != null ? !headImgUrl.equals(that.headImgUrl) : that.headImgUrl != null) return false;
-        if (primarySendaddressId != null ? !primarySendaddressId.equals(that.primarySendaddressId) : that.primarySendaddressId != null)
-            return false;
         if (openid != null ? !openid.equals(that.openid) : that.openid != null) return false;
         if (province != null ? !province.equals(that.province) : that.province != null) return false;
         if (city != null ? !city.equals(that.city) : that.city != null) return false;
         if (country != null ? !country.equals(that.country) : that.country != null) return false;
         if (privilege != null ? !privilege.equals(that.privilege) : that.privilege != null) return false;
         if (unionid != null ? !unionid.equals(that.unionid) : that.unionid != null) return false;
+        if (firstDeliverAddress != null ? !firstDeliverAddress.equals(that.firstDeliverAddress) : that.firstDeliverAddress != null)
+            return false;
 
         return true;
     }
@@ -234,7 +234,6 @@ public class UserEntity {
         result = 31 * result + (inviteUserId != null ? inviteUserId.hashCode() : 0);
         result = 31 * result + grade;
         result = 31 * result + (headImgUrl != null ? headImgUrl.hashCode() : 0);
-        result = 31 * result + (primarySendaddressId != null ? primarySendaddressId.hashCode() : 0);
         temp = Double.doubleToLongBits(balance);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         result = 31 * result + (openid != null ? openid.hashCode() : 0);
@@ -244,6 +243,7 @@ public class UserEntity {
         result = 31 * result + (country != null ? country.hashCode() : 0);
         result = 31 * result + (privilege != null ? privilege.hashCode() : 0);
         result = 31 * result + (unionid != null ? unionid.hashCode() : 0);
+        result = 31 * result + (firstDeliverAddress != null ? firstDeliverAddress.hashCode() : 0);
         return result;
     }
 }

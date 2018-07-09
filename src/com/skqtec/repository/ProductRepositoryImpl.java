@@ -24,11 +24,11 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         return this.sessionFactory.openSession();
     }
 
-    public ProductEntity load(Integer id) {
+    public ProductEntity load(String id) {
         return (ProductEntity)getCurrentSession().load(ProductEntity.class,id);
     }
 
-    public ProductEntity get(Integer id) {
+    public ProductEntity get(String id) {
         return (ProductEntity)getCurrentSession().get(ProductEntity.class,id);
     }
 
@@ -61,15 +61,19 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         }
     }
 
+    public List<ProductEntity> search(String key) {
+        return null;
+    }
+
     public void persist(ProductEntity entity) {
         Session session = getCurrentSession();
         session.persist(entity);
     }
 
-    public Integer save(ProductEntity entity) {
+    public String save(ProductEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
-        Integer result = (Integer) session.save(entity);
+        String result = (String)session.save(entity);
         transaction.commit();
         return  result;
     }
@@ -78,7 +82,7 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         getCurrentSession().saveOrUpdate(entity);
     }
 
-    public void delete(Integer id) {
+    public void delete(String id) {
         ProductEntity product = load(id);
         getCurrentSession().delete(product);
     }

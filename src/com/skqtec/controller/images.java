@@ -49,7 +49,7 @@ public class images {
 
     @RequestMapping("/test")
     public @ResponseBody String test() {
-        ImageEntity image = imagedao.load(2);
+        ImageEntity image = imagedao.load("2");
         System.out.println(image.getUrl().toString());
         String result = JSON.toJSONString(image);
         logger.info(result);

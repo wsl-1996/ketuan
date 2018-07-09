@@ -1,7 +1,8 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.ImageEntity;
+import com.skqtec.entity.MerchantEntity;
+import org.apache.log4j.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -14,9 +15,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-@Repository
-public class ImageRepositoryImpl implements  ImageRepository{
 
+@Repository
+public class MerchantRepositoryImpl implements  MerchantRepository{
+    static Logger logger = Logger.getLogger(MerchantRepositoryImpl.class.getName());
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -24,24 +26,24 @@ public class ImageRepositoryImpl implements  ImageRepository{
         return this.sessionFactory.openSession();
     }
 
-    public ImageEntity load(String id) {
-        return (ImageEntity)getCurrentSession().load(ImageEntity.class,id);
+    public MerchantEntity load(String id) {
+        return (MerchantEntity)getCurrentSession().load(MerchantEntity.class,id);
     }
 
-    public ImageEntity get(String id) {
-        return (ImageEntity)getCurrentSession().get(ImageEntity.class,id);
+    public MerchantEntity get(String id) {
+        return (MerchantEntity)getCurrentSession().get(MerchantEntity.class,id);
     }
 
-    public List<ImageEntity> findAll() {
+    public List<MerchantEntity> findAll() {
         return null;
     }
 
-    public List<ImageEntity> query(JSONObject jsonObject) {
+    public List<MerchantEntity> query(JSONObject jsonObject) {
         Session s = null;
-        List<ImageEntity> list = new ArrayList<ImageEntity>();
+        List<MerchantEntity> list = new ArrayList<MerchantEntity>();
         try {
             s = getCurrentSession();
-            Criteria c = s.createCriteria(ImageEntity.class);
+            Criteria c = s.createCriteria(MerchantEntity.class);
             Iterator it = jsonObject.keySet().iterator();
             while (it.hasNext()){
                 String key = (String)it.next();
@@ -51,26 +53,29 @@ public class ImageRepositoryImpl implements  ImageRepository{
 //            c.add(Restrictions.eq("aname", name));//eq是等于，gt是大于，lt是小于,or是或
 
             list = c.list();
-            for (ImageEntity image : list) {
-                System.out.println(image.getUrl());
+            for (MerchantEntity merchant : list) {
+                System.out.println(merchant.getName());
             }
-        } finally {
+        }catch (Exception e){
+            logger.error(e);
+        }
+        finally {
             if (s != null)
                 s.close();
             return list;
         }
     }
 
-    public List<ImageEntity> search(String key) {
+    public List<MerchantEntity> search(String key) {
         return null;
     }
 
-    public void persist(ImageEntity entity) {
+    public void persist(MerchantEntity entity) {
         Session session = getCurrentSession();
         session.persist(entity);
     }
 
-    public String save(ImageEntity entity) {
+    public String save(MerchantEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
         Serializable pKey = session.save(entity);
@@ -79,12 +84,12 @@ public class ImageRepositoryImpl implements  ImageRepository{
         return  (String)pKey;
     }
 
-    public void saveOrUpdate(ImageEntity entity) {
+    public void saveOrUpdate(MerchantEntity entity) {
         getCurrentSession().saveOrUpdate(entity);
     }
 
     public void delete(String id) {
-        ImageEntity image = load(id);
+        MerchantEntity image = load(id);
         getCurrentSession().delete(image);
     }
 

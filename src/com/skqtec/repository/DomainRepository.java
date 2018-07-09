@@ -14,6 +14,8 @@ public interface DomainRepository <T,PK extends Serializable>{
 
     List<T> query(JSONObject jsonObject);
 
+    List<T> search(String key);
+
     void persist(T entity);
 
     PK save(T entity);
