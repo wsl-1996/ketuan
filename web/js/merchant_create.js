@@ -8,16 +8,16 @@ $(function(){
         var merchant_count = $("#merchant_count")[0].value;
         var merchant_pass = $("#merchant_pass")[0].value;
         var merchant_pass_re = $("#merchant_pass_re")[0].value;
-        if(merchant_name==undefined){
+        if(merchant_name==undefined||merchant_name==""){
             alert("请填写商户名");
         }
-        if(merchant_add==undefined){
+        if(merchant_add==undefined||merchant_add==""){
             alert("请填写商户的联系地址");
         }
-        if(merchant_phone==undefined){
+        if(merchant_phone==undefined||merchant_phone==""){
             alert("请填写商户联系方式");
         }
-        if(merchant_count==undefined){
+        if(merchant_count==undefined||merchant_count==""){
             alert("请填写商户的登陆账号");
         }
         if(merchant_pass!=merchant_pass_re){

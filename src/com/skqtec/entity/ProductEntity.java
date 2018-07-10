@@ -1,6 +1,7 @@
 package com.skqtec.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "PRODUCT", schema = "ketuanDB", catalog = "")
@@ -25,6 +26,11 @@ public class ProductEntity {
     private String productProduceCity;
     private String productProduceAddress;
     private String productName;
+    private int productState;
+    private Timestamp onlineTime;
+    private Timestamp offlineTime;
+    private int saleVolumeHistory;
+    private int saleVolumeMonthly;
 
     @Id
     @Column(name = "id")
@@ -226,6 +232,56 @@ public class ProductEntity {
         this.productName = productName;
     }
 
+    @Basic
+    @Column(name = "product_state")
+    public int getProductState() {
+        return productState;
+    }
+
+    public void setProductState(int productState) {
+        this.productState = productState;
+    }
+
+    @Basic
+    @Column(name = "online_time")
+    public Timestamp getOnlineTime() {
+        return onlineTime;
+    }
+
+    public void setOnlineTime(Timestamp onlineTime) {
+        this.onlineTime = onlineTime;
+    }
+
+    @Basic
+    @Column(name = "offline_time")
+    public Timestamp getOfflineTime() {
+        return offlineTime;
+    }
+
+    public void setOfflineTime(Timestamp offlineTime) {
+        this.offlineTime = offlineTime;
+    }
+
+    @Basic
+    @Column(name = "sale_volume_history")
+    public int getSaleVolumeHistory() {
+        return saleVolumeHistory;
+    }
+
+    public void setSaleVolumeHistory(int saleVolumeHistory) {
+        this.saleVolumeHistory = saleVolumeHistory;
+    }
+
+    @Basic
+    @Column(name = "sale_volume_monthly")
+    public int getSaleVolumeMonthly() {
+        return saleVolumeMonthly;
+    }
+
+    public void setSaleVolumeMonthly(int saleVolumeMonthly) {
+        this.saleVolumeMonthly = saleVolumeMonthly;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -237,6 +293,9 @@ public class ProductEntity {
         if (Double.compare(that.price, price) != 0) return false;
         if (Double.compare(that.starLevel, starLevel) != 0) return false;
         if (Double.compare(that.productCost, productCost) != 0) return false;
+        if (productState != that.productState) return false;
+        if (saleVolumeHistory != that.saleVolumeHistory) return false;
+        if (saleVolumeMonthly != that.saleVolumeMonthly) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (productInfo != null ? !productInfo.equals(that.productInfo) : that.productInfo != null) return false;
         if (userId != null ? !userId.equals(that.userId) : that.userId != null) return false;
@@ -261,6 +320,8 @@ public class ProductEntity {
         if (productProduceAddress != null ? !productProduceAddress.equals(that.productProduceAddress) : that.productProduceAddress != null)
             return false;
         if (productName != null ? !productName.equals(that.productName) : that.productName != null) return false;
+        if (onlineTime != null ? !onlineTime.equals(that.onlineTime) : that.onlineTime != null) return false;
+        if (offlineTime != null ? !offlineTime.equals(that.offlineTime) : that.offlineTime != null) return false;
 
         return true;
     }
@@ -292,6 +353,11 @@ public class ProductEntity {
         result = 31 * result + (productProduceCity != null ? productProduceCity.hashCode() : 0);
         result = 31 * result + (productProduceAddress != null ? productProduceAddress.hashCode() : 0);
         result = 31 * result + (productName != null ? productName.hashCode() : 0);
+        result = 31 * result + productState;
+        result = 31 * result + (onlineTime != null ? onlineTime.hashCode() : 0);
+        result = 31 * result + (offlineTime != null ? offlineTime.hashCode() : 0);
+        result = 31 * result + saleVolumeHistory;
+        result = 31 * result + saleVolumeMonthly;
         return result;
     }
 }

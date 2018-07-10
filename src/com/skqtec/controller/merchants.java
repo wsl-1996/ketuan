@@ -78,4 +78,55 @@ public class merchants {
             //return JSON.toJSONString(responseData);
         }
     }
+
+    /**
+     * 获取所有团购
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/listall",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getAllMerchants(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        try {
+            List<MerchantEntity> merchants = merchantRepository.findAll();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("merchants",merchants);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
+
+    /**
+     * 关键词查询团购
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/search",method=RequestMethod.GET)
+    public @ResponseBody ResponseData queryMerchants(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        String key = request.getParameter("key");
+        try {
+            List<MerchantEntity> merchants = merchantRepository.search(key);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("merchants",merchants);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
 }

@@ -2,7 +2,7 @@ package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.entity.GroupEntity;
-import com.skqtec.entity.ProductEntity;
+import com.skqtec.entity.UserEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository
-public class ProductRepositoryImpl  implements  ProductRepository{
-    static Logger logger = Logger.getLogger(ProductRepositoryImpl.class.getName());
+public class UserRepositoryImpl implements  UserRepository{
+    static Logger logger = Logger.getLogger(UserRepositoryImpl.class.getName());
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -23,24 +23,24 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         return this.sessionFactory.openSession();
     }
 
-    public ProductEntity load(String id) {
-        return (ProductEntity)getCurrentSession().load(ProductEntity.class,id);
+    public UserEntity load(String id) {
+        return (UserEntity)getCurrentSession().load(UserEntity.class,id);
     }
 
-    public ProductEntity get(String id) {
-        return (ProductEntity)getCurrentSession().get(ProductEntity.class,id);
+    public UserEntity get(String id) {
+        return (UserEntity)getCurrentSession().get(UserEntity.class,id);
     }
 
-    public List<ProductEntity> findAll() {
-        return getCurrentSession().createQuery("from "+ProductEntity.class.getSimpleName()).list();
+    public List<UserEntity> findAll() {
+        return getCurrentSession().createQuery("from "+UserEntity.class.getSimpleName()).list();
     }
 
-    public List<ProductEntity> query(JSONObject jsonObject) {
+    public List<UserEntity> query(JSONObject jsonObject) {
         Session s = null;
-        List<ProductEntity> list = new ArrayList<ProductEntity>();
+        List<UserEntity> list = new ArrayList<UserEntity>();
         try {
             s = getCurrentSession();
-            Criteria c = s.createCriteria(ProductEntity.class);
+            Criteria c = s.createCriteria(UserEntity.class);
             Iterator it = jsonObject.keySet().iterator();
             while (it.hasNext()){
                 String key = (String)it.next();
@@ -48,9 +48,6 @@ public class ProductRepositoryImpl  implements  ProductRepository{
                 c.add(Restrictions.eq(key, value));
             }
             list = c.list();
-            for (ProductEntity image : list) {
-                System.out.println(image.getProductName());
-            }
         } finally {
             if (s != null)
                 s.close();
@@ -58,12 +55,12 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         }
     }
 
-    public List<ProductEntity> search(String key) {
+    public List<UserEntity> search(String key) {
         Session s = null;
-        List<ProductEntity> list = new ArrayList<ProductEntity>();
+        List<UserEntity> list = new ArrayList<UserEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`PRODUCT` as a where a.product_name like '%"+key+"%' and a.product_produce_address like '%"+key+"%' and a.product_info like '%"+key+"%' and a.product_label like '%"+key+"%'").addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`USER` as a where a.nickname like '%"+key+"%' and a.email like '%"+key+"%' and a.phone like '%"+key+"%'").addEntity(GroupEntity.class);
             list = q.list();
         }
         catch(Exception e){
@@ -76,12 +73,12 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         }
     }
 
-    public void persist(ProductEntity entity) {
+    public void persist(UserEntity entity) {
         Session session = getCurrentSession();
         session.persist(entity);
     }
 
-    public String save(ProductEntity entity) {
+    public String save(UserEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
@@ -89,13 +86,13 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         return  result;
     }
 
-    public void saveOrUpdate(ProductEntity entity) {
+    public void saveOrUpdate(UserEntity entity) {
         getCurrentSession().saveOrUpdate(entity);
     }
 
     public void delete(String id) {
-        ProductEntity product = load(id);
-        getCurrentSession().delete(product);
+        UserEntity user = load(id);
+        getCurrentSession().delete(user);
     }
 
     public void flush() {

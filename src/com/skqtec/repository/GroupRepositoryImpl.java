@@ -2,10 +2,8 @@ package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.entity.GroupEntity;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.apache.log4j.Logger;
+import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -17,7 +15,7 @@ import java.util.List;
 
 @Repository
 public class GroupRepositoryImpl implements  GroupRepository{
-
+    static Logger logger = Logger.getLogger(GroupRepositoryImpl.class.getName());
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -53,7 +51,10 @@ public class GroupRepositoryImpl implements  GroupRepository{
             for (GroupEntity group : list) {
                 System.out.println(group.getGroupName());
             }
-        } finally {
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+        }finally {
             if (s != null)
                 s.close();
             return list;
@@ -65,15 +66,22 @@ public class GroupRepositoryImpl implements  GroupRepository{
         List<GroupEntity> list = new ArrayList<GroupEntity>();
         try {
             s = getCurrentSession();
-            Criteria c = s.createCriteria(GroupEntity.class);
-            c.add(Restrictions.like("group_name", key));
-            c.add(Restrictions.like("group_discription", key));
-            c.add(Restrictions.like("deliver_address", key));
-            list = c.list();
+            //list = s.createQuery("from "+ GroupEntity.class.getSimpleName()+" as a where a.groupName like '%"+key+"%' and a.groupDiscription like '%"+key+"%' and a.deliverAddress like '%"+key+"%'").list();
+//            Criteria c = s.createCriteria(GroupEntity.class);
+//            c.add(Restrictions.like("groupName", "%"+key+"%"));
+//            c.add(Restrictions.like("groupDiscription", "%"+key+"%"));
+//            c.add(Restrictions.like("deliverAddress", "%"+key+"%"));
+//            list = c.list();
+            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`GROUP` as a where a.group_name like '%"+key+"%' and a.group_discription like '%"+key+"%'").addEntity(GroupEntity.class);
+            list = q.list();
             for (GroupEntity group : list) {
                 System.out.println(group.getGroupName());
             }
-        } finally {
+        }
+        catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
+        finally {
             if (s != null)
                 s.close();
             return list;

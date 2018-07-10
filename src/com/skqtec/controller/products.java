@@ -2,6 +2,7 @@ package com.skqtec.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.ProductEntity;
 import com.skqtec.repository.ProductRepository;
@@ -16,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -25,7 +27,7 @@ public class products {
     static Logger logger = Logger.getLogger(products.class.getName());
 
     @Autowired
-    private ProductRepository productdao;
+    private ProductRepository productRepository;
 
     /***
      * 管理页面上传图片（买家秀页面上传图片也用该接口）
@@ -85,7 +87,7 @@ public class products {
         String uuid = UUID.randomUUID().toString().replace("-", "");
         productEntity.setId(uuid);
         try{
-            logger.info("********product save returned :  "+productdao.save(productEntity));
+            logger.info("********product save returned :  "+ productRepository.save(productEntity));
             JSONObject data = new JSONObject();
             data.put("productid",uuid);
             responseData.setData(data);
@@ -100,6 +102,52 @@ public class products {
         }
     }
 
+    /**
+     * 获取所有团购
+     * @return
+     */
+    @RequestMapping(value="/listall",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getAllProducts(){
+        ResponseData responseData = new ResponseData();
+        try {
+            List<ProductEntity> products = productRepository.findAll();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("products",products);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
 
+    /**
+     * 关键词查询团购
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/search",method=RequestMethod.GET)
+    public @ResponseBody ResponseData queryProducts(HttpServletRequest request){
+        ResponseData responseData = new ResponseData();
+        String key = request.getParameter("key");
+        try {
+            List<ProductEntity> products = productRepository.search(key);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("products",products);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
 
 }

@@ -3,10 +3,7 @@ package com.skqtec.repository;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.entity.MerchantEntity;
 import org.apache.log4j.Logger;
-import org.hibernate.Criteria;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -35,7 +32,7 @@ public class MerchantRepositoryImpl implements  MerchantRepository{
     }
 
     public List<MerchantEntity> findAll() {
-        return null;
+        return getCurrentSession().createQuery("from "+MerchantEntity.class.getSimpleName()).list();
     }
 
     public List<MerchantEntity> query(JSONObject jsonObject) {
@@ -50,8 +47,6 @@ public class MerchantRepositoryImpl implements  MerchantRepository{
                 String value = jsonObject.getString(key);
                 c.add(Restrictions.eq(key, value));
             }
-//            c.add(Restrictions.eq("aname", name));//eq是等于，gt是大于，lt是小于,or是或
-
             list = c.list();
             for (MerchantEntity merchant : list) {
                 System.out.println(merchant.getName());
@@ -67,7 +62,21 @@ public class MerchantRepositoryImpl implements  MerchantRepository{
     }
 
     public List<MerchantEntity> search(String key) {
-        return null;
+        Session s = null;
+        List<MerchantEntity> list = new ArrayList<MerchantEntity>();
+        try {
+            s = getCurrentSession();
+            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`MERCHANT` as a where a.name like '%"+key+"%' and a.discription like '%"+key+"%'").addEntity(MerchantEntity.class);
+            list = q.list();
+        }
+        catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            if (s != null)
+                s.close();
+            return list;
+        }
     }
 
     public void persist(MerchantEntity entity) {
