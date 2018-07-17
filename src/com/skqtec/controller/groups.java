@@ -31,7 +31,7 @@ public class groups {
     private GroupRepository groupRepository;
 
     /**
-     * 创建产品
+     * 创建团购
      * @param request
      * @param response
      * @return
