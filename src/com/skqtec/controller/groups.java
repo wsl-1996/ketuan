@@ -5,10 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.GroupEntity;
+import com.skqtec.entity.ProductEntity;
 import com.skqtec.repository.GroupRepository;
+import com.skqtec.repository.ProductRepository;
+import com.skqtec.repository.CommentRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,8 +23,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import com.skqtec.tools.Datetools;
 
 @Controller
 @RequestMapping("/applet/groups")
@@ -29,6 +37,11 @@ public class groups {
 
     @Autowired
     private GroupRepository groupRepository;
+    @Autowired
+    private ProductRepository productRepository;
+    @Autowired
+    private CommentRepository commentRepository;
+    private Datetools datetools=new Datetools();
 
     /**
      * 创建团购
@@ -131,6 +144,80 @@ public class groups {
             responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
         }
         finally {
+            return responseData;
+        }
+    }
+    //获取当前团购
+    @RequestMapping(value="/getgroup",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getCurrentGroup(HttpServletRequest request,HttpServletResponse response){
+        ResponseData responseData=new ResponseData();
+        String page=request.getParameter("page");
+        String state=request.getParameter("state");
+        try{
+            List<GroupEntity> groups=groupRepository.query(page,state);
+            List<JSONObject>jsonobject=new ArrayList<JSONObject>();
+            int i=0;
+            for(GroupEntity group:groups){
+                JSONObject jsonObject=new JSONObject();
+                ProductEntity product=productRepository.get(group.getProductId());
+                String product_name=product.getProductName();
+                String product_first_image="http://172.16.2.90:8080/ketuan/img/"+product.getProductFistImg();
+                String degree_of_praise=commentRepository.getDegereeOfPraise(group.getId());
+                Date date2=datetools.timeStampToDate(group.getEndTime());
+                String last_time[]=datetools.time_diff(new Date(),date2);
+                String last_time_info=last_time[0]+"天"+last_time[1]+"小时"+last_time[2]+"分钟";
+                String product_id=group.getProductId();
+                String group_id=group.getId();
+                String product_state_info=null;
+                if(product.getProductState()==0){
+                    product_state_info="自营";
+                }
+                else
+                    product_state_info="";
+                String group_type_info=null;
+                if(group.getGroupType()==0){
+                    group_type_info="动态团";
+                }
+                else
+                    group_type_info="固定团";
+                jsonObject.put("product_id",product_id);
+                jsonObject.put("group_id",group_id);
+                jsonObject.put("product_first_image",product_first_image);
+                jsonObject.put("product_name",product_name);
+                jsonObject.put("product_price",group.getGroupPrice());
+                jsonObject.put("degree_of_praise",degree_of_praise);
+                jsonObject.put("last_time",last_time_info);
+                jsonObject.put("product_state",product_state_info);
+                jsonObject.put("group_type",group_type_info);
+                i++;
+                jsonobject.add(jsonObject);
+            }
+            JSONObject j=new JSONObject();
+            j.put("groups",jsonobject);
+            responseData.setData(j);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
+    //获取团购详情
+    @RequestMapping(value="/getgroupinfo",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getGroupDetails(HttpServletRequest request,HttpServletResponse response){
+        ResponseData responseData=new ResponseData();
+        String groupId=request.getParameter("groupid");
+        try {
+            GroupEntity group = groupRepository.get(groupId);
+            JSONObject jsonobject = new JSONObject();
+            jsonobject.put("groupdetails",group);
+            responseData.setData(jsonobject);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_DETAILS_FAILED);
+        }finally{
             return responseData;
         }
     }
