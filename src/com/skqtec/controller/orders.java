@@ -126,7 +126,7 @@ public class orders {
             return responseData;
         }
     }
-    //订单搜索
+   /* //订单搜索
     @RequestMapping(value="/removeorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData removeOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
@@ -140,7 +140,7 @@ public class orders {
         }finally{
             return responseData;
         }
-    }
+    }*/
 
 
 

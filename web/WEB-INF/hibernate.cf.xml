@@ -18,18 +18,6 @@
         <property name="hibernate.show_sql">true</property>
         <property name="connection.autocommit">true</property>
 
-        <mapping></mapping>
-        <mapping class="com.skqtec.entity.CashbackEntity"/>
-        <mapping class="com.skqtec.entity.CashbackCalculateStandEntity"/>
-        <mapping class="com.skqtec.entity.CommentEntity"/>
-        <mapping class="com.skqtec.entity.GroupEntity"/>
-        <mapping class="com.skqtec.entity.ImageEntity"/>
-        <mapping class="com.skqtec.entity.MerchantEntity"/>
-        <mapping class="com.skqtec.entity.MessageEntity"/>
-        <mapping class="com.skqtec.entity.OrderEntity"/>
-        <mapping class="com.skqtec.entity.ProductEntity"/>
-        <mapping class="com.skqtec.entity.SendaddressEntity"/>
-        <mapping class="com.skqtec.entity.TrackEntity"/>
-        <mapping class="com.skqtec.entity.UserEntity"/>
+
     </session-factory>
 </hibernate-configuration>

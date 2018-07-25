@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-<<<<<<< HEAD
-import java.util.ArrayList;
-=======
 import javax.servlet.http.HttpServletResponse;
->>>>>>> 29f13ab1c6c26bcad02833cf5b6fc27246877bfc
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -134,7 +131,6 @@ public class users {
             return responseData;
         }
 
-<<<<<<< HEAD
     }
    //添加用户收货地址
     @RequestMapping(value="/addaddress",method=RequestMethod.GET)
@@ -239,7 +235,7 @@ public class users {
             return responseData;
         }
     }
-=======
+
 
 
     /**
@@ -268,6 +264,4 @@ public class users {
         }
     }
 
-
->>>>>>> 29f13ab1c6c26bcad02833cf5b6fc27246877bfc
 }
