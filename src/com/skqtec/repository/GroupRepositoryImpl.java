@@ -60,7 +60,23 @@ public class GroupRepositoryImpl implements  GroupRepository{
             return list;
         }
     }
-
+    public List<GroupEntity>query(String page,String state){
+        int p=Integer.parseInt(page);
+        int k=(p-1)*10;
+        List<GroupEntity>list=new ArrayList<GroupEntity>();
+        try{
+            Session s=getCurrentSession();
+            Query q=s.createSQLQuery("select * from `GROUP` as a where a.group_state="+state+" limit "+k+","+"10").addEntity(GroupEntity.class);
+            list=q.list();
+            for (GroupEntity group : list) {
+                System.out.println(group.getGroupName());
+            }
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }finally{
+            return list;
+        }
+    }
     public List<GroupEntity> search(String key) {
         Session s = null;
         List<GroupEntity> list = new ArrayList<GroupEntity>();
@@ -72,7 +88,7 @@ public class GroupRepositoryImpl implements  GroupRepository{
 //            c.add(Restrictions.like("groupDiscription", "%"+key+"%"));
 //            c.add(Restrictions.like("deliverAddress", "%"+key+"%"));
 //            list = c.list();
-            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`GROUP` as a where a.group_name like '%"+key+"%' and a.group_discription like '%"+key+"%'").addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `GROUP` as a where a.group_name like '%"+key+"%' or a.group_discription like '%"+key+"%'").addEntity(GroupEntity.class);
             list = q.list();
             for (GroupEntity group : list) {
                 System.out.println(group.getGroupName());

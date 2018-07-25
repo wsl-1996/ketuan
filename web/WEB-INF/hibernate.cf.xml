@@ -7,7 +7,7 @@
         <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.pool_size">10</property>
-        <property name="hibernate.connection.url">jdbc:mysql://121.196.202.96:3306/ketuanDB</property>
+        <property name="hibernate.connection.url">jdbc:mysql://121.196.202.96:3306/ketuanDB_test</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hibernate.format_sql">true</property>
         <property name="hibernate.generate_statistics">true</property>

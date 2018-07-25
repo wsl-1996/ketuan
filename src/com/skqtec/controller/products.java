@@ -9,6 +9,7 @@ import com.skqtec.repository.ProductRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -149,5 +150,24 @@ public class products {
             return responseData;
         }
     }
+    //获取商品详情
+    @RequestMapping(value="/getproductinfo",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getProductDetails(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String productId=request.getParameter("productid");
+        try{
+            ProductEntity product=productRepository.get(productId);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("productdetails",product);
+            responseData.setData(jsonObject);
+        } catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_PRODUCT_DETAILS_FAILED);
+        }
+        finally {
+            return responseData;
+        }
 
+    }
 }
