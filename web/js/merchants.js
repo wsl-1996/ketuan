@@ -51,6 +51,7 @@ $(function(){
                     if(merchants.length==0){
                         $("#merchantsList tbody").html("");
                     }
+                    $("#merchantsList tbody").html("");
                     for(var i=0;i<merchants.length;i++){
                         appendTr(merchants[i]);
                     }
@@ -69,7 +70,7 @@ $(function(){
             + '             <span class="label label-primary">@'
             +'          </td>'
             +'          <td class="project-title">'
-            +'              <a href="project_detail.html">'+merchant["name"]
+            +'              <a href="merchant_detail.html?merchantid='+merchant["id"]+'">'+merchant["name"]
             +'              </a>'
             +'          </td>'
             +'          <td class="project-completion">'
@@ -82,7 +83,7 @@ $(function(){
             +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 下线 </a>'
             +'          </td>'
             +'      </tr>'
-        $("#merchantsList tbody").html("");
+
         $("#merchantsList tbody").append(s);
     }
     getAllMerchants();

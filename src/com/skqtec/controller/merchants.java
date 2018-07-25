@@ -128,4 +128,31 @@ public class merchants {
             return responseData;
         }
     }
+
+    /**
+     * 获取商家详细信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/getdetail",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getMerchant(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        String merchantid = request.getParameter("merchantid");
+        try {
+            MerchantEntity merchant = merchantRepository.get(merchantid);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("merchant",merchant);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
+
 }

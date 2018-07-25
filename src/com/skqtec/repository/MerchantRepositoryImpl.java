@@ -65,7 +65,7 @@ public class MerchantRepositoryImpl implements  MerchantRepository{
         List<MerchantEntity> list = new ArrayList<MerchantEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`MERCHANT` as a where a.name like '%"+key+"%' and a.discription like '%"+key+"%'").addEntity(MerchantEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`MERCHANT` as a where a.name like '%"+key+"%' or a.discription like '%"+key+"%'").addEntity(MerchantEntity.class);
             list = q.list();
         }
         catch(Exception e){

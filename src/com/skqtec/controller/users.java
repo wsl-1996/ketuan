@@ -15,7 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+import javax.servlet.http.HttpServletResponse;
+>>>>>>> 29f13ab1c6c26bcad02833cf5b6fc27246877bfc
 import java.util.List;
 import java.util.UUID;
 
@@ -130,6 +134,7 @@ public class users {
             return responseData;
         }
 
+<<<<<<< HEAD
     }
    //添加用户收货地址
     @RequestMapping(value="/addaddress",method=RequestMethod.GET)
@@ -234,4 +239,35 @@ public class users {
             return responseData;
         }
     }
+=======
+
+
+    /**
+     * 获取用户详细信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/getdetail",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getuser(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        String usersid = request.getParameter("userid");
+        try {
+            UserEntity user= userRepository.get(usersid);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("user",user);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
+
+
+>>>>>>> 29f13ab1c6c26bcad02833cf5b6fc27246877bfc
 }
