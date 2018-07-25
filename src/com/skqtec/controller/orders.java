@@ -16,6 +16,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -89,7 +91,56 @@ public class orders {
 
 
     }
-
+    //获取订单
+    @RequestMapping(value="/getorder",method = RequestMethod.GET)
+    public @ResponseBody ResponseData getOrder(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String userId=request.getParameter("userid");
+        String orderState=request.getParameter("orderstate");
+        try{
+            List<OrderEntity>orders=new ArrayList<OrderEntity>();
+            orders=orderRepository.query(userId,orderState);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("orders",orders);
+            responseData.setData(jsonObject);
+        }catch(Exception e){
+            logger.error(e,e.fillInStackTrace());
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_ORDER_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
+    //删除订单
+    @RequestMapping(value="/removeorder",method = RequestMethod.GET)
+    public @ResponseBody ResponseData removeOrder(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String orderId=request.getParameter("orderid");
+        try{
+           orderRepository.delete(orderId);
+        }catch(Exception e){
+            logger.error(e,e.fillInStackTrace());
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_ORDER_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
+    //订单搜索
+    @RequestMapping(value="/removeorder",method = RequestMethod.GET)
+    public @ResponseBody ResponseData removeOrder(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String orderId=request.getParameter("orderid");
+        try{
+            orderRepository.delete(orderId);
+        }catch(Exception e){
+            logger.error(e,e.fillInStackTrace());
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_ORDER_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
 
 
 

@@ -1,6 +1,7 @@
 package com.skqtec.entity;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "COMMENT", schema = "ketuanDB_test", catalog = "")
@@ -14,6 +15,7 @@ public class CommentEntity {
     private int starLevel;
     private String reply;
     private String evaluateLabel;
+    private Timestamp commentTime;
 
     @Id
     @Column(name = "id")
@@ -105,6 +107,16 @@ public class CommentEntity {
         this.evaluateLabel = evaluateLabel;
     }
 
+    @Basic
+    @Column(name = "comment_time")
+    public Timestamp getCommentTime() {
+        return commentTime;
+    }
+
+    public void setCommentTime(Timestamp commentTime) {
+        this.commentTime = commentTime;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -123,6 +135,7 @@ public class CommentEntity {
         if (reply != null ? !reply.equals(that.reply) : that.reply != null) return false;
         if (evaluateLabel != null ? !evaluateLabel.equals(that.evaluateLabel) : that.evaluateLabel != null)
             return false;
+        if (commentTime != null ? !commentTime.equals(that.commentTime) : that.commentTime != null) return false;
 
         return true;
     }
@@ -138,6 +151,7 @@ public class CommentEntity {
         result = 31 * result + starLevel;
         result = 31 * result + (reply != null ? reply.hashCode() : 0);
         result = 31 * result + (evaluateLabel != null ? evaluateLabel.hashCode() : 0);
+        result = 31 * result + (commentTime != null ? commentTime.hashCode() : 0);
         return result;
     }
 }

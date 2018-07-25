@@ -6,14 +6,13 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.GroupEntity;
 import com.skqtec.entity.ProductEntity;
+import com.skqtec.repository.CommentRepository;
 import com.skqtec.repository.GroupRepository;
 import com.skqtec.repository.ProductRepository;
-import com.skqtec.repository.CommentRepository;
+import com.skqtec.tools.Datetools;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import com.skqtec.tools.Datetools;
 
 @Controller
 @RequestMapping("/applet/groups")
@@ -161,7 +159,7 @@ public class groups {
                 JSONObject jsonObject=new JSONObject();
                 ProductEntity product=productRepository.get(group.getProductId());
                 String product_name=product.getProductName();
-                String product_first_image="http://172.16.2.90:8080/ketuan/img/"+product.getProductFistImg();
+                String product_first_image=CommonMessage.IMG_URL+product.getProductFistImg();
                 String degree_of_praise=commentRepository.getDegereeOfPraise(group.getId());
                 Date date2=datetools.timeStampToDate(group.getEndTime());
                 String last_time[]=datetools.time_diff(new Date(),date2);

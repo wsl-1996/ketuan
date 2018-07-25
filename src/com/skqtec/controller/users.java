@@ -3,7 +3,9 @@ package com.skqtec.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
+import com.skqtec.entity.SendaddressEntity;
 import com.skqtec.entity.UserEntity;
+import com.skqtec.repository.SendAddressRepository;
 import com.skqtec.repository.UserRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/applet/users")
@@ -23,7 +27,8 @@ public class users {
 
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private SendAddressRepository sendAddressRepository;
     /**
      * 获取所有用户
      * @return
@@ -71,5 +76,162 @@ public class users {
             return responseData;
         }
     }
+    //获取用户的默认收货地址
+   @RequestMapping(value="/getdefaultaddress",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getAddresss(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String userId=request.getParameter("userid");
+        try{
+            JSONObject jsonObject=new JSONObject();
+            UserEntity user=userRepository.get(userId);
+            String userAddressId=user.getFirstDeliverAddress();
+            SendaddressEntity sendaddress=sendAddressRepository.get(userAddressId);
+            String userCountry=sendaddress.getCountry();
+            String userProvince=sendaddress.getProvince();
+            String userCity=sendaddress.getCity();
+            String userDistricts=sendaddress.getDistricts();
+            String userStreet=sendaddress.getStreet();
+            String userAddressDetails=sendaddress.getAddressDetail();
+            jsonObject.put("userCountry",userCountry);
+            jsonObject.put("userProvince",userProvince);
+            jsonObject.put("userCity",userCity);
+            jsonObject.put("userDistricts",userDistricts);
+            jsonObject.put("userStreet",userStreet);
+            jsonObject.put("userAddressDetails",userAddressDetails);
+            JSONObject j[]=new JSONObject[1];
+            j[0]=jsonObject;
+            JSONObject jsonObject1=new JSONObject();
+            jsonObject1.put("addressinfo",j);
+            responseData.setData(jsonObject1);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_ADDRESS_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
+    //获取用户的全部收货地址
+    @RequestMapping(value="/getalladdress",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getAllAddresss(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String userId=request.getParameter("userid");
+        try {
+            List<SendaddressEntity> sendaddress = new ArrayList<SendaddressEntity>();
+            sendaddress = sendAddressRepository.query(userId);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("alladdress",sendaddress);
+            responseData.setData(jsonObject);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_ALL_ADDRESS_FAILED);
+        }finally{
+            return responseData;
+        }
 
+    }
+   //添加用户收货地址
+    @RequestMapping(value="/addaddress",method=RequestMethod.GET)
+    public @ResponseBody ResponseData addAddresss(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String userId=request.getParameter("userid");
+        String userCountry=request.getParameter("usercountry");
+        String userProvince=request.getParameter("userprovince");
+        String userCity=request.getParameter("usercity");
+        String userDistricts=request.getParameter("userdistricts");
+        String userStreet=request.getParameter("userstreet");
+        String userAddressDetails=request.getParameter("useraddressdetails");
+        String sendName=request.getParameter("sendname");
+        String sendPhone=request.getParameter("sendphone");
+        try{
+            SendaddressEntity sendaddress=new SendaddressEntity();
+            sendaddress.setAddressDetail(userAddressDetails);
+            sendaddress.setCity(userCity);
+            sendaddress.setCountry(userCountry);
+            sendaddress.setDistricts(userDistricts);
+            sendaddress.setProvince(userProvince);
+            sendaddress.setStreet(userStreet);
+            sendaddress.setUserId(userId);
+            sendaddress.setSendName(sendName);
+            sendaddress.setSendPhone(sendPhone);
+            String uuid = UUID.randomUUID().toString().replace("-", "");
+            sendaddress.setId(uuid);
+            logger.info("********product save returned :  "+sendAddressRepository.save(sendaddress));
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.ADD_ADDRESS_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
+    //修改用户收货地址
+    @RequestMapping(value="/updateaddress",method=RequestMethod.GET)
+    public @ResponseBody ResponseData updateAddresss(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String Id=request.getParameter("fdid");
+        String userId=request.getParameter("userid");
+        String userCountry=request.getParameter("usercountry");
+        String userProvince=request.getParameter("userprovince");
+        String userCity=request.getParameter("usercity");
+        String userDistricts=request.getParameter("userdistricts");
+        String userStreet=request.getParameter("userstreet");
+        String userAddressDetails=request.getParameter("useraddressdetails");
+        String sendName=request.getParameter("sendname");
+        String sendPhone=request.getParameter("sendphone");
+        try{
+            SendaddressEntity sendaddress=new SendaddressEntity();
+            sendaddress.setAddressDetail(userAddressDetails);
+            sendaddress.setCity(userCity);
+            sendaddress.setCountry(userCountry);
+            sendaddress.setDistricts(userDistricts);
+            sendaddress.setProvince(userProvince);
+            sendaddress.setStreet(userStreet);
+            sendaddress.setUserId(userId);
+            sendaddress.setId(Id);
+            sendaddress.setSendName(sendName);
+            sendaddress.setSendPhone(sendPhone);
+            sendAddressRepository.saveOrUpdate(sendaddress);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.ADD_ADDRESS_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
+    //设置用户的默认收获地址
+    @RequestMapping(value="/setdefaultaddress",method=RequestMethod.GET)
+    public @ResponseBody ResponseData setDefaultAddresss(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String userId=request.getParameter("userid");
+        String FirstDeliverAddress=request.getParameter("fdid");
+        try{
+            UserEntity user=userRepository.get(userId);
+            user.setFirstDeliverAddress(FirstDeliverAddress);
+            userRepository.saveOrUpdate(user);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.SET_DEFAULT_ADDRESS_FAILED);
+        }finally{
+            return responseData;
+        }
+    }
+    //删除收货地址
+    @RequestMapping(value="/deleteaddress",method=RequestMethod.GET)
+    public @ResponseBody ResponseData deleteAddresss(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String fdid = request.getParameter("fdid");
+        try {
+            sendAddressRepository.delete(fdid);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.DELETE_ADDRESS_FAILED);
+        } finally {
+            return responseData;
+        }
+    }
 }

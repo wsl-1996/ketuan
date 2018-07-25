@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "CASHBACK_CALCULATE_STAND", schema = "ketuanDB", catalog = "")
+@Table(name = "CASHBACK_CALCULATE_STAND", schema = "ketuanDB_test", catalog = "")
 public class CashbackCalculateStandEntity {
     private String id;
     private int suitLevel;

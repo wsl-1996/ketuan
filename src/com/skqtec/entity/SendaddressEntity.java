@@ -3,8 +3,7 @@ package com.skqtec.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "SENDADDRESS", schema = "ketuanDB", catalog = "")
-@IdClass(SendaddressEntityPK.class)
+@Table(name = "SENDADDRESS", schema = "ketuanDB_test", catalog = "")
 public class SendaddressEntity {
     private String id;
     private String country;
@@ -108,7 +107,7 @@ public class SendaddressEntity {
         this.sendPhone = sendPhone;
     }
 
-    @Id
+    @Basic
     @Column(name = "USER_id")
     public String getUserId() {
         return userId;

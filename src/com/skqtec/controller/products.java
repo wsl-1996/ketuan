@@ -9,7 +9,6 @@ import com.skqtec.repository.ProductRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -18,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -156,10 +156,17 @@ public class products {
         ResponseData responseData=new ResponseData();
         String productId=request.getParameter("productid");
         try{
+            JSONObject jsonObject1=new JSONObject();
+            List<JSONObject>j=new ArrayList<JSONObject>();
             ProductEntity product=productRepository.get(productId);
+            product.setProductFistImg(CommonMessage.IMG_URL+product.getProductFistImg());
+            product.setImagesAddress(CommonMessage.IMG_URL+product.getImagesAddress());
+            product.setProductSlideImg(CommonMessage.IMG_URL+product.getProductSlideImg());
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("productdetails",product);
-            responseData.setData(jsonObject);
+            j.add(jsonObject);
+            jsonObject1.put("product_details",j);
+            responseData.setData(jsonObject1);
         } catch (Exception e){
             logger.error(e.getMessage(),e);
             responseData.setFailed(true);

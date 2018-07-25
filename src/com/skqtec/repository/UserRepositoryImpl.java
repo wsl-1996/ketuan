@@ -87,7 +87,10 @@ public class UserRepositoryImpl implements  UserRepository{
     }
 
     public void saveOrUpdate(UserEntity entity) {
-        getCurrentSession().saveOrUpdate(entity);
+        Session session = getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(entity);
+        transaction.commit();
     }
 
     public void delete(String id) {

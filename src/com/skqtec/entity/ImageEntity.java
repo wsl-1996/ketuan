@@ -3,7 +3,7 @@ package com.skqtec.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "IMAGE", schema = "ketuanDB", catalog = "")
+@Table(name = "IMAGE", schema = "ketuanDB_test", catalog = "")
 public class ImageEntity {
     private String id;
     private String url;

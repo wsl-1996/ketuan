@@ -3,7 +3,7 @@ package com.skqtec.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TRACK", schema = "ketuanDB", catalog = "")
+@Table(name = "TRACK", schema = "ketuanDB_test", catalog = "")
 public class TrackEntity {
     private String id;
     private String trackNumber;

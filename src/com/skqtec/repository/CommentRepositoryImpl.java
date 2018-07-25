@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
     @Repository
-    public class CommentRepositoryImpl implements CommentRepository {
-        static Logger logger = Logger.getLogger(com.skqtec.repository.CommentRepositoryImpl.class.getName());
+    public class CommentRepositoryImpl implements CommentRepository{
+        static Logger logger = Logger.getLogger(CommentRepositoryImpl.class.getName());
         @Autowired
         private SessionFactory sessionFactory;
 
@@ -48,9 +48,6 @@ import java.util.List;
                     c.add(Restrictions.eq(key, value));
                 }
                 list = c.list();
-                for (CommentEntity Comment : list) {
-                    //System.out.println(Comment.getName());
-                }
             }catch (Exception e){
                 logger.error(e);
             }
@@ -115,6 +112,23 @@ import java.util.List;
             Serializable pKey = session.save(entity);
             transaction.commit();
             return  (String)pKey;
+        }
+        public List<CommentEntity>query(String page,String productId){
+            int p=Integer.parseInt(page);
+            int k=(p-1)*10;
+            List<CommentEntity>list=new ArrayList<CommentEntity>();
+            try{
+                Session s=getCurrentSession();
+                Query q=s.createSQLQuery("select * from `COMMENT` as a where a.product_id="+productId+" limit "+k+","+"10").addEntity(CommentEntity.class);
+                list=q.list();
+                for (CommentEntity comment : list) {
+                    System.out.println(comment.getId());
+                }
+            }catch(Exception e){
+                logger.error(e.getMessage(),e);
+            }finally{
+                return list;
+            }
         }
 
         public void saveOrUpdate(CommentEntity entity) {

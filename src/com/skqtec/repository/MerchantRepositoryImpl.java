@@ -1,7 +1,6 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.MerchantEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;

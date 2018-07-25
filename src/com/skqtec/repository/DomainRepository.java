@@ -1,7 +1,6 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.GroupEntity;
 
 import java.io.Serializable;
 import java.util.List;
