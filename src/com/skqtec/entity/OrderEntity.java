@@ -26,6 +26,9 @@ public class OrderEntity {
     private Timestamp receiptTime;
     private double productPrice;
     private double carriagePrice;
+    private String descript;
+    private Integer sums;
+    private String typeSpecification;
 
     @Id
     @Column(name = "id")
@@ -286,5 +289,35 @@ public class OrderEntity {
         temp = Double.doubleToLongBits(carriagePrice);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
+    }
+
+    @Basic
+    @Column(name = "descript")
+    public String getDescript() {
+        return descript;
+    }
+
+    public void setDescript(String descript) {
+        this.descript = descript;
+    }
+
+    @Basic
+    @Column(name = "sums")
+    public Integer getSums() {
+        return sums;
+    }
+
+    public void setSums(Integer sums) {
+        this.sums = sums;
+    }
+
+    @Basic
+    @Column(name = "type_specification")
+    public String getTypeSpecification() {
+        return typeSpecification;
+    }
+
+    public void setTypeSpecification(String typeSpecification) {
+        this.typeSpecification = typeSpecification;
     }
 }

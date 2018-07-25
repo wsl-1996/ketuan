@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface OrderRepository extends DomainRepository<OrderEntity,String>{
     public List<OrderEntity>query(String userId,String orderState);
+    public List<OrderEntity> search(String userId,String key);
 }

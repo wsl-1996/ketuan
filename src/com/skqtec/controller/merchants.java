@@ -3,6 +3,7 @@ package com.skqtec.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
+import com.skqtec.entity.MerchantEntity;
 import com.skqtec.repository.MerchantRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-
 @Controller
 @RequestMapping("/applet/merchants")
 public class merchants {

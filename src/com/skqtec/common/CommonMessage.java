@@ -1,7 +1,7 @@
 package com.skqtec.common;
 
 public class CommonMessage {
-    public static String IMG_URL = "http://172.16.2.90:8080/ketuan/img/";
+    public static String IMG_URL = "http://172.16.2.36:8080/ketuan/img/";
     public static String MERCHANT_ACOUNT_EXISTS = "商家账户已存在！";
     public static String SAVE_MERCHANT_INFO_FAILED = "商家账户已存在！";
     public static String CREATE_GROUP_FAILED = "创建团购失败！";
@@ -16,4 +16,7 @@ public class CommonMessage {
     public static String DELETE_ADDRESS_FAILED="删除地址失败";
     public static String GET_ALL_ADDRESS_FAILED="获取全部地址失败";
     public static String GET_ORDER_FAILED="获取订单失败";
+    public static String SEARCH_ORDERS_FAILED="查询订单失败";
+    public static String GET_ORDER_DETAILS_FAILED="获取订单详情失败";
+    public static String REMOVE_ORDER_FAILED="删除订单失败";
 }
