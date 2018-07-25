@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
@@ -71,5 +72,34 @@ public class users {
             return responseData;
         }
     }
+
+
+
+    /**
+     * 获取用户详细信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/getdetail",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getuser(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        String usersid = request.getParameter("userid");
+        try {
+            UserEntity user= userRepository.get(usersid);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("user",user);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
+
 
 }

@@ -51,6 +51,7 @@ $(function(){
                     if(users.length==0){
                         $("#usersList tbody").html("");
                     }
+                    $("#usersList tbody").html("");
                     for(var i=0;i<users.length;i++){
                         appendTr(users[i]);
                     }
@@ -82,7 +83,7 @@ $(function(){
             +'          </td>'
             +'          <td class="project-title">'
             +'              <img alt="image" class="img-circle" src="'+user["headImgUrl"]+'">'
-            +'              <a href="project_detail.html">'+user["nickname"]
+            +'              <a href="users_detail.html?userid='+user["id"]+'">'+user["nickname"]
             +'              </a>'
             +'          </td>'
             +'          <td class="project-completion">'
@@ -97,7 +98,7 @@ $(function(){
             +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 下线 </a>'
             +'          </td>'
             +'      </tr>'
-        $("#usersList tbody").html("");
+        /*$("#usersList tbody").html("");*/
         $("#usersList tbody").append(s);
     }
     getAllUsers();
