@@ -31,6 +31,7 @@ public class ProductEntity {
     private Timestamp offlineTime;
     private int saleVolumeHistory;
     private int saleVolumeMonthly;
+    private String typeSpecification;
 
     @Id
     @Column(name = "id")
@@ -359,5 +360,15 @@ public class ProductEntity {
         result = 31 * result + saleVolumeHistory;
         result = 31 * result + saleVolumeMonthly;
         return result;
+    }
+
+    @Basic
+    @Column(name = "type_specification")
+    public String getTypeSpecification() {
+        return typeSpecification;
+    }
+
+    public void setTypeSpecification(String typeSpecification) {
+        this.typeSpecification = typeSpecification;
     }
 }

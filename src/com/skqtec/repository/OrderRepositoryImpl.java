@@ -78,13 +78,35 @@ public class OrderRepositoryImpl implements OrderRepository {
             return list;
         }
     }
+
+    public List<OrderEntity> search(String userId,String key) {
+        Session s = null;
+        List<OrderEntity> list = new ArrayList<OrderEntity>();
+        try {
+            s = getCurrentSession();
+            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.descript like '%"+key+"%' and a.user_id="+userId).addEntity(OrderEntity.class);
+            list = q.list();
+        }
+        catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            if (s != null)
+                s.close();
+            return list;
+        }
+    }
     public List<OrderEntity>query(String userId,String orderState){
         Session s = null;
         List<OrderEntity> list = new ArrayList<OrderEntity>();
         try {
-            int state=Integer.parseInt(orderState);
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.user_id="+userId+" and a.state="+state).addEntity(OrderEntity.class);
+            int state=Integer.parseInt(orderState);
+            Query q=null;
+            if(state==0)//获取全部订单
+                q= s.createSQLQuery("SELECT * FROM `ORDER` as a where a.user_id="+userId+" and a.state>"+state).addEntity(OrderEntity.class);
+            else
+                q= s.createSQLQuery("SELECT * FROM `ORDER` as a where a.user_id="+userId+" and a.state="+state).addEntity(OrderEntity.class);
             list = q.list();
         }
         catch(Exception e){
@@ -113,7 +135,11 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     public void saveOrUpdate(OrderEntity entity) {
-        getCurrentSession().saveOrUpdate(entity);
+        Session session = null;
+        session=getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(entity);
+        transaction.commit();
     }
 
     public void delete(String id) {
