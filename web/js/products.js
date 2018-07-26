@@ -85,7 +85,7 @@ $(function(){
             + '             <span class="label label-primary">'+state
             +'          </td>'
             +'          <td class="project-title">'
-            +'              <a href="project_detail.html">'+product["productName"]
+            +'              <a href="products_detail.html?productid='+product["id"]+'">'+product["productName"]
             +'              </a>'
             +'              <br/>'
             +'              <small>上线时间：'+product["onlineTime"]+'</small>'
@@ -102,7 +102,7 @@ $(function(){
             +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 下线 </a>'
             +'          </td>'
             +'      </tr>'
-        $("#productsList tbody").html("");
+        /*$("#productsList tbody").html("");*/
         $("#productsList tbody").append(s);
     }
     getAllProducts();

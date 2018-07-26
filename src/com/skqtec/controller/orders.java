@@ -36,8 +36,8 @@ public class orders {
             throws ServletException, IOException {
         ResponseData responseData=new ResponseData();
         String productId=request.getParameter("");
-        String groupId=request.getParameter("");
-        String userId=request.getParameter("");
+        String userId=request.getParameter("\");\n" +
+                "        String groupId=request.getParameter(\"\");");
         String state=request.getParameter("");
         String sendName=request.getParameter("");
         String sendAddress=request.getParameter("");
@@ -142,7 +142,31 @@ public class orders {
         }
     }*/
 
-
+    /**
+     * 获取订单详细信息
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/getdetail",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getMerchant(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        String orderid = request.getParameter("orderid");
+        try {
+            OrderEntity order = orderRepository.get(orderid);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("order",order);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
 
 
 }

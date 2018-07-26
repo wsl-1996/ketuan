@@ -85,7 +85,7 @@ $(function(){
             + '             <span class="label label-primary">'+state
             +'          </td>'
             +'          <td class="project-title">'
-            +'              <a href="project_detail.html">'+group["groupName"]
+            +'              <a href="groupbuys_detail.html?groupid='+group["id"]+'">'+group["groupName"]
             +'              </a>'
             +'              <br/>'
             +'              <small>上线时间：'+group["endTime"]+'</small>'
@@ -104,7 +104,7 @@ $(function(){
             +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 下线 </a>'
             +'          </td>'
             +'      </tr>'
-        $("#groupList tbody").html("");
+        /*$("#groupList tbody").html("");*/
         $("#groupList tbody").append(s);
     }
     getAllGroups();

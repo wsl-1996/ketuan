@@ -1,10 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>客团商城后台管理详情</title>
+    <meta name="keywords" content="客团 团购 商城 后台">
+    <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
+
+    <link rel="shortcut icon" href="favicon.ico"> <link href="css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+
+    <link href="css/animate.min.css" rel="stylesheet">
+    <link href="css/style.min.css?v=4.0.0" rel="stylesheet"><base target="_blank">
+
 </head>
-<body>
-$END$
+
+<body class="gray-bg">
+<div class="row">
+    <div class="col-sm-9">
+        <div class="wrapper wrapper-content animated fadeInUp">
+            <div class="ibox">
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="m-b-md">
+                                <a href="project_detail.html#" class="btn btn-white btn-xs pull-right">编辑项目</a>
+                                <h2 id="product_name"></h2>
+                            </div>
+                            <dl class="dl-horizontal">
+                                <dt>状态：</dt>
+                                <dd><span class="label label-primary">进行中</span>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-5">
+                            <dl class="dl-horizontal">
+
+                                <dt>产品的价格：</dt>
+                                <span style="color:red">￥</span> <dd id="product_price">115</dd>         <!--  设置一个价格符号￥，样式红色  右下角增加一个删除功能，编辑项目用于改即编辑  怎么查找样式-->
+                                <dt>消息：</dt>
+                                <dd>162</dd>
+                                <dt>产品描述：</dt>
+                                <dd id="product_info">该产品采用了钢铁化的结构，优质的原材料，精细的制作为一体的，拥有全国第一的人性化设计
+                                </dd>
+                                <dd id="productState">上线状态</dd>
+                                <dt>产品店铺id：</dt>
+                                <a href="merchant_detail.html"><img alt="merchantimage" class="img-circle" sir="img/http://localhost:8080/ketuan/img/p2.jpg"></a>    <!--产品的店铺头像，product_merchantaddress需要新定义，问题店铺的变量命名方式,<a href="hdh.html#是什么意思"-->
+                                <dd id="product_cost">最牛店铺之家</dd><br>
+                                <dd ><span class="label label-primary">包邮</span></dd>
+                                <dd>1291人付款</dd>
+                            </dl>
+                        </div>
+                        <div class="col-sm-7" id="cluster_info">
+                            <dl class="dl-horizontal">
+
+                                <dt>产品月销量：</dt>
+                                <dd>30000件</dd>
+                                <dt>产品发布于：</dt>
+                                <dd>2020年11月11日 03:01</dd>
+                                <dt>产品好评度：</dt>
+                                <dd>60%</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <dl class="dl-horizontal">
+                                <dt>当前进度</dt>
+                                <dd>
+                                    <div class="progress progress-striped active m-b-sm">
+                                        <div style="width: 60%;" class="progress-bar"></div>
+                                    </div>
+                                    <small>当前已完成项目总进度的 <strong>60%</strong></small>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="js/jquery.min.js?v=2.1.4"></script>
+<script src="js/bootstrap.min.js?v=3.3.5"></script>
+<script src="js/content.min.js?v=1.0.0"></script>
+<script>
+    $(document).ready(function(){$("#loading-example-btn").click(function(){btn=$(this);simpleLoad(btn,true);simpleLoad(btn,false)})});function simpleLoad(btn,state){if(state){btn.children().addClass("fa-spin");btn.contents().last().replaceWith(" Loading")}else{setTimeout(function(){btn.children().removeClass("fa-spin");btn.contents().last().replaceWith(" Refresh")},2000)}};
+</script>
+<script type="text/javascript" src="http://tajs.qq.com/stats?sId=9051096" charset="UTF-8"></script>
+<script src="js/products_detail.js"></script>
 </body>
+
 </html>

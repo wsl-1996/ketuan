@@ -6,6 +6,7 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.ProductEntity;
 import com.skqtec.repository.ProductRepository;
+import com.skqtec.tools.DisposeUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,7 +18,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.UUID;
 
@@ -156,17 +158,20 @@ public class products {
         ResponseData responseData=new ResponseData();
         String productId=request.getParameter("productid");
         try{
-            JSONObject jsonObject1=new JSONObject();
-            List<JSONObject>j=new ArrayList<JSONObject>();
+            JSONObject jsonObject=new JSONObject();
             ProductEntity product=productRepository.get(productId);
+            DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            String onlineTime = sdf.format(product.getOnlineTime());
             product.setProductFistImg(CommonMessage.IMG_URL+product.getProductFistImg());
             product.setImagesAddress(CommonMessage.IMG_URL+product.getImagesAddress());
             product.setProductSlideImg(CommonMessage.IMG_URL+product.getProductSlideImg());
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("productdetails",product);
-            j.add(jsonObject);
-            jsonObject1.put("product_details",j);
-            responseData.setData(jsonObject1);
+
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1 = DisposeUtil.dispose(product);
+            jsonObject1.put("onlineTime",onlineTime);
+
+            jsonObject.put("productdetails",jsonObject1);
+            responseData.setData(jsonObject);
         } catch (Exception e){
             logger.error(e.getMessage(),e);
             responseData.setFailed(true);
