@@ -2,17 +2,24 @@ package com.skqtec.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.ResponseData;
+import com.skqtec.entity.OrderEntity;
+import com.skqtec.repository.OrderRepository;
+import com.skqtec.wxtools.WXPay;
 import com.skqtec.wxtools.WXPayConfigImpl;
 import com.skqtec.wxtools.WXPayUtil;
 import com.sun.istack.internal.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import com.skqtec.wxtools.WXPay;
-import org.springframework.web.bind.annotation.*;
-import com.alibaba.fastjson.JSON;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
-import java.util.Map.Entry;
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 public class payment {
     private WXPay wxpay;
@@ -20,6 +27,8 @@ public class payment {
     private static Logger logger= Logger.getLogger(payment.class);
 //    @Autowired
 //    private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private OrderRepository orderRepository;
     //支付请求接口
     @RequestMapping(value="/payrequest",method=RequestMethod.GET)
     public @ResponseBody ResponseData payRequest(HttpServletRequest request){
@@ -57,12 +66,38 @@ public class payment {
 
 
     //支付回调接口
-    @RequestMapping(value="/paycallback",method=RequestMethod.GET)
-    public @ResponseBody ResponseData payCallBack(HttpServletRequest request){
-        ResponseData responseData=new ResponseData();
-        //String strxml=request.get
-        return responseData;
+    @RequestMapping(value="/paycallback",method=RequestMethod.POST)
+    public @ResponseBody String payCallBack(@RequestBody String body){
+        Map<String,String>info=new HashMap<String, String>();
+        String returns=null;
+        try {
+            info = WXPayUtil.xmlToMap(body);
+            String orderId=info.get("out_trade_no");
+            int totalFee=Integer.parseInt(info.get("total_fee"));
+            String payTime=info.get("time_end");
+            OrderEntity order=orderRepository.get(orderId);
+            if(totalFee!=order.getTotalPrice()) {
+                returns = "<xml>" +
+                        "  <return_code><![CDATA[FAIL]]></return_code>" +
+                        "  <return_msg><![CDATA[OK]]></return_msg>" +
+                        "</xml>";
+            } else {
+                returns = "<xml>" +
+                        "  <return_code><![CDATA[SUCCESS]]></return_code>" +
+                        "  <return_msg><![CDATA[OK]]></return_msg>" +
+                        "</xml>";
+                order.setState(2);
+                order.setPayTime(Timestamp.valueOf(payTime));
+                orderRepository.saveOrUpdate(order);
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            returns="<xml>" +
+                    "  <return_code><![CDATA[FAIL]]></return_code>" +
+                    "  <return_msg><![CDATA[OK]]></return_msg>" +
+                    "</xml>";
+        }finally{
+            return returns;
+        }
     }
-
-
 }

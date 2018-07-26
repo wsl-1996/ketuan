@@ -3,14 +3,8 @@ package com.skqtec.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
-import com.skqtec.entity.MerchantEntity;
-import com.skqtec.entity.OrderEntity;
-import com.skqtec.entity.ProductEntity;
-import com.skqtec.entity.UserEntity;
-import com.skqtec.repository.MerchantRepository;
-import com.skqtec.repository.OrderRepository;
-import com.skqtec.repository.ProductRepository;
-import com.skqtec.repository.UserRepository;
+import com.skqtec.entity.*;
+import com.skqtec.repository.*;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,6 +16,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,48 +36,50 @@ public class orders {
     private MerchantRepository merchantRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SendAddressRepository sendAddressRepository;
     //生成订单
     @RequestMapping(value="/creatorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData createProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ResponseData responseData=new ResponseData();
-        String productId=request.getParameter("");
-        String groupId=request.getParameter("");
-        String userId=request.getParameter("");
-        String state=request.getParameter("");
-        String sendName=request.getParameter("");
-        String sendAddress=request.getParameter("");
-        String sendZip=request.getParameter("");
-        String sendTel=request.getParameter("");
-        String orderTime=request.getParameter("");
-        String paymethod=request.getParameter("");
-        String meno=request.getParameter("");
-        String totalPrice=request.getParameter("");
-        String trackCode=request.getParameter("");
-        String trackId=request.getParameter("");
-        String payTime=request.getParameter("");
-        String deliverTime=request.getParameter("");
-        String receiptTime=request.getParameter("");
-        String productPrice=request.getParameter("");
-        String carriagePrice=request.getParameter("");
+        String productId=request.getParameter("productid");
+        String groupId=request.getParameter("groupid");
+        String userId=request.getParameter("userid");
+        UserEntity user=userRepository.get(userId);
+        String fdAddress=user.getFirstDeliverAddress();
+        if(fdAddress==null){
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("error","未填收货地址");
+            responseData.setData(jsonObject);
+        }
+        //String paymethod=request.getParameter("");
+        String meno=request.getParameter("meno");
+        int productPrice=Integer.parseInt(request.getParameter("productprice"));
+        int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
+        String typeSpecification=request.getParameter("typespecification");
+        int sums=Integer.parseInt(request.getParameter("sums"));
         String uuid = UUID.randomUUID().toString().replace("-", "");
         OrderEntity orderEntity=new OrderEntity();
-        /*
-        orderEntity.setCarriagePrice();
-        orderEntity.setDeliverTime();
-        orderEntity.setGroupId();
+        orderEntity.setCarriagePrice(carriagePrice);
+        orderEntity.setGroupId(groupId);
         orderEntity.setId(uuid);
-        orderEntity.setMeno();
-        orderEntity.setOrderTime();
-        orderEntity.setProductId();
-        orderEntity.setProductPrice();
-        orderEntity.setSendName();
-        orderEntity.setSendTel();
-        orderEntity.setSendZip();
-        orderEntity.setState();
-        orderEntity.setTrackCode();
-        orderEntity.setUserId();
-        */
+        orderEntity.setMeno(meno);
+        orderEntity.setOrderTime( new Timestamp(System.currentTimeMillis()));
+        orderEntity.setProductId(productId);
+        orderEntity.setProductPrice(productPrice);
+
+        ProductEntity product=productRepository.get(productId);
+        SendaddressEntity sendaddress=sendAddressRepository.get(fdAddress);
+        orderEntity.setSendName(sendaddress.getSendName());
+        orderEntity.setSendTel(sendaddress.getSendPhone());
+        orderEntity.setSendZip(sendaddress.getZip());
+        orderEntity.setState(1);
+        orderEntity.setTotalPrice(productPrice*sums+carriagePrice);
+        orderEntity.setUserId(userId);
+        orderEntity.setPaymethod("微信支付");
+        orderEntity.setTypeSpecification(typeSpecification);
+        orderEntity.setDescript(product.getProductName()+product.getEvaluateLabel()+product.getProductInfo()+product.getProductLabel());
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
             JSONObject data = new JSONObject();
@@ -97,10 +94,6 @@ public class orders {
         finally {
             return responseData;
         }
-
-
-
-
     }
     //获取订单
     @RequestMapping(value="/getorder",method = RequestMethod.GET)
@@ -110,10 +103,41 @@ public class orders {
         String orderState=request.getParameter("orderstate");
         try{
             List<OrderEntity>orders=new ArrayList<OrderEntity>();
+            List<JSONObject>j=new ArrayList<JSONObject>();
             orders=orderRepository.query(userId,orderState);
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("orders",orders);
-            responseData.setData(jsonObject);
+            for(OrderEntity order:orders){
+                ProductEntity product=productRepository.get(order.getProductId());
+                String shopName=null;
+                if(product.getOwnerType()==0) {
+                    MerchantEntity merchant = merchantRepository.get(product.getMerchantId());
+                    shopName=merchant.getName();
+                }
+                else{
+                    UserEntity user=userRepository.get(product.getUserId());
+                    shopName=user.getNickname();
+                }
+                String orderId=order.getId();
+                String productImg=CommonMessage.IMG_URL+product.getProductFistImg();
+                String productTitle=product.getProductName();
+                String productPrice=String.valueOf(product.getPrice());
+                String sums=String.valueOf(order.getSums());
+                String typeSpecification=order.getTypeSpecification();
+                String sumPrice=String.valueOf(order.getTotalPrice());
+                JSONObject jsonObject=new JSONObject();
+                jsonObject.put("shopName",shopName);
+                jsonObject.put("orderId",orderId);
+                jsonObject.put("orderState",orderState);
+                jsonObject.put("productImg",productImg);
+                jsonObject.put("productTitle",productTitle);
+                jsonObject.put("productPrice",productPrice);
+                jsonObject.put("sums",sums);
+                jsonObject.put("typeSpecification",typeSpecification);
+                jsonObject.put("sumPrice",sumPrice);
+                j.add(jsonObject);
+            }
+            JSONObject jsonObject1=new JSONObject();
+            jsonObject1.put("searchResult",j);
+            responseData.setData(jsonObject1);
         }catch(Exception e){
             logger.error(e,e.fillInStackTrace());
             responseData.setFailed(true);
