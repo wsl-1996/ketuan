@@ -1,7 +1,8 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.SendaddressEntity;
+import com.skqtec.entity.BillEntity;
+import com.skqtec.entity.GroupEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
@@ -12,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 @Repository
-public class SendAddressRepositoryImpl implements SendAddressRepository{
-    static Logger logger = Logger.getLogger(SendAddressRepositoryImpl.class.getName());
+public class BillRepositoryImpl implements BillRepository {
+    static Logger logger = Logger.getLogger(BillRepositoryImpl.class.getName());
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -21,24 +22,24 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
         return this.sessionFactory.openSession();
     }
 
-    public SendaddressEntity load(String id) {
-        return (SendaddressEntity)getCurrentSession().load(SendaddressEntity.class,id);
+    public BillEntity load(String id) {
+        return (BillEntity)getCurrentSession().load(BillEntity.class,id);
     }
 
-    public SendaddressEntity get(String id) {
-        return (SendaddressEntity)getCurrentSession().get(SendaddressEntity.class,id);
+    public BillEntity get(String id) {
+        return (BillEntity)getCurrentSession().get(BillEntity.class,id);
     }
 
-    public List<SendaddressEntity> findAll() {
-        return getCurrentSession().createQuery("from "+SendaddressEntity.class.getSimpleName()).list();
+    public List<BillEntity> findAll() {
+        return getCurrentSession().createQuery("from "+BillEntity.class.getSimpleName()).list();
     }
 
-    public List<SendaddressEntity> query(JSONObject jsonObject) {
+    public List<BillEntity> query(JSONObject jsonObject) {
         Session s = null;
-        List<SendaddressEntity> list = new ArrayList<SendaddressEntity>();
+        List<BillEntity> list = new ArrayList<BillEntity>();
         try {
             s = getCurrentSession();
-            Criteria c = s.createCriteria(SendaddressEntity.class);
+            Criteria c = s.createCriteria(BillEntity.class);
             Iterator it = jsonObject.keySet().iterator();
             while (it.hasNext()){
                 String key = (String)it.next();
@@ -52,12 +53,29 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
             return list;
         }
     }
-    public List<SendaddressEntity>query(String userId){
+    public List<BillEntity> query(String userId,int type){
         Session s = null;
-        List<SendaddressEntity> list = new ArrayList<SendaddressEntity>();
+        List<BillEntity> list = new ArrayList<BillEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `SENDADDRESS` as a where a.user_id="+userId).addEntity(SendaddressEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `BILL` as a where a.user_id="+userId+" and a.type="+type).addEntity(BillEntity.class);
+            list = q.list();
+        }
+        catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            if (s != null)
+                s.close();
+            return list;
+        }
+    }
+    public List<BillEntity> search(String key) {
+        Session s = null;
+        List<BillEntity> list = new ArrayList<BillEntity>();
+        try {
+            s = getCurrentSession();
+            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`BILL` as a where a.Bill_name like '%"+key+"%' and a.Bill_produce_address like '%"+key+"%' and a.Bill_info like '%"+key+"%' and a.Bill_label like '%"+key+"%'").addEntity(GroupEntity.class);
             list = q.list();
         }
         catch(Exception e){
@@ -70,30 +88,12 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
         }
     }
 
-    public List<SendaddressEntity> search(String key) {
-        Session s = null;
-        List<SendaddressEntity> list = new ArrayList<SendaddressEntity>();
-        try {
-            s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `SENDADDRESS` as a where a.nickname like '%"+key+"%' and a.email like '%"+key+"%' and a.phone like '%"+key+"%'").addEntity(SendaddressEntity.class);
-            list = q.list();
-        }
-        catch(Exception e){
-            logger.error(e.getMessage(),e);
-        }
-        finally {
-            if (s != null)
-                s.close();
-            return list;
-        }
-    }
-
-    public void persist(SendaddressEntity entity) {
+    public void persist(BillEntity entity) {
         Session session = getCurrentSession();
         session.persist(entity);
     }
 
-    public String save(SendaddressEntity entity) {
+    public String save(BillEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
@@ -101,24 +101,16 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
         return  result;
     }
 
-    public void saveOrUpdate(SendaddressEntity entity) {
-        Session session = getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.saveOrUpdate(entity);
-        transaction.commit();
+    public void saveOrUpdate(BillEntity entity) {
+        getCurrentSession().saveOrUpdate(entity);
     }
 
     public void delete(String id) {
-        Session session = getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        SendaddressEntity Sendaddress =get(id);
-        session.delete(Sendaddress);
-        transaction.commit();
+        BillEntity Bill = load(id);
+        getCurrentSession().delete(Bill);
     }
 
     public void flush() {
         getCurrentSession().flush();
     }
 }
-
-
