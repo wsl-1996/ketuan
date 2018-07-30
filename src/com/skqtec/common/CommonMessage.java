@@ -22,4 +22,6 @@ public class CommonMessage {
     public static String GET_USER_GRADE_FAILED="获取用户等级失败";
     public static String GET_CASHBACK_LIST_FAILED="获取返现列表失败";
     public static String GET_CHILDREN_FAILED="获取Children信息失败";
+    public static String SEND_VERFICATION_CODE_FAILED="发送短信验证码失败";
+    public static String LOGIN_FAILED="登录失败";
 }

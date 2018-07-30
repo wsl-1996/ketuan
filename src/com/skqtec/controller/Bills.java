@@ -22,8 +22,8 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/applet/bills")
-public class bill {
-    static Logger logger = Logger.getLogger(bill.class.getName());
+public class Bills {
+    static Logger logger = Logger.getLogger(Bills.class.getName());
     @Autowired
     private BillRepository billRepository;
     @RequestMapping(value="/getcashback",method=RequestMethod.GET)
