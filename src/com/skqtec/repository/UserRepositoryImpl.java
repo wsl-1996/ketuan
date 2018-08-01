@@ -55,12 +55,33 @@ public class UserRepositoryImpl implements  UserRepository{
         }
     }
 
+    public UserEntity query(String openid){
+        Session s = null;
+        List<UserEntity> list = new ArrayList<UserEntity>();
+        UserEntity user=null;
+        try {
+            s = getCurrentSession();
+            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.openid="+openid).addEntity(GroupEntity.class);
+            list = q.list();
+            if(list.size()!=0)
+                user=list.get(0);
+        }
+        catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            if (s != null)
+                s.close();
+            return user;
+        }
+    }
+
     public List<UserEntity> search(String key) {
         Session s = null;
         List<UserEntity> list = new ArrayList<UserEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`USER` as a where a.nickname like '%"+key+"%' and a.email like '%"+key+"%' and a.phone like '%"+key+"%'").addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.nickname like '%"+key+"%' and a.email like '%"+key+"%' and a.phone like '%"+key+"%'").addEntity(GroupEntity.class);
             list = q.list();
         }
         catch(Exception e){

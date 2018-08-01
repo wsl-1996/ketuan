@@ -11,11 +11,9 @@ import java.security.AlgorithmParameters;
 import java.security.Security;
 import java.util.Arrays;
 
-/**
- * @author ljh
- */
 public class WXUtils {
     public static JSONObject getUserInfo(String encryptedData, String sessionKey, String iv){
+        JSONObject jsonObject = new JSONObject();
         // 被加密的数据
         byte[] dataByte = Base64.decode(encryptedData);
         // 加密秘钥
@@ -48,7 +46,9 @@ public class WXUtils {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return null;
+        return jsonObject;
     }
+
+
 
 }

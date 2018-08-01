@@ -32,6 +32,29 @@ public class ProductEntity {
     private int saleVolumeHistory;
     private int saleVolumeMonthly;
     private String typeSpecification;
+    private String productDetails;
+    private String productStyle;
+    private String stylePrice;
+
+    public void setStarLevel(Double starLevel) {
+        this.starLevel = starLevel;
+    }
+
+    public void setProductCost(Double productCost) {
+        this.productCost = productCost;
+    }
+
+    public void setProductState(Integer productState) {
+        this.productState = productState;
+    }
+
+    public void setSaleVolumeHistory(Integer saleVolumeHistory) {
+        this.saleVolumeHistory = saleVolumeHistory;
+    }
+
+    public void setSaleVolumeMonthly(Integer saleVolumeMonthly) {
+        this.saleVolumeMonthly = saleVolumeMonthly;
+    }
 
     @Id
     @Column(name = "id")
@@ -370,5 +393,35 @@ public class ProductEntity {
 
     public void setTypeSpecification(String typeSpecification) {
         this.typeSpecification = typeSpecification;
+    }
+
+    @Basic
+    @Column(name = "product_details")
+    public String getProductDetails() {
+        return productDetails;
+    }
+
+    public void setProductDetails(String productDetails) {
+        this.productDetails = productDetails;
+    }
+
+    @Basic
+    @Column(name = "product_style")
+    public String getProductStyle() {
+        return productStyle;
+    }
+
+    public void setProductStyle(String productStyle) {
+        this.productStyle = productStyle;
+    }
+
+    @Basic
+    @Column(name = "style_price")
+    public String getStylePrice() {
+        return stylePrice;
+    }
+
+    public void setStylePrice(String stylePrice) {
+        this.stylePrice = stylePrice;
     }
 }

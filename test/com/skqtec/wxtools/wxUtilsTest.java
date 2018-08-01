@@ -1,7 +1,6 @@
-package com.skqtec.controller;
+package com.skqtec.wxtools;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.wxtools.WXUtils;
 
 public class wxUtilsTest {
 
@@ -30,7 +29,8 @@ public class wxUtilsTest {
                 "Db/XcxxmK01EpqOyuxINew==";
         String sessionKey = "tiihtNczf5v6AKRyjwEUhQ==";
         String iv = "r7BXXKkLb8qrSNn05n0qiA==";
-        JSONObject jsonObject = WXUtils.getUserInfo(encryptedData,sessionKey,iv);
+        WXUtils wXUtils = new WXUtils();
+        JSONObject jsonObject = wXUtils.getUserInfo(encryptedData,sessionKey,iv);
         System.out.println(jsonObject.toJSONString());
     }
 

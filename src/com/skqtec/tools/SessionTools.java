@@ -1,25 +1,29 @@
 package com.skqtec.tools;
 
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import java.util.UUID;
 
 public class SessionTools {
     //查询session
-    public String sessionQuery(String sessionId){
-        Jedis jedis = new Jedis("localhost");
-        System.out.println("连接成功");
+    public static String sessionQuery(String sessionId){
+        JedisPool jedisPool=RedisAPI.getPool();
+        Jedis jedis=jedisPool.getResource();
         String userId=jedis.get(sessionId);
         if(userId!=null)
         jedis.expire(sessionId,600);
+        jedisPool.returnResource(jedis);
         return userId;
     }
-    public String setSession(String userId){
-        Jedis jedis = new Jedis("localhost");
-        System.out.println("连接成功");
+    //生成session
+    public static String setSession(String userId){
+        JedisPool jedisPool=RedisAPI.getPool();
+        Jedis jedis=jedisPool.getResource();
         String uuid = UUID.randomUUID().toString().replace("-", "");
         jedis.set(uuid,userId);
         jedis.expire(uuid,600);
+        jedisPool.returnResource(jedis);
         return uuid;
     }
 

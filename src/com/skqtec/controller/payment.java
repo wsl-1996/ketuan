@@ -34,7 +34,7 @@ public class payment {
     public @ResponseBody ResponseData payRequest(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
         String userId="o5sMv0TY78EzXxCuFQF_nLH8e6YQ";
-        //String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionId");
         String productId=request.getParameter("productid");
         String fee=request.getParameter("fee");
         HashMap<String, String> data = new HashMap<String, String>();
@@ -46,8 +46,9 @@ public class payment {
         data.put("total_fee", fee);
         data.put("spbill_create_ip", "114.212.81.63");
         data.put("notify_url", "a73f284b.ngrok.io/ketuan/paycallback");
-        data.put("trade_type", "NATIVE");
+        data.put("trade_type", "JSAPI");
         data.put("product_id", productId);
+        //data.put("openid",openid);
         Map<String, String> r=new HashMap<String, String>();
         try {
             this.config=WXPayConfigImpl.getInstance();

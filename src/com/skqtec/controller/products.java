@@ -1,6 +1,7 @@
 package com.skqtec.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -157,20 +159,33 @@ public class products {
     public @ResponseBody ResponseData getProductDetails(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
         String productId=request.getParameter("productid");
+        String sessionId=request.getParameter("sessionid");
+
         try{
+            //判断是否登录
+           /* String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }*/
             JSONObject jsonObject=new JSONObject();
             ProductEntity product=productRepository.get(productId);
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String onlineTime = sdf.format(product.getOnlineTime());
             product.setProductFistImg(CommonMessage.IMG_URL+product.getProductFistImg());
-            product.setImagesAddress(CommonMessage.IMG_URL+product.getImagesAddress());
-            product.setProductSlideImg(CommonMessage.IMG_URL+product.getProductSlideImg());
-
             JSONObject jsonObject1 = new JSONObject();
+            jsonObject.put("ImageAddress",JSONArray.parseArray(product.getImagesAddress()));
+            List<JSONObject>j=new ArrayList<JSONObject>();
+            j.add(JSON.parseObject(product.getProductDetails()));
+            jsonObject.put("ProductDetails",j);
+            jsonObject.put("SlideImage",JSONArray.parseArray(product.getProductSlideImg()));
+            product.setImagesAddress("");
+            product.setProductSlideImg("");
+            product.setProductDetails("");
             jsonObject1 = DisposeUtil.dispose(product);
             jsonObject1.put("onlineTime",onlineTime);
-
-            jsonObject.put("productdetails",jsonObject1);
+            jsonObject.put("product",jsonObject1);
             responseData.setData(jsonObject);
         } catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -180,6 +195,31 @@ public class products {
         finally {
             return responseData;
         }
-
+    }
+    //获取商品款式
+    @RequestMapping(value="/getproductstyle",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getProductStyle(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String productId = request.getParameter("productid");
+        String sessionId = request.getParameter("sessionid");
+        try {
+            ProductEntity product=productRepository.get(productId);
+            String productStyle=product.getProductStyle();
+            String productFistImg=product.getProductFistImg();
+            String stylePrice=product.getStylePrice();
+            List<JSONArray>j=new ArrayList<JSONArray>();
+            j.add(JSONArray.parseArray(productStyle));
+            j.add(JSONArray.parseArray(stylePrice));
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("productStyle",j);
+            jsonObject.put("productFistImg",productFistImg);
+            responseData.setData(jsonObject);
+        } catch (Exception e) {
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_PRODUCT_STYLE_FAILED);
+        } finally {
+            return responseData;
+        }
     }
 }

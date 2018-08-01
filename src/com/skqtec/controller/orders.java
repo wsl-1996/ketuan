@@ -45,7 +45,20 @@ public class orders {
         ResponseData responseData=new ResponseData();
         String productId=request.getParameter("productid");
         String groupId=request.getParameter("groupid");
-        String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
+        String totalPrice=request.getParameter("totalprice");
+        String productStyle=request.getParameter("style");
+        String meno=request.getParameter("meno");
+        String productPrice=request.getParameter("productprice");
+        int sums=Integer.parseInt(request.getParameter("sums"));
+        int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
+        //判断是否登录
+        String userId="01";//SessionTools.sessionQuery(sessionId);
+        if(userId==null){
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+            return responseData;
+        }
         UserEntity user=userRepository.get(userId);
         String fdAddress=user.getFirstDeliverAddress();
         if(fdAddress==null){
@@ -54,11 +67,6 @@ public class orders {
             responseData.setData(jsonObject);
         }
         //String paymethod=request.getParameter("");
-        String meno=request.getParameter("meno");
-        int productPrice=Integer.parseInt(request.getParameter("productprice"));
-        int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
-        String typeSpecification=request.getParameter("typespecification");
-        int sums=Integer.parseInt(request.getParameter("sums"));
         String uuid = UUID.randomUUID().toString().replace("-", "");
         OrderEntity orderEntity=new OrderEntity();
         orderEntity.setCarriagePrice(carriagePrice);
@@ -67,18 +75,17 @@ public class orders {
         orderEntity.setMeno(meno);
         orderEntity.setOrderTime( new Timestamp(System.currentTimeMillis()));
         orderEntity.setProductId(productId);
-        orderEntity.setProductPrice(productPrice);
-
+        orderEntity.setProductPrice(Integer.parseInt(productPrice));
         ProductEntity product=productRepository.get(productId);
         SendaddressEntity sendaddress=sendAddressRepository.get(fdAddress);
         orderEntity.setSendName(sendaddress.getSendName());
         orderEntity.setSendTel(sendaddress.getSendPhone());
         orderEntity.setSendZip(sendaddress.getZip());
         orderEntity.setState(1);
-        orderEntity.setTotalPrice(productPrice*sums+carriagePrice);
+        orderEntity.setTotalPrice(Integer.parseInt(totalPrice));
         orderEntity.setUserId(userId);
         orderEntity.setPaymethod("微信支付");
-        orderEntity.setTypeSpecification(typeSpecification);
+        orderEntity.setTypeSpecification(productStyle);
         orderEntity.setDescript(product.getProductName()+product.getEvaluateLabel()+product.getProductInfo()+product.getProductLabel());
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
