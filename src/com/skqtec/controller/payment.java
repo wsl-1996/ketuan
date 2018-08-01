@@ -1,9 +1,12 @@
 package com.skqtec.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.OrderEntity;
+import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.OrderRepository;
+import com.skqtec.repository.UserRepository;
 import com.skqtec.wxtools.WXPay;
 import com.skqtec.wxtools.WXPayConfigImpl;
 import com.skqtec.wxtools.WXPayUtil;
@@ -29,16 +32,27 @@ public class payment {
 //    private JdbcTemplate jdbcTemplate;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private UserRepository userRepository;
     //支付请求接口
     @RequestMapping(value="/payrequest",method=RequestMethod.GET)
     public @ResponseBody ResponseData payRequest(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId="o5sMv0TY78EzXxCuFQF_nLH8e6YQ";
+        //String userId="o5sMv0TY78EzXxCuFQF_nLH8e6YQ";
         String sessionId=request.getParameter("sessionId");
         String productId=request.getParameter("productid");
+        String out_trade_no=request.getParameter("orderid");
         String fee=request.getParameter("fee");
+        //判断是否登录
+        String userId="957a2c423b7e43828bbee771fdcbb8ed";//SessionTools.sessionQuery(sessionId);
+        if(userId==null){
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+            return responseData;
+        }
+        UserEntity user=userRepository.get(userId);
+        String openId=user.getOpenid();
         HashMap<String, String> data = new HashMap<String, String>();
-        String out_trade_no=WXPayUtil.getOrderNo();
         data.put("body", "克团-XXX");
         data.put("out_trade_no", out_trade_no);
         data.put("device_info", "APP");
@@ -48,7 +62,7 @@ public class payment {
         data.put("notify_url", "a73f284b.ngrok.io/ketuan/paycallback");
         data.put("trade_type", "JSAPI");
         data.put("product_id", productId);
-        //data.put("openid",openid);
+        data.put("openid",openId);
         Map<String, String> r=new HashMap<String, String>();
         try {
             this.config=WXPayConfigImpl.getInstance();
@@ -64,7 +78,6 @@ public class payment {
             return responseData;
         }
     }
-
 
     //支付回调接口
     @RequestMapping(value="/paycallback",method=RequestMethod.POST)

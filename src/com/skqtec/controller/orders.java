@@ -5,6 +5,7 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.*;
 import com.skqtec.repository.*;
+import com.skqtec.wxtools.WXPayUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +22,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/applet/orders")
@@ -53,7 +53,7 @@ public class orders {
         int sums=Integer.parseInt(request.getParameter("sums"));
         int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
         //判断是否登录
-        String userId="01";//SessionTools.sessionQuery(sessionId);
+        String userId="957a2c423b7e43828bbee771fdcbb8ed";//SessionTools.sessionQuery(sessionId);
         if(userId==null){
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
@@ -67,11 +67,12 @@ public class orders {
             responseData.setData(jsonObject);
         }
         //String paymethod=request.getParameter("");
-        String uuid = UUID.randomUUID().toString().replace("-", "");
+       // String uuid = UUID.randomUUID().toString().replace("-", "");
+        String out_trade_no=WXPayUtil.getOrderNo();
         OrderEntity orderEntity=new OrderEntity();
         orderEntity.setCarriagePrice(carriagePrice);
         orderEntity.setGroupId(groupId);
-        orderEntity.setId(uuid);
+        orderEntity.setId(out_trade_no);
         orderEntity.setMeno(meno);
         orderEntity.setOrderTime( new Timestamp(System.currentTimeMillis()));
         orderEntity.setProductId(productId);
@@ -90,7 +91,7 @@ public class orders {
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
             JSONObject data = new JSONObject();
-            data.put("orderid",uuid);
+            data.put("orderid",out_trade_no);
             responseData.setData(data);
         }
         catch (Exception e){

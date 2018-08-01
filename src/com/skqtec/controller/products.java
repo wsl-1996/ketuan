@@ -207,12 +207,12 @@ public class products {
             String productStyle=product.getProductStyle();
             String productFistImg=product.getProductFistImg();
             String stylePrice=product.getStylePrice();
-            List<JSONArray>j=new ArrayList<JSONArray>();
-            j.add(JSONArray.parseArray(productStyle));
-            j.add(JSONArray.parseArray(stylePrice));
+            JSONObject j=new JSONObject();
+            j.put("productStyle",JSONArray.parseArray(productStyle));
+            j.put("stylePrice",JSONArray.parseArray(stylePrice));
             JSONObject jsonObject=new JSONObject();
-            jsonObject.put("productStyle",j);
-            jsonObject.put("productFistImg",productFistImg);
+            jsonObject.put("Style",j);
+            jsonObject.put("FistImg",productFistImg);
             responseData.setData(jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(),e);

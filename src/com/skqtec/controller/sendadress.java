@@ -43,12 +43,16 @@ public class sendadress {
             String userDistricts=sendaddress.getDistricts();
             String userStreet=sendaddress.getStreet();
             String userAddressDetails=sendaddress.getAddressDetail();
+            String sendName=sendaddress.getSendName();
+            String sendPhone=sendaddress.getSendPhone();
             jsonObject.put("userCountry",userCountry);
             jsonObject.put("userProvince",userProvince);
             jsonObject.put("userCity",userCity);
             jsonObject.put("userDistricts",userDistricts);
             jsonObject.put("userStreet",userStreet);
             jsonObject.put("userAddressDetails",userAddressDetails);
+            jsonObject.put("sendName",sendName);
+            jsonObject.put("sendPhone",sendPhone);
             JSONObject j[]=new JSONObject[1];
             j[0]=jsonObject;
             JSONObject jsonObject1=new JSONObject();
