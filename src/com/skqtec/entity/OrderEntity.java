@@ -29,6 +29,7 @@ public class OrderEntity {
     private String descript;
     private Integer sums;
     private String typeSpecification;
+    private String outRefundNo;
 
     @Id
     @Column(name = "id")
@@ -319,5 +320,15 @@ public class OrderEntity {
 
     public void setTypeSpecification(String typeSpecification) {
         this.typeSpecification = typeSpecification;
+    }
+
+    @Basic
+    @Column(name = "out_refund_no")
+    public String getOutRefundNo() {
+        return outRefundNo;
+    }
+
+    public void setOutRefundNo(String outRefundNo) {
+        this.outRefundNo = outRefundNo;
     }
 }

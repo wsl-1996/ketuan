@@ -28,7 +28,10 @@ public class GroupRepositoryImpl implements  GroupRepository{
     }
 
     public GroupEntity get(String id) {
-        return (GroupEntity)getCurrentSession().get(GroupEntity.class,id);
+        Session session=getCurrentSession();
+        GroupEntity groupEntity=(GroupEntity)session.get(GroupEntity.class,id);
+        session.close();
+        return groupEntity;
     }
 
     public List<GroupEntity> findAll() {
@@ -71,6 +74,7 @@ public class GroupRepositoryImpl implements  GroupRepository{
             for (GroupEntity group : list) {
                 System.out.println(group.getGroupName());
             }
+            s.close();
         }catch(Exception e){
             logger.error(e.getMessage(),e);
         }finally{
@@ -115,6 +119,7 @@ public class GroupRepositoryImpl implements  GroupRepository{
         Serializable pKey = session.save(entity);
 
         transaction.commit();
+        session.close();
         return  (String)pKey;
     }
 

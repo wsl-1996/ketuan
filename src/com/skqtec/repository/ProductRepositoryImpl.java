@@ -2,13 +2,12 @@ package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.entity.GroupEntity;
-
+import com.skqtec.entity.ProductEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import com.skqtec.entity.ProductEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -29,7 +28,10 @@ public class ProductRepositoryImpl  implements  ProductRepository{
     }
 
     public ProductEntity get(String id) {
-        return (ProductEntity)getCurrentSession().get(ProductEntity.class,id);
+        Session session=getCurrentSession();
+        ProductEntity productEntity=(ProductEntity)session.get(ProductEntity.class,id);
+        session.close();
+        return productEntity;
     }
 
     public List<ProductEntity> findAll() {
@@ -87,6 +89,7 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
         transaction.commit();
+        session.close();
         return  result;
     }
 

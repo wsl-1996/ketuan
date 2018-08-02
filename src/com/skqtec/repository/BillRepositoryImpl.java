@@ -27,7 +27,10 @@ public class BillRepositoryImpl implements BillRepository {
     }
 
     public BillEntity get(String id) {
-        return (BillEntity)getCurrentSession().get(BillEntity.class,id);
+        Session session=getCurrentSession();
+        BillEntity billEntity=(BillEntity)session.get(BillEntity.class,id);
+        session.close();
+        return billEntity;
     }
 
     public List<BillEntity> findAll() {
@@ -98,6 +101,7 @@ public class BillRepositoryImpl implements BillRepository {
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
         transaction.commit();
+        session.close();
         return  result;
     }
 

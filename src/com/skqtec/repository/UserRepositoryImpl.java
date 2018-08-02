@@ -28,7 +28,10 @@ public class UserRepositoryImpl implements  UserRepository{
     }
 
     public UserEntity get(String id) {
-        return (UserEntity)getCurrentSession().get(UserEntity.class,id);
+        Session session=getCurrentSession();
+        UserEntity userEntity=(UserEntity)session.get(UserEntity.class,id);
+        session.close();
+        return userEntity;
     }
 
     public List<UserEntity> findAll() {
@@ -61,7 +64,7 @@ public class UserRepositoryImpl implements  UserRepository{
         UserEntity user=null;
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.openid="+openid).addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.openid="+"'"+openid+"'").addEntity(UserEntity.class);
             list = q.list();
             if(list.size()!=0)
                 user=list.get(0);
@@ -104,6 +107,7 @@ public class UserRepositoryImpl implements  UserRepository{
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
         transaction.commit();
+        session.close();
         return  result;
     }
 
@@ -112,6 +116,7 @@ public class UserRepositoryImpl implements  UserRepository{
         Transaction transaction = session.beginTransaction();
         session.saveOrUpdate(entity);
         transaction.commit();
+        session.close();
     }
 
     public void delete(String id) {

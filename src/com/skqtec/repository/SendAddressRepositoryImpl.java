@@ -26,7 +26,10 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
     }
 
     public SendaddressEntity get(String id) {
-        return (SendaddressEntity)getCurrentSession().get(SendaddressEntity.class,id);
+        Session session=getCurrentSession();
+        SendaddressEntity sendaddressEntity=(SendaddressEntity)session.get(SendaddressEntity.class,id);
+        session.close();
+        return sendaddressEntity;
     }
 
     public List<SendaddressEntity> findAll() {
@@ -98,6 +101,7 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
         transaction.commit();
+        session.close();
         return  result;
     }
 
@@ -105,7 +109,9 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
         session.saveOrUpdate(entity);
+
         transaction.commit();
+        session.close();
     }
 
     public void delete(String id) {
@@ -114,6 +120,7 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
         SendaddressEntity Sendaddress =get(id);
         session.delete(Sendaddress);
         transaction.commit();
+        session.close();
     }
 
     public void flush() {

@@ -28,7 +28,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     public OrderEntity get(String id) {
-        return (OrderEntity)getCurrentSession().get(OrderEntity.class,id);
+        Session session=getCurrentSession();
+        OrderEntity orderEntity=(OrderEntity)session.get(OrderEntity.class,id);
+        session.close();
+        return orderEntity;
     }
 
     public List<OrderEntity> findAll() {
@@ -129,8 +132,8 @@ public class OrderRepositoryImpl implements OrderRepository {
         session=getCurrentSession();
         Transaction transaction = session.beginTransaction();
         Serializable pKey = session.save(entity);
-
         transaction.commit();
+        session.close();
         return  (String)pKey;
     }
 
@@ -140,6 +143,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         Transaction transaction = session.beginTransaction();
         session.saveOrUpdate(entity);
         transaction.commit();
+        session.close();
     }
 
     public void delete(String id) {
@@ -149,6 +153,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         OrderEntity image = get(id);
         session.delete(image);
         transaction.commit();
+        session.close();
     }
 
     public void flush() {

@@ -4,9 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.OrderEntity;
-import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.OrderRepository;
 import com.skqtec.repository.UserRepository;
+import com.skqtec.tools.SessionTools;
 import com.skqtec.wxtools.WXPay;
 import com.skqtec.wxtools.WXPayConfigImpl;
 import com.skqtec.wxtools.WXPayUtil;
@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Controller
+@RequestMapping("/applet/payments")
 public class payment {
     private WXPay wxpay;
     private WXPayConfigImpl config;
@@ -34,48 +35,51 @@ public class payment {
     private OrderRepository orderRepository;
     @Autowired
     private UserRepository userRepository;
-    //支付请求接口
-    @RequestMapping(value="/payrequest",method=RequestMethod.GET)
-    public @ResponseBody ResponseData payRequest(HttpServletRequest request){
-        ResponseData responseData=new ResponseData();
+    //支付请求
+    public static JSONObject payRequest(String orderId,String productId,String openId,String fee){
+       // ResponseData responseData=new ResponseData();
         //String userId="o5sMv0TY78EzXxCuFQF_nLH8e6YQ";
-        String sessionId=request.getParameter("sessionId");
-        String productId=request.getParameter("productid");
-        String out_trade_no=request.getParameter("orderid");
-        String fee=request.getParameter("fee");
+        //String sessionId=request.getParameter("sessionid");
+        //String productId=request.getParameter("productid");
+        //String orderId=request.getParameter("orderid");
+        //String fee=request.getParameter("fee");
         //判断是否登录
-        String userId="957a2c423b7e43828bbee771fdcbb8ed";//SessionTools.sessionQuery(sessionId);
+        /*String userId=SessionTools.sessionQuery(sessionId);
         if(userId==null){
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
             return responseData;
         }
-        UserEntity user=userRepository.get(userId);
-        String openId=user.getOpenid();
+        */
+       // UserEntity user=userRepository.get(userId);
+        //OrderEntity order=orderRepository.get(orderId);
+        //String fee=String.valueOf(order.getTotalPrice());
+        //String productId=order.getProductId();
+        //String openId=user.getOpenid();
+        JSONObject jsonobject=new JSONObject();
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("body", "克团-XXX");
-        data.put("out_trade_no", out_trade_no);
+        data.put("out_trade_no", orderId);
         data.put("device_info", "APP");
         data.put("fee_type", "CNY");
         data.put("total_fee", fee);
         data.put("spbill_create_ip", "114.212.81.63");
-        data.put("notify_url", "a73f284b.ngrok.io/ketuan/paycallback");
+        data.put("notify_url", "f6677120.ngrok.io/ketuan/paycallback");
         data.put("trade_type", "JSAPI");
         data.put("product_id", productId);
         data.put("openid",openId);
         Map<String, String> r=new HashMap<String, String>();
         try {
-            this.config=WXPayConfigImpl.getInstance();
-            this.wxpay=new WXPay(config);
+            WXPayConfigImpl config=WXPayConfigImpl.getInstance();
+            WXPay wxpay=new WXPay(config);
             r = wxpay.unifiedOrder(data);
             System.out.println(r);
-            JSONObject jsonobject=new JSONObject();
             jsonobject.put("data",r);
-            responseData.setData(jsonobject);
+            //responseData.setData(jsonobject);
         } catch (Exception e) {
             e.printStackTrace();
         }finally{
-            return responseData;
+            return jsonobject;
         }
     }
 
@@ -112,6 +116,46 @@ public class payment {
                     "</xml>";
         }finally{
             return returns;
+        }
+    }
+    //申请退款接口
+    @RequestMapping(value="/refund",method=RequestMethod.GET)
+    public @ResponseBody ResponseData refund(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String sessionId = request.getParameter("sessionid");
+        String orderId = request.getParameter("orderid");
+        try {
+            //判断是否登录
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
+            String outRefundNo=WXPayUtil.getOrderNo();
+            OrderEntity order=orderRepository.get(orderId);
+            String totalFee=String.valueOf(order.getTotalPrice());
+            order.setOutRefundNo(outRefundNo);
+            HashMap<String, String> data = new HashMap<String, String>();
+            data.put("out_trade_no",orderId);
+            data.put("out_refund_no",outRefundNo);
+            data.put("total_fee",totalFee);
+            data.put("refund_fee",totalFee);
+            Map<String, String> r=new HashMap<String, String>();
+            //data.put("",);
+            this.config=WXPayConfigImpl.getInstance();
+            this.wxpay=new WXPay(config);
+            r=wxpay.refund(data);
+            if(!r.get("return_code").equals("SUCCESS"));{
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.REFUND_FAILED);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.REFUND_FAILED);
+        } finally {
+            return responseData;
         }
     }
 }

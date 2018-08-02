@@ -5,6 +5,7 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.*;
 import com.skqtec.repository.*;
+import com.skqtec.tools.SessionTools;
 import com.skqtec.wxtools.WXPayUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,13 +54,14 @@ public class orders {
         int sums=Integer.parseInt(request.getParameter("sums"));
         int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
         //判断是否登录
-        String userId="957a2c423b7e43828bbee771fdcbb8ed";//SessionTools.sessionQuery(sessionId);
+        String userId=SessionTools.sessionQuery(sessionId);
         if(userId==null){
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
             return responseData;
         }
         UserEntity user=userRepository.get(userId);
+        String openId=user.getOpenid();
         String fdAddress=user.getFirstDeliverAddress();
         if(fdAddress==null){
             JSONObject jsonObject=new JSONObject();
@@ -79,6 +81,7 @@ public class orders {
         orderEntity.setProductPrice(Integer.parseInt(productPrice));
         ProductEntity product=productRepository.get(productId);
         SendaddressEntity sendaddress=sendAddressRepository.get(fdAddress);
+        orderEntity.setSendAddress(sendaddress.getId());
         orderEntity.setSendName(sendaddress.getSendName());
         orderEntity.setSendTel(sendaddress.getSendPhone());
         orderEntity.setSendZip(sendaddress.getZip());
@@ -87,11 +90,12 @@ public class orders {
         orderEntity.setUserId(userId);
         orderEntity.setPaymethod("微信支付");
         orderEntity.setTypeSpecification(productStyle);
+        orderEntity.setSums(sums);
         orderEntity.setDescript(product.getProductName()+product.getEvaluateLabel()+product.getProductInfo()+product.getProductLabel());
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
-            JSONObject data = new JSONObject();
-            data.put("orderid",out_trade_no);
+            JSONObject data=null;
+            data=payment.payRequest(out_trade_no,productId,openId,totalPrice);
             responseData.setData(data);
         }
         catch (Exception e){
