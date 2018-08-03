@@ -29,7 +29,10 @@ public class ImageRepositoryImpl implements  ImageRepository{
     }
 
     public ImageEntity get(String id) {
-        return (ImageEntity)getCurrentSession().get(ImageEntity.class,id);
+        Session session=getCurrentSession();
+        ImageEntity imageEntity=(ImageEntity)session.get(ImageEntity.class,id);
+        session.close();
+        return imageEntity;
     }
 
     public List<ImageEntity> findAll() {

@@ -1,8 +1,8 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
+import com.skqtec.entity.BillEntity;
 import com.skqtec.entity.GroupEntity;
-import com.skqtec.entity.UserEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
 import org.hibernate.criterion.Restrictions;
@@ -12,10 +12,9 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 @Repository
-public class UserRepositoryImpl implements  UserRepository{
-    static Logger logger = Logger.getLogger(UserRepositoryImpl.class.getName());
+public class BillRepositoryImpl implements BillRepository {
+    static Logger logger = Logger.getLogger(BillRepositoryImpl.class.getName());
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -23,27 +22,27 @@ public class UserRepositoryImpl implements  UserRepository{
         return this.sessionFactory.openSession();
     }
 
-    public UserEntity load(String id) {
-        return (UserEntity)getCurrentSession().load(UserEntity.class,id);
+    public BillEntity load(String id) {
+        return (BillEntity)getCurrentSession().load(BillEntity.class,id);
     }
 
-    public UserEntity get(String id) {
+    public BillEntity get(String id) {
         Session session=getCurrentSession();
-        UserEntity userEntity=(UserEntity)session.get(UserEntity.class,id);
+        BillEntity billEntity=(BillEntity)session.get(BillEntity.class,id);
         session.close();
-        return userEntity;
+        return billEntity;
     }
 
-    public List<UserEntity> findAll() {
-        return getCurrentSession().createQuery("from "+UserEntity.class.getSimpleName()).list();
+    public List<BillEntity> findAll() {
+        return getCurrentSession().createQuery("from "+BillEntity.class.getSimpleName()).list();
     }
 
-    public List<UserEntity> query(JSONObject jsonObject) {
+    public List<BillEntity> query(JSONObject jsonObject) {
         Session s = null;
-        List<UserEntity> list = new ArrayList<UserEntity>();
+        List<BillEntity> list = new ArrayList<BillEntity>();
         try {
             s = getCurrentSession();
-            Criteria c = s.createCriteria(UserEntity.class);
+            Criteria c = s.createCriteria(BillEntity.class);
             Iterator it = jsonObject.keySet().iterator();
             while (it.hasNext()){
                 String key = (String)it.next();
@@ -57,17 +56,13 @@ public class UserRepositoryImpl implements  UserRepository{
             return list;
         }
     }
-
-    public UserEntity query(String openid){
+    public List<BillEntity> query(String userId,int type){
         Session s = null;
-        List<UserEntity> list = new ArrayList<UserEntity>();
-        UserEntity user=null;
+        List<BillEntity> list = new ArrayList<BillEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.openid="+"'"+openid+"'").addEntity(UserEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `BILL` as a where a.user_id="+userId+" and a.type="+type).addEntity(BillEntity.class);
             list = q.list();
-            if(list.size()!=0)
-                user=list.get(0);
         }
         catch(Exception e){
             logger.error(e.getMessage(),e);
@@ -75,16 +70,15 @@ public class UserRepositoryImpl implements  UserRepository{
         finally {
             if (s != null)
                 s.close();
-            return user;
+            return list;
         }
     }
-
-    public List<UserEntity> search(String key) {
+    public List<BillEntity> search(String key) {
         Session s = null;
-        List<UserEntity> list = new ArrayList<UserEntity>();
+        List<BillEntity> list = new ArrayList<BillEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.nickname like '%"+key+"%' and a.email like '%"+key+"%' and a.phone like '%"+key+"%'").addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`BILL` as a where a.Bill_name like '%"+key+"%' and a.Bill_produce_address like '%"+key+"%' and a.Bill_info like '%"+key+"%' and a.Bill_label like '%"+key+"%'").addEntity(GroupEntity.class);
             list = q.list();
         }
         catch(Exception e){
@@ -97,12 +91,12 @@ public class UserRepositoryImpl implements  UserRepository{
         }
     }
 
-    public void persist(UserEntity entity) {
+    public void persist(BillEntity entity) {
         Session session = getCurrentSession();
         session.persist(entity);
     }
 
-    public String save(UserEntity entity) {
+    public String save(BillEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
@@ -111,17 +105,13 @@ public class UserRepositoryImpl implements  UserRepository{
         return  result;
     }
 
-    public void saveOrUpdate(UserEntity entity) {
-        Session session = getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        session.saveOrUpdate(entity);
-        transaction.commit();
-        session.close();
+    public void saveOrUpdate(BillEntity entity) {
+        getCurrentSession().saveOrUpdate(entity);
     }
 
     public void delete(String id) {
-        UserEntity user = load(id);
-        getCurrentSession().delete(user);
+        BillEntity Bill = load(id);
+        getCurrentSession().delete(Bill);
     }
 
     public void flush() {

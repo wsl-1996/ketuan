@@ -16,6 +16,7 @@ public class SendaddressEntity {
     private String sendPhone;
     private String userId;
     private String zip;
+    private int defaultAddress;
 
     @Id
     @Column(name = "id")
@@ -164,5 +165,15 @@ public class SendaddressEntity {
         result = 31 * result + (userId != null ? userId.hashCode() : 0);
         result = 31 * result + (zip != null ? zip.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "default_address")
+    public int getDefaultAddress() {
+        return defaultAddress;
+    }
+
+    public void setDefaultAddress(int defaultAddress) {
+        this.defaultAddress = defaultAddress;
     }
 }

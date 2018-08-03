@@ -28,7 +28,10 @@ import java.util.List;
         }
 
         public CommentEntity get(String id) {
-            return (CommentEntity)getCurrentSession().get(CommentEntity.class,id);
+            Session session=getCurrentSession();
+            CommentEntity commentEntity=(CommentEntity)session.get(CommentEntity.class,id);
+            session.close();
+            return commentEntity;
         }
 
         public List<CommentEntity> findAll() {
@@ -111,6 +114,7 @@ import java.util.List;
             Transaction transaction = session.beginTransaction();
             Serializable pKey = session.save(entity);
             transaction.commit();
+            session.close();
             return  (String)pKey;
         }
         public List<CommentEntity>query(String page,String productId){
@@ -124,9 +128,11 @@ import java.util.List;
                 for (CommentEntity comment : list) {
                     System.out.println(comment.getId());
                 }
+                s.close();
             }catch(Exception e){
                 logger.error(e.getMessage(),e);
             }finally{
+
                 return list;
             }
         }

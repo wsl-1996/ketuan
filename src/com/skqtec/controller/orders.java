@@ -5,6 +5,8 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.*;
 import com.skqtec.repository.*;
+import com.skqtec.tools.SessionTools;
+import com.skqtec.wxtools.WXPayUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,7 +23,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Controller
 @RequestMapping("/applet/orders")
@@ -39,14 +40,28 @@ public class orders {
     @Autowired
     private SendAddressRepository sendAddressRepository;
     //生成订单
-    @RequestMapping(value="/creatorder",method = RequestMethod.GET)
+    @RequestMapping(value="/createorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData createProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ResponseData responseData=new ResponseData();
         String productId=request.getParameter("productid");
         String groupId=request.getParameter("groupid");
-        String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
+        String totalPrice=request.getParameter("totalprice");
+        String productStyle=request.getParameter("style");
+        String meno=request.getParameter("meno");
+        String productPrice=request.getParameter("productprice");
+        int sums=Integer.parseInt(request.getParameter("sums"));
+        int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
+        //判断是否登录
+        String userId=SessionTools.sessionQuery(sessionId);
+        if(userId==null){
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+            return responseData;
+        }
         UserEntity user=userRepository.get(userId);
+        String openId=user.getOpenid();
         String fdAddress=user.getFirstDeliverAddress();
         if(fdAddress==null){
             JSONObject jsonObject=new JSONObject();
@@ -54,36 +69,33 @@ public class orders {
             responseData.setData(jsonObject);
         }
         //String paymethod=request.getParameter("");
-        String meno=request.getParameter("meno");
-        int productPrice=Integer.parseInt(request.getParameter("productprice"));
-        int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
-        String typeSpecification=request.getParameter("typespecification");
-        int sums=Integer.parseInt(request.getParameter("sums"));
-        String uuid = UUID.randomUUID().toString().replace("-", "");
+       // String uuid = UUID.randomUUID().toString().replace("-", "");
+        String out_trade_no=WXPayUtil.getOrderNo();
         OrderEntity orderEntity=new OrderEntity();
         orderEntity.setCarriagePrice(carriagePrice);
         orderEntity.setGroupId(groupId);
-        orderEntity.setId(uuid);
+        orderEntity.setId(out_trade_no);
         orderEntity.setMeno(meno);
         orderEntity.setOrderTime( new Timestamp(System.currentTimeMillis()));
         orderEntity.setProductId(productId);
-        orderEntity.setProductPrice(productPrice);
-
+        orderEntity.setProductPrice(Integer.parseInt(productPrice));
         ProductEntity product=productRepository.get(productId);
         SendaddressEntity sendaddress=sendAddressRepository.get(fdAddress);
+        orderEntity.setSendAddress(sendaddress.getId());
         orderEntity.setSendName(sendaddress.getSendName());
         orderEntity.setSendTel(sendaddress.getSendPhone());
         orderEntity.setSendZip(sendaddress.getZip());
         orderEntity.setState(1);
-        orderEntity.setTotalPrice(productPrice*sums+carriagePrice);
+        orderEntity.setTotalPrice(Integer.parseInt(totalPrice));
         orderEntity.setUserId(userId);
         orderEntity.setPaymethod("微信支付");
-        orderEntity.setTypeSpecification(typeSpecification);
+        orderEntity.setTypeSpecification(productStyle);
+        orderEntity.setSums(sums);
         orderEntity.setDescript(product.getProductName()+product.getEvaluateLabel()+product.getProductInfo()+product.getProductLabel());
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
-            JSONObject data = new JSONObject();
-            data.put("orderid",uuid);
+            JSONObject data=null;
+            data=payment.payRequest(out_trade_no,productId,openId,totalPrice);
             responseData.setData(data);
         }
         catch (Exception e){
@@ -95,7 +107,7 @@ public class orders {
             return responseData;
         }
     }
-   /* //获取所有订单
+    //获取订单
     @RequestMapping(value="/getorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData getOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
@@ -145,38 +157,7 @@ public class orders {
         }finally{
             return responseData;
         }
-    }*/
-
-
-    /**
-     * 获取所有订单
-     * @param request
-     * @param response
-     * @return
-     */
-    @RequestMapping(value="/listall",method=RequestMethod.GET)
-    public @ResponseBody ResponseData getAllOrders(HttpServletRequest request, HttpServletResponse response){
-        ResponseData responseData = new ResponseData();
-        try {
-            List<OrderEntity> orders = orderRepository.findAll();
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("orders",orders);
-            responseData.setData(jsonObject);
-        }
-        catch (Exception e){
-            logger.error(e.getMessage(),e);
-            responseData.setFailed(true);
-            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
-        }
-        finally {
-            return responseData;
-        }
     }
-
-
-
-
-
     //删除订单
     @RequestMapping(value="/removeorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData removeOrder(HttpServletRequest request){

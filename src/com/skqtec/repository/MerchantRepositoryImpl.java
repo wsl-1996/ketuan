@@ -28,7 +28,10 @@ public class MerchantRepositoryImpl implements  MerchantRepository{
     }
 
     public MerchantEntity get(String id) {
-        return (MerchantEntity)getCurrentSession().get(MerchantEntity.class,id);
+        Session session=getCurrentSession();
+        MerchantEntity merchantEntity=(MerchantEntity)session.get(MerchantEntity.class,id);
+        session.close();
+        return merchantEntity;
     }
 
     public List<MerchantEntity> findAll() {
@@ -90,6 +93,7 @@ public class MerchantRepositoryImpl implements  MerchantRepository{
         Serializable pKey = session.save(entity);
 
         transaction.commit();
+        session.close();
         return  (String)pKey;
     }
 
