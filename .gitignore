@@ -28,3 +28,6 @@ hs_err_pid*
 /.idea/
 src/com/skqtec/service/
 target/generated-sources/
+/ketuan/
+web/backmanagedir/css/
+web/hout/

@@ -30,11 +30,11 @@
                         <div class="col-sm-12">
                             <div class="m-b-md">
                                 <a href="project_detail.html#" class="btn btn-white btn-xs pull-right">评价订单</a>
-                                <h2 id="order_name"></h2>
+                                <h2 id="order_sendName">订单的发送者</h2>
                             </div>
                             <dl class="dl-horizontal">
                                 <dt>状态：</dt>
-                                <dd id="order-status"><span class="label label-primary">下单成功</span>
+                                <dd id="order_state" class="label label-primary">待付款<!--<span class="label label-primary">下单成功</span>-->
                                 </dd>
                             </dl>
                         </div>
@@ -43,17 +43,17 @@
                         <div class="col-sm-5">
                             <dl class="dl-horizontal">
 
-                                <dt>Accountname：</dt>
-                                <dd id="order_accountname">@ViewData["accountname"]</dd>
+                                <dt>订单产品：</dt>
+                                <dd id="order_productTitle">微信支付or支付宝支付</dd>
                                 <dt>消息：</dt>
                                 <dd>162</dd>
-                                <dt>公司描述：</dt>
-                                <dd id="order_discription">@ViewData["discription"]
+                                <dt>订单描述：</dt>
+                                <dd id="order_discription">该订单由小米科技公司发货
                                 </dd>
-                                <dt>公司地址：</dt>
-                                <dd id="order_address">南京玄武区</dd>
-                                <dt>公司电话：</dt>
-                                <dd id="order_iphone">52131</dd>
+                                <dt>订单签收电话：</dt>
+                                <dd id="order_sendTel">南京市玄武区南京农业大学一号</dd>
+                                <dt>产品价格：</dt>
+                                <dd id="order_productPrice">52131</dd>
                                 <dt>版本：</dt>
                                 <dd>v1.4.2</dd>
                             </dl>
@@ -61,11 +61,11 @@
                         <div class="col-sm-7" id="cluster_info">
                             <dl class="dl-horizontal">
 
-                                <dt>最后更新：</dt>
+                                <dt>订单下单时间：</dt>
                                 <dd>2014年 11月7日 22:03</dd>
                                 <dt>创建于：</dt>
                                 <dd>2014年 2月16日 03:01</dd>
-                                <dt>团队成员：</dt>
+                                <dt>团购成员：</dt>
                                 <dd class="project-people">
                                     <a href="project_detail.html">
                                         <img alt="image" class="img-circle" src="img/a3.jpg">

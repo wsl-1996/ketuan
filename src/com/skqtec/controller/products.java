@@ -108,7 +108,7 @@ public class products {
     }
 
     /**
-     * 获取所有团购
+     * 获取所有商品
      * @return
      */
     @RequestMapping(value="/listall",method=RequestMethod.GET)
@@ -131,7 +131,7 @@ public class products {
     }
 
     /**
-     * 关键词查询团购
+     * 关键词查询商品
      * @param request
      * @return
      */

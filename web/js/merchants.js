@@ -11,7 +11,7 @@ $(function(){
             return
         }
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/merchants/search?key="+key,
+            url:"http://localhost:8080/ketuan/backmanage/merchantsearch?key="+key,
             type:"GET",
             dataType: "json",
             success:function (data) {
@@ -38,7 +38,7 @@ $(function(){
 
     function getAllMerchants() {
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/merchants/listall",
+            url:"http://localhost:8080/ketuan/backmanage/merchantlistall",
             type:"GET",
             dataType: "json",
             success:function (data) {

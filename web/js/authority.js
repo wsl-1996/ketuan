@@ -100,8 +100,8 @@ $(function(){
             +'              <span class="label label-primary">'+type+'</span>'
             +'          </td>'
             +'          <td class="project-actions">'
-            +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-folder"></i> 查看 </a>'
-            +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 下线 </a>'
+            +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-folder"></i> 查看权限</a>'
+            +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 解除权限</a>'
             +'          </td>'
             +'      </tr>'
         /*$("#groupList tbody").html("");*/
