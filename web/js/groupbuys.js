@@ -11,7 +11,7 @@ $(function(){
             return
         }
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/groups/search?key="+key,
+            url:"http://localhost:8080/ketuan/backmanage/groupsearch?key="+key,
             type:"GET",
             dataType: "json",
             success:function (data) {
@@ -38,7 +38,7 @@ $(function(){
 
     function getAllGroups() {
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/groups/listall",
+            url:"http://localhost:8080/ketuan/backmanage/grouplistall",
             type:"GET",
             dataType: "json",
             success:function (data) {

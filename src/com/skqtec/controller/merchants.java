@@ -79,7 +79,7 @@ public class merchants {
     }
 
     /**
-     * 获取所有团购
+     * 获取所有商家
      * @param request
      * @param response
      * @return
@@ -104,7 +104,7 @@ public class merchants {
     }
 
     /**
-     * 关键词查询团购
+     * 关键词查询商家
      * @param request
      * @param response
      * @return

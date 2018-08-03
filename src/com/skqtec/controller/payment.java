@@ -29,6 +29,9 @@ public class payment {
 //    private JdbcTemplate jdbcTemplate;
     @Autowired
     private OrderRepository orderRepository;
+
+
+
     //支付请求接口
     @RequestMapping(value="/payrequest",method=RequestMethod.GET)
     public @ResponseBody ResponseData payRequest(HttpServletRequest request){

@@ -25,7 +25,7 @@
         }
         var merchantid = getQueryString("merchantid");
         $.ajax({
-            url : "http://localhost:8080/ketuan/applet/merchants/getdetail?merchantid="+merchantid,//请求地址
+            url : "http://localhost:8080/ketuan/backmanage/merchantgetdetail?merchantid="+merchantid,//请求地址
             dataType : "json",//数据格式
             type : "get",//请求方式
             async : false,//是否异步请求

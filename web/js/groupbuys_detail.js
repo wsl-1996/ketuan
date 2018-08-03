@@ -6,7 +6,7 @@ $(document).ready(function() {
     }
     var groupid = getQueryString("groupid");
     $.ajax({
-        url : "http://localhost:8080/ketuan/applet/groups/getgroupinfo?groupid="+groupid,//请求地址
+        url : "http://localhost:8080/ketuan/backmanage/getgroupinfo?groupid="+groupid,//请求地址
         dataType : "json",//数据格式
         type : "get",//请求方式
         async : false,//是否异步请求

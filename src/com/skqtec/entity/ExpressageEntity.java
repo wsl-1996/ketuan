@@ -3,7 +3,7 @@ package com.skqtec.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "EXPRESSAGE", schema = "ketuanDB_test", catalog = "")
+@Table(name = "EXPRESSAGE", schema = "ketuanDB_test", catalog ="")
 public class ExpressageEntity {
     private String id;
     private String expressageName;

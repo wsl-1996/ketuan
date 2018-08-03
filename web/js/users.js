@@ -11,7 +11,7 @@ $(function(){
             return
         }
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/users/search?key="+key,
+            url:"http://localhost:8080/ketuan/backmanage/usersearch?key="+key,
             type:"GET",
             dataType: "json",
             success:function (data) {
@@ -38,7 +38,7 @@ $(function(){
 
     function getAllUsers() {
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/users/listall",
+            url:"http://localhost:8080/ketuan/backmanage/userlistall",
             type:"GET",
             dataType: "json",
             success:function (data) {

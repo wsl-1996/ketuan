@@ -11,7 +11,7 @@ $(function(){
             return
         }
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/products/search?key="+key,
+            url:"http://localhost:8080/ketuan/backmanage/productsearch?key="+key,
             type:"GET",
             dataType: "json",
             success:function (data) {
@@ -38,7 +38,7 @@ $(function(){
 
     function getAllProducts() {
         $.ajax({
-            url:"http://localhost:8080/ketuan/applet/products/listall",
+            url:"http://localhost:8080/ketuan/backmanage/productlistall",
             type:"GET",
             dataType: "json",
             success:function (data) {

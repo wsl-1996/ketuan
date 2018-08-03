@@ -145,6 +145,9 @@ public class groups {
             return responseData;
         }
     }
+
+
+
     //获取当前团购
     @RequestMapping(value="/getgroup",method=RequestMethod.GET)
     public @ResponseBody ResponseData getCurrentGroup(HttpServletRequest request,HttpServletResponse response){
