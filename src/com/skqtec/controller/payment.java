@@ -64,7 +64,7 @@ public class payment {
         data.put("fee_type", "CNY");
         data.put("total_fee", fee);
         data.put("spbill_create_ip", "114.212.81.63");
-        data.put("notify_url", "f6677120.ngrok.io/ketuan/paycallback");
+        data.put("notify_url", "b8a8dc03.ngrok.io/ketuan/paycallback");
         data.put("trade_type", "JSAPI");
         data.put("product_id", productId);
         data.put("openid",openId);

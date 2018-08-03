@@ -127,14 +127,52 @@ public class groups {
     @RequestMapping(value="/search",method=RequestMethod.GET)
     public @ResponseBody ResponseData queryGroups(HttpServletRequest request, HttpServletResponse response){
         ResponseData responseData = new ResponseData();
-        String key = request.getParameter("key");
+        //String sessionId=request.getParameter("sessionid");
+        String key = request.getParameter("keyword");
         try {
 //            JSONObject queryObject = new JSONObject();
 //            queryObject.put("key",key);
             List<GroupEntity> groups = groupRepository.search(key);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("groups",groups);
-            responseData.setData(jsonObject);
+            List<JSONObject>jsonobject=new ArrayList<JSONObject>();
+            int i=0;
+            for(GroupEntity group:groups){
+                JSONObject jsonObject=new JSONObject();
+                ProductEntity product=productRepository.get(group.getProductId());
+                String product_name=product.getProductName();
+                String product_first_image=CommonMessage.IMG_URL+product.getProductFistImg();
+                String degree_of_praise=commentRepository.getDegereeOfPraise(group.getId());
+                Date date2=datetools.timeStampToDate(group.getEndTime());
+                String last_time[]=datetools.time_diff(new Date(),date2);
+                //String last_time_info=last_time[0]+"天"+last_time[1]+"小时"+last_time[2]+"分钟";
+                String product_id=group.getProductId();
+                String group_id=group.getId();
+                String product_state_info=null;
+                if(product.getProductState()==0){
+                    product_state_info="自营";
+                }
+                else
+                    product_state_info="";
+                String group_type_info=null;
+                if(group.getGroupType()==0){
+                    group_type_info="动态团";
+                }
+                else
+                    group_type_info="固定团";
+                jsonObject.put("product_id",product_id);
+                jsonObject.put("group_id",group_id);
+                jsonObject.put("product_first_image",product_first_image);
+                jsonObject.put("product_name",product_name);
+                jsonObject.put("product_price",group.getGroupPrice());
+                jsonObject.put("degree_of_praise",degree_of_praise);
+                jsonObject.put("last_time",last_time);
+                jsonObject.put("product_state",product_state_info);
+                jsonObject.put("group_type",group_type_info);
+                i++;
+                jsonobject.add(jsonObject);
+            }
+            JSONObject j=new JSONObject();
+            j.put("groups",jsonobject);
+            responseData.setData(j);
         }
         catch (Exception e){
             logger.error(e.getMessage(),e);
@@ -163,7 +201,7 @@ public class groups {
                 String degree_of_praise=commentRepository.getDegereeOfPraise(group.getId());
                 Date date2=datetools.timeStampToDate(group.getEndTime());
                 String last_time[]=datetools.time_diff(new Date(),date2);
-                String last_time_info=last_time[0]+"天"+last_time[1]+"小时"+last_time[2]+"分钟";
+                //String last_time_info=last_time[0]+"天"+last_time[1]+"小时"+last_time[2]+"分钟";
                 String product_id=group.getProductId();
                 String group_id=group.getId();
                 String product_state_info=null;
@@ -184,7 +222,7 @@ public class groups {
                 jsonObject.put("product_name",product_name);
                 jsonObject.put("product_price",group.getGroupPrice());
                 jsonObject.put("degree_of_praise",degree_of_praise);
-                jsonObject.put("last_time",last_time_info);
+                jsonObject.put("last_time",last_time);
                 jsonObject.put("product_state",product_state_info);
                 jsonObject.put("group_type",group_type_info);
                 i++;

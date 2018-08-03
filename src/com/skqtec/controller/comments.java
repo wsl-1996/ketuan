@@ -1,5 +1,6 @@
 package com.skqtec.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
@@ -49,15 +50,17 @@ public class comments {
                 String starLevel=String.valueOf(comment.getStarLevel());
                 String commentTime=String.valueOf(comment.getCommentTime());
                 String commentContent=comment.getCommentContent();
-                String commentImg=CommonMessage.IMG_URL+comment.getAttachImgs();
+                JSONArray commentImg=JSONArray.parseArray(comment.getAttachImgs());
                 //String
                 String payTime=String.valueOf(order.getPayTime());
+                String productStyle=comment.getProductStyle();
                 j.put("headImg",userImg);
                 j.put("userName",userName);
                 j.put("starLevel",starLevel);
                 j.put("commentTime",commentTime);
                 j.put("commentContent",commentContent);
                 j.put("commentImg",commentImg);
+                j.put("productStyle",productStyle);
                // j.put("",);
                 j.put("payTime",payTime);
                 jsonObject.add(j);
