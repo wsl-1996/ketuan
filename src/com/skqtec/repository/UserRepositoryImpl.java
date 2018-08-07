@@ -35,7 +35,10 @@ public class UserRepositoryImpl implements  UserRepository{
     }
 
     public List<UserEntity> findAll() {
-        return getCurrentSession().createQuery("from "+UserEntity.class.getSimpleName()).list();
+        Session session=getCurrentSession();
+        List<UserEntity>list=session.createQuery("from "+UserEntity.class.getSimpleName()).list();
+        session.close();
+        return  list;
     }
 
     public List<UserEntity> query(JSONObject jsonObject) {

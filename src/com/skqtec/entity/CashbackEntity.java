@@ -7,13 +7,9 @@ import java.sql.Timestamp;
 @Table(name = "CASHBACK", schema = "ketuanDB_test", catalog = "")
 public class CashbackEntity {
     private String id;
-    private double sum;
-    private String orderId;
-    private String cashbackUserId;
-    private String consumeUserId;
-    private Timestamp date;
+    private double sumMoney;
+    private Timestamp cashbackDate;
     private int paybacked;
-    private String cashbackCalculateStandId;
 
     @Id
     @Column(name = "id")
@@ -26,53 +22,23 @@ public class CashbackEntity {
     }
 
     @Basic
-    @Column(name = "sum")
-    public double getSum() {
-        return sum;
+    @Column(name = "sum_money")
+    public double getSumMoney() {
+        return sumMoney;
     }
 
-    public void setSum(double sum) {
-        this.sum = sum;
-    }
-
-    @Basic
-    @Column(name = "ORDER_id")
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
+    public void setSumMoney(double sumMoney) {
+        this.sumMoney = sumMoney;
     }
 
     @Basic
-    @Column(name = "cashback_USER_id")
-    public String getCashbackUserId() {
-        return cashbackUserId;
+    @Column(name = "cashback_date")
+    public Timestamp getCashbackDate() {
+        return cashbackDate;
     }
 
-    public void setCashbackUserId(String cashbackUserId) {
-        this.cashbackUserId = cashbackUserId;
-    }
-
-    @Basic
-    @Column(name = "consume_USER_id")
-    public String getConsumeUserId() {
-        return consumeUserId;
-    }
-
-    public void setConsumeUserId(String consumeUserId) {
-        this.consumeUserId = consumeUserId;
-    }
-
-    @Basic
-    @Column(name = "date")
-    public Timestamp getDate() {
-        return date;
-    }
-
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setCashbackDate(Timestamp cashbackDate) {
+        this.cashbackDate = cashbackDate;
     }
 
     @Basic
@@ -85,16 +51,6 @@ public class CashbackEntity {
         this.paybacked = paybacked;
     }
 
-    @Basic
-    @Column(name = "CASHBACK_CALCULATE_STAND_id")
-    public String getCashbackCalculateStandId() {
-        return cashbackCalculateStandId;
-    }
-
-    public void setCashbackCalculateStandId(String cashbackCalculateStandId) {
-        this.cashbackCalculateStandId = cashbackCalculateStandId;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -102,17 +58,10 @@ public class CashbackEntity {
 
         CashbackEntity that = (CashbackEntity) o;
 
-        if (Double.compare(that.sum, sum) != 0) return false;
+        if (Double.compare(that.sumMoney, sumMoney) != 0) return false;
         if (paybacked != that.paybacked) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
-        if (orderId != null ? !orderId.equals(that.orderId) : that.orderId != null) return false;
-        if (cashbackUserId != null ? !cashbackUserId.equals(that.cashbackUserId) : that.cashbackUserId != null)
-            return false;
-        if (consumeUserId != null ? !consumeUserId.equals(that.consumeUserId) : that.consumeUserId != null)
-            return false;
-        if (date != null ? !date.equals(that.date) : that.date != null) return false;
-        if (cashbackCalculateStandId != null ? !cashbackCalculateStandId.equals(that.cashbackCalculateStandId) : that.cashbackCalculateStandId != null)
-            return false;
+        if (cashbackDate != null ? !cashbackDate.equals(that.cashbackDate) : that.cashbackDate != null) return false;
 
         return true;
     }
@@ -122,14 +71,10 @@ public class CashbackEntity {
         int result;
         long temp;
         result = id != null ? id.hashCode() : 0;
-        temp = Double.doubleToLongBits(sum);
+        temp = Double.doubleToLongBits(sumMoney);
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        result = 31 * result + (orderId != null ? orderId.hashCode() : 0);
-        result = 31 * result + (cashbackUserId != null ? cashbackUserId.hashCode() : 0);
-        result = 31 * result + (consumeUserId != null ? consumeUserId.hashCode() : 0);
-        result = 31 * result + (date != null ? date.hashCode() : 0);
+        result = 31 * result + (cashbackDate != null ? cashbackDate.hashCode() : 0);
         result = 31 * result + paybacked;
-        result = 31 * result + (cashbackCalculateStandId != null ? cashbackCalculateStandId.hashCode() : 0);
         return result;
     }
 }

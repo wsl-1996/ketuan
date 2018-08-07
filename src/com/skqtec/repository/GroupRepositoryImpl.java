@@ -124,7 +124,11 @@ public class GroupRepositoryImpl implements  GroupRepository{
     }
 
     public void saveOrUpdate(GroupEntity entity) {
-        getCurrentSession().saveOrUpdate(entity);
+        Session session = getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(entity);
+        transaction.commit();
+        session.close();
     }
 
     public void delete(String id) {

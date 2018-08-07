@@ -1,7 +1,7 @@
 package com.skqtec.common;
 
 public class CommonMessage {
-    public static String IMG_URL = "http://172.16.2.67:8080/ketuan/img/";
+    public static String IMG_URL = "http://172.16.2.87:8080/ketuan/img/";
     public static String MERCHANT_ACOUNT_EXISTS = "商家账户已存在！";
     public static String SAVE_MERCHANT_INFO_FAILED = "商家账户已存在！";
     public static String CREATE_GROUP_FAILED = "创建团购失败！";

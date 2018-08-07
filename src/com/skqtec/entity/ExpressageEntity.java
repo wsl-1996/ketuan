@@ -3,7 +3,7 @@ package com.skqtec.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "EXPRESSAGE", schema = "ketuanDB_test", catalog ="")
+@Table(name = "EXPRESSAGE", schema = "ketuanDB_test", catalog = "")
 public class ExpressageEntity {
     private String id;
     private String expressageName;
@@ -12,6 +12,8 @@ public class ExpressageEntity {
     private String productId;
     private Integer isNew;
     private String shipAddress;
+    private Integer isAccomplish;
+    private String expressageDetails;
 
     @Id
     @Column(name = "id")
@@ -114,5 +116,25 @@ public class ExpressageEntity {
         result = 31 * result + (isNew != null ? isNew.hashCode() : 0);
         result = 31 * result + (shipAddress != null ? shipAddress.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "is_accomplish")
+    public Integer getIsAccomplish() {
+        return isAccomplish;
+    }
+
+    public void setIsAccomplish(Integer isAccomplish) {
+        this.isAccomplish = isAccomplish;
+    }
+
+    @Basic
+    @Column(name = "expressage_details")
+    public String getExpressageDetails() {
+        return expressageDetails;
+    }
+
+    public void setExpressageDetails(String expressageDetails) {
+        this.expressageDetails = expressageDetails;
     }
 }
