@@ -141,8 +141,16 @@ public class users {
     @RequestMapping(value="/getchildren",method=RequestMethod.GET)
     public @ResponseBody ResponseData getChildren(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         try {
+            //判断是否登录
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             UserEntity user=userRepository.get(userId);
             String childrens=user.getChildren();
             JSONArray jChildrens = JSONArray.parseArray(childrens);
@@ -177,12 +185,12 @@ public class users {
         String sessionId=request.getParameter("sessionid");
         try {
             //判断是否登录
-           /* String userId=SessionTools.sessionQuery(sessionId);
+           String userId=SessionTools.sessionQuery(sessionId);
             if(userId==null){
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
-            }*/
+            }
             //生成六位随机数
             String base = "0123456789";
             Random random = new Random();
@@ -193,6 +201,7 @@ public class users {
             }
             String verficationCode=sb.toString();
             StoreTools.storeInfo(sessionId+"0",verficationCode,900);
+            StoreTools.storeInfo(sessionId+"1",phone,900);
             HttpClient client = new HttpClient();
             PostMethod post = new PostMethod("http://sms.webchinese.cn/web_api/");
             post.addRequestHeader("Content-Type",
@@ -231,16 +240,20 @@ public class users {
         String sessionId=request.getParameter("sessionid");
         try{
             //判断是否登录
-           /* String userId=SessionTools.sessionQuery(sessionId);
+           String userId=SessionTools.sessionQuery(sessionId);
             if(userId==null){
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
-            }*/
+            }
             if(!verficationCode.equals(StoreTools.getInfo(sessionId+"0"))) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.CHECK_VERFICATION_CODE_FAILED);
             }
+            String phone=StoreTools.getInfo(sessionId+"1");
+            UserEntity user=userRepository.get(userId);
+            user.setPhone(phone);
+            userRepository.saveOrUpdate(user);
         }catch(Exception e){
             logger.error(e.getMessage(), e);
             responseData.setFailed(true);

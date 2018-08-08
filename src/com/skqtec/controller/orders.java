@@ -107,7 +107,7 @@ public class orders {
             reqData.put("package",package1);
             reqData.put("signType",signType);
             reqData.put("timeStamp",timeStamp);
-            String paySign=WXPayUtil.generateSignature(reqData,"lijie1987110801spaceorg1234qwerl",WXPayConstants.SignType.MD5);
+            String paySign=WXPayUtil.generateSignature(reqData,"lijie1108NANCYlijie1108skqtec01s",WXPayConstants.SignType.MD5);
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("timeStamp",timeStamp);
             jsonObject.put("nonceStr",nonceStr);

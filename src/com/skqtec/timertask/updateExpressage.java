@@ -1,6 +1,7 @@
 package com.skqtec.timertask;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.entity.ExpressageEntity;
 import com.skqtec.repository.ExpressageRepository;
@@ -15,7 +16,7 @@ import java.util.List;
 public class updateExpressage {
     @Autowired
     private ExpressageRepository expressageRepository;
-    @Scheduled(cron = "0 * * * * ? ")
+    @Scheduled(cron = "0 0 * * * ? ")
     public void run(){
         try{
             KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
@@ -25,8 +26,8 @@ public class updateExpressage {
                 String expNo=expressage.getId();
                 String result = api.getOrderTracesByJson(expCode, expNo);
                 JSONObject jsonObject=JSON.parseObject(result);
-                String traces=(String)jsonObject.get("traces");
-                expressage.setExpressageDetails(traces);
+                JSONArray traces=(JSONArray)jsonObject.get("Traces");
+                expressage.setExpressageDetails(traces.toString());
                 expressageRepository.saveOrUpdate(expressage);
             }
 

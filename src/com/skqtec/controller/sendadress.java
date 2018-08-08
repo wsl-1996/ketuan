@@ -95,7 +95,7 @@ public class sendadress {
         String userProvince=request.getParameter("userprovince");
         String userCity=request.getParameter("usercity");
         String userDistricts=request.getParameter("userdistricts");
-        String userStreet=request.getParameter("userstreet");
+        //String userStreet=request.getParameter("");
         String userAddressDetails=request.getParameter("useraddressdetails");
         String sendName=request.getParameter("sendname");
         String sendPhone=request.getParameter("sendphone");
@@ -103,14 +103,15 @@ public class sendadress {
             SendaddressEntity sendaddress=new SendaddressEntity();
             sendaddress.setAddressDetail(userAddressDetails);
             sendaddress.setCity(userCity);
-            sendaddress.setCountry(userCountry);
+            sendaddress.setCountry("China");
             sendaddress.setDistricts(userDistricts);
             sendaddress.setProvince(userProvince);
-            sendaddress.setStreet(userStreet);
+            sendaddress.setStreet("");
             sendaddress.setUserId(userId);
             sendaddress.setSendName(sendName);
             sendaddress.setSendPhone(sendPhone);
             sendaddress.setDefaultAddress(0);
+            sendaddress.setAddressDetail(userAddressDetails);
             String uuid = UUID.randomUUID().toString().replace("-", "");
             sendaddress.setId(uuid);
             logger.info("********product save returned :  "+sendAddressRepository.save(sendaddress));
