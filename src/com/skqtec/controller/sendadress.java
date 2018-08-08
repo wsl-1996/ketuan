@@ -7,6 +7,7 @@ import com.skqtec.entity.SendaddressEntity;
 import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.SendAddressRepository;
 import com.skqtec.repository.UserRepository;
+import com.skqtec.tools.SessionTools;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,8 +32,16 @@ public class sendadress {
     public @ResponseBody
     ResponseData getAddresss(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         try{
+            //判断是否登录
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             JSONObject jsonObject=new JSONObject();
             UserEntity user=userRepository.get(userId);
             String userAddressId=user.getFirstDeliverAddress();
@@ -70,8 +79,16 @@ public class sendadress {
     @RequestMapping(value="/getalladdress",method=RequestMethod.GET)
     public @ResponseBody ResponseData getAllAddresss(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         try {
+            //判断是否登录
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             List<SendaddressEntity> sendaddress = new ArrayList<SendaddressEntity>();
             sendaddress = sendAddressRepository.query(userId);
             JSONObject jsonObject=new JSONObject();
@@ -90,7 +107,8 @@ public class sendadress {
     @RequestMapping(value="/addaddress",method=RequestMethod.GET)
     public @ResponseBody ResponseData addAddresss(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         String userCountry=request.getParameter("usercountry");
         String userProvince=request.getParameter("userprovince");
         String userCity=request.getParameter("usercity");
@@ -100,6 +118,13 @@ public class sendadress {
         String sendName=request.getParameter("sendname");
         String sendPhone=request.getParameter("sendphone");
         try{
+            //判断是否登录
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             SendaddressEntity sendaddress=new SendaddressEntity();
             sendaddress.setAddressDetail(userAddressDetails);
             sendaddress.setCity(userCity);
@@ -162,9 +187,16 @@ public class sendadress {
     @RequestMapping(value="/setdefaultaddress",method=RequestMethod.GET)
     public @ResponseBody ResponseData setDefaultAddresss(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         String FirstDeliverAddress=request.getParameter("fdid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             UserEntity user=userRepository.get(userId);
             String oldFirstDeliverAddress=user.getFirstDeliverAddress();
             user.setFirstDeliverAddress(FirstDeliverAddress);

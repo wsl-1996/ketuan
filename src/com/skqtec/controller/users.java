@@ -102,9 +102,17 @@ public class users {
     @RequestMapping(value="/getdetail",method=RequestMethod.GET)
     public @ResponseBody ResponseData getuser(HttpServletRequest request, HttpServletResponse response){
         ResponseData responseData = new ResponseData();
-        String usersid = request.getParameter("userid");
+        //String usersid = request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         try {
-            UserEntity user= userRepository.get(usersid);
+            //判断是否登录
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
+            UserEntity user= userRepository.get(userId);
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("user",user);
             responseData.setData(jsonObject);
@@ -122,8 +130,16 @@ public class users {
     @RequestMapping(value="/getusergrade",method=RequestMethod.GET)
     public @ResponseBody ResponseData getUserGrade(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
-        String userId = request.getParameter("userid");
+        //String userId = request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         try {
+            //判断是否登录
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             UserEntity user = userRepository.get(userId);
             String userGrade = String.valueOf(user.getGrade());
             JSONObject jsonObject = new JSONObject();
