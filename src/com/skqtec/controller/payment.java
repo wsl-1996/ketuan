@@ -6,6 +6,7 @@ import com.skqtec.common.ResponseData;
 import com.skqtec.entity.OrderEntity;
 import com.skqtec.repository.OrderRepository;
 import com.skqtec.repository.UserRepository;
+import com.skqtec.tools.SessionTools;
 import com.skqtec.wxtools.WXPay;
 import com.skqtec.wxtools.WXPayConfigImpl;
 import com.skqtec.wxtools.WXPayUtil;
@@ -122,16 +123,16 @@ public class payment {
     @RequestMapping(value="/refund",method=RequestMethod.GET)
     public @ResponseBody ResponseData refund(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
-        //String sessionId = request.getParameter("sessionid");
+        String sessionId = request.getParameter("sessionid");
         String orderId = request.getParameter("orderid");
         try {
             //判断是否登录
-           /* String userId=SessionTools.sessionQuery(sessionId);
+            String userId=SessionTools.sessionQuery(sessionId);
             if(userId==null){
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
-            }*/
+            }
             String outRefundNo=WXPayUtil.getOrderNo();
             OrderEntity order=orderRepository.get(orderId);
             String totalFee=String.valueOf((int)order.getTotalPrice());

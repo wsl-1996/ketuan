@@ -5,6 +5,7 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.BillEntity;
 import com.skqtec.repository.BillRepository;
+import com.skqtec.tools.SessionTools;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,8 +31,15 @@ public class Bills {
     public @ResponseBody
     ResponseData getCashBack(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
+        String sessionId=request.getParameter("sessionid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             List<BillEntity>bills=new ArrayList<BillEntity>();
             bills=billRepository.query(userId,0);
             List<JSONObject>j=new ArrayList<JSONObject>();

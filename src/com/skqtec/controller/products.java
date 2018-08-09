@@ -201,7 +201,7 @@ public class products {
     public @ResponseBody ResponseData getProductStyle(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String productId = request.getParameter("productid");
-        String sessionId = request.getParameter("sessionid");
+        //String sessionId = request.getParameter("sessionid");
         try {
             ProductEntity product=productRepository.get(productId);
             String productStyle=product.getProductStyle();

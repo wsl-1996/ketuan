@@ -129,9 +129,17 @@ public class orders {
     @RequestMapping(value="/getorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData getOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
         String orderState=request.getParameter("orderstate");
+        String sessionId=request.getParameter("sessionid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
+
             List<OrderEntity>orders=new ArrayList<OrderEntity>();
             List<JSONObject>j=new ArrayList<JSONObject>();
             orders=orderRepository.query(userId,orderState);
@@ -181,7 +189,14 @@ public class orders {
     public @ResponseBody ResponseData removeOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
         String orderId=request.getParameter("orderid");
+        String sessionId=request.getParameter("sessionid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             OrderEntity order=orderRepository.get(orderId);
             order.setState(-1);
             orderRepository.saveOrUpdate(order);
@@ -197,9 +212,16 @@ public class orders {
     @RequestMapping(value="/searchorders",method = RequestMethod.GET)
     public @ResponseBody ResponseData searchOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
         String key=request.getParameter("key");
+        String sessionId=request.getParameter("sessionid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             List<JSONObject>j=new ArrayList<JSONObject>();
             List<OrderEntity>orders=new ArrayList<OrderEntity>();
             orders=orderRepository.search(userId,key);
@@ -257,7 +279,14 @@ public class orders {
     public @ResponseBody ResponseData getOrderDetails(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String orderId = request.getParameter("orderid");
+        String sessionId=request.getParameter("sessionid");
         try {
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             OrderEntity order=orderRepository.get(orderId);
             ProductEntity product=productRepository.get(order.getProductId());
             String orderState=null;
