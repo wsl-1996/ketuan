@@ -700,7 +700,7 @@ public class backmanage {
             String expresageName=request.getParameter("expresageName");
             expressageEntity.setExpressageName(expresageName);
 
-            String expresage_shipAddress=request.getParameter("expresage_shipAddress");
+            String expresage_shipAddress=request.getParameter("shipAddress");
             expressageEntity.setShipAddress(expresage_shipAddress);
             expressageRepository.save(expressageEntity);
             JSONObject jsonObject = new JSONObject();
