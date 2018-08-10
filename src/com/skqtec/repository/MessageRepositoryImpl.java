@@ -2,6 +2,7 @@ package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.entity.MessageEntity;
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 import java.util.List;
 @Repository
 public class MessageRepositoryImpl implements MessageRepository{
+    static Logger logger = Logger.getLogger(MessageRepositoryImpl.class.getName());
     @Autowired
     private SessionFactory sessionFactory;
     public MessageEntity load(String id) {

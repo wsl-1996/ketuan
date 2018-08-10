@@ -331,6 +331,7 @@ public class users {
                 String sessionId=SessionTools.setSession(user.getId());
                 JSONObject jsonObject=new JSONObject();
                 jsonObject.put("sessionId",sessionId);
+                jsonObject.put("userId",user.getId());
                 responseData.setData(jsonObject);
                 }else
                 {
