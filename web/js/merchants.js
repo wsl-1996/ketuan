@@ -21,9 +21,7 @@ $(function(){
                 }
                 else{
                     var merchants = data["data"]["merchants"];
-                    if(merchants.length==0){
                         $("#merchantsList tbody").html("");
-                    }
                     for(var i=0;i<merchants.length;i++){
                         appendTr(merchants[i]);
                     }
@@ -48,9 +46,6 @@ $(function(){
                 }
                 else{
                     var merchants = data["data"]["merchants"];
-                    if(merchants.length==0){
-                        $("#merchantsList tbody").html("");
-                    }
                     $("#merchantsList tbody").html("");
                     for(var i=0;i<merchants.length;i++){
                         appendTr(merchants[i]);

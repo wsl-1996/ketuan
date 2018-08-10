@@ -69,7 +69,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         List<OrderEntity> list = new ArrayList<OrderEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.name like '%"+key+"%' and a.discription like '%"+key+"%'").addEntity(OrderEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.send_name like '%"+key+"%' or a.descript like '%"+key+"%'").addEntity(OrderEntity.class);
             list = q.list();
         }
         catch(Exception e){
@@ -87,7 +87,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         List<OrderEntity> list = new ArrayList<OrderEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.descript like '%"+key+"%' and a.user_id="+userId).addEntity(OrderEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.descript like '%"+key+"%' or a.user_id="+userId).addEntity(OrderEntity.class);
             list = q.list();
         }
         catch(Exception e){

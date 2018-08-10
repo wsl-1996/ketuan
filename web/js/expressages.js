@@ -21,9 +21,7 @@ $(function(){
                 }
                 else{
                     var expressages = data["data"]["expressages"];
-                    if(expressages.length==0){
                         $("#expressagesList tbody").html("");
-                    }
                     for(var i=0;i<expressages.length;i++){
                         appendTr(expressages[i]);
                     }
@@ -48,10 +46,7 @@ $(function(){
                 }
                 else{
                     var expressages = data["data"]["expressages"];
-                    if(expressages.length==0){
                         $("#expressagesList tbody").html("");
-                    }
-                    $("#expressagesList tbody").html("");
                     for(var i=0;i<expressages.length;i++){
                         appendTr(expressages[i]);
                     }
@@ -64,17 +59,6 @@ $(function(){
         })
     }
 
-   /* function initmodar() { //当我点击保存，触发函数。先获取前端的值，连接数据库，把前端的值赋值给后端
-        //var productName = $("#productName").value;
-        //$("#productName_moda").value = productName;
-        $("input").click(function() {
-           var a = $("#form-control").value;//被选项目的值value
-         varb = $("#form-control option:checked").text;//被选项目显示的值
-            expressage["expressageName"]=b;
-            alert("被选项目的值："+expressage["expressageName"]+"，被选项目的显示值："+b+"。");
-        });
-    }
-*/
 
   /*  $("#button").click(function () {
         var expressage_isnew=$("#expressage_isnew").val();
@@ -104,6 +88,7 @@ $(function(){
 
 
 
+
     function appendTr(expressage){
         var isnew = "已最新";
         switch (expressage["expressageIsnew"]){
@@ -114,7 +99,9 @@ $(function(){
                 isnew="待更新";
                 break;
         }
-        var s = '<tr>'
+
+
+        /*var s = '<tr>'
             +'          <td class="project-status">'
             + '             <span class="label label-primary">@'+isnew
             +'          </td>'
@@ -129,14 +116,30 @@ $(function(){
             +'          </td>'
             +'          <td class="project-actions">'
             +'              <a href="expressages_detail.html#" class="btn btn-white btn-sm"><i class="fa fa-folder"></i> 编辑</a>'
-            +'              <i class="fa fa-pencil"></i><span id="city-create" class="btn btn-white btn-sm" data-toggle="modal" data-target="#myModal">创建</span>'
+            +'              <i class="fa fa-pencil"></i><span id="city-create" class="btn btn-white btn-sm change" data-toggle="modal" data-target="#myModal" onclick=\\"xiugai(\'"+atr.id+"\')\\">创建</span>'
             +'          </td>'
-            +'      </tr>'
+            +'      </tr>'*/
 
 
 
 
-
+        var s = '<tr id="'+expressage["id"]+'">'
+            +'          <td class="project-status">'
+            + '             <span class="label label-primary">@'+expressage["isNew"]+'</span>'+'<input id="expressageDisplay" type="text" style="display: none"/>'
+            +'          </td>'
+            +'          <td class="project-title">'
+            +'              <span>'+expressage["expressageName"]+'</span>'+'<input id="expressageDisplay" type="text" style="display: none"/>'
+            +'          </td>'
+            +'          <td class="project-completion">'
+            +'              <small>发货起始地：</small>'+'<span>'+expressage["shipAddress"]+'</span>'+'<input id="expressageDisplay" type="text" style="display: none"/>'
+            +'          </td>'
+            + '         <td class="project-people">'
+            +'          </td>'
+            +'          <td class="project-actions">'
+            +'           <button class="btn btn-white btn-sm change" id="change"><i class="fa fa-folder"></i>修改</button>'+'<button  id="que_change" class="btn btn-white btn-sm que_change"  style="display: none"><i class="fa fa-folder"></i>确定</button>'
+            +'              <i class="fa fa-pencil"></i><span id="city-create" class="btn btn-white btn-sm" data-toggle="modal" data-target="#myModal" >创建</span>'
+            +'          </td>'
+            +'      </tr>';
 
 
 
@@ -167,10 +170,73 @@ $(function(){
 
 
 
-
-
         $("#expressagesList tbody").append(s);
+       //修改功能
+        for (var i=0;i<$("#expressagesList tbody tr").length;i++) {
 
+            $("#expressagesList tbody tr").eq(i).children('td').last().children('button').first().on("click", function (e) {
+                var val = $(this).parent('.project-actions').prevAll('.project-completion').children('input').prev('span').text();
+                $(this).hide();
+                $(this).next('button').show();
+                $(this).parent('.project-actions').prevAll('.project-completion').children('input').show();
+                $(this).parent('.project-actions').prevAll('.project-completion').children('input').prev('span').hide();
+                $(this).parent('.project-actions').prevAll('.project-completion').children('input').val(val);
+                // $(this).parent('.project-actions').prevAll('.project-completion').children('input').focus();
+
+                var val1 = $(this).parent('.project-actions').prevAll('.project-title').children('input').prev('span').text();  //没找到当前的元素
+                $(this).parent('.project-actions').prevAll('.project-title').children('input').show();
+                $(this).parent('.project-actions').prevAll('.project-title').children('input').prev('span').hide();
+                $(this).parent('.project-actions').prevAll('.project-title').children('input').val(val1);
+                // $(this).parent('.project-actions').prevAll('.project-title').children('input').focus();
+
+                var val2 = $(this).parent('.project-actions').prevAll('.project-status').children('input').prev('span').text();
+                $(this).parent('.project-actions').prevAll('.project-status').children('input').show();
+                $(this).parent('.project-actions').prevAll('.project-status').children('input').prev('span').hide();
+                $(this).parent('.project-actions').prevAll('.project-status').children('input').val(val2);
+                //$(this).parent('.project-actions').prevAll('.project-status').children('input').focus();
+            })
+
+
+            $("#expressagesList tbody tr").eq(i).children('td').last().find("#que_change").on("click", function (e) {
+                $(this).hide();
+                $("#expressagesList tbody tr .project-actions").find("#change").show();     //再获取当前输入的值
+                var shipAddress = $(this).parent('.project-actions').prevAll('.project-completion').children('input').val();
+                var expresageName = $(this).parent('.project-actions').prevAll('.project-title').children('input').val();
+                var expressageIsnew = $(this).parent('.project-actions').prevAll('.project-status').children('input').val().slice(1);
+                var expressageId =$(this).parent('.project-actions').parent('tr').attr("id");
+
+                $.ajax(
+                    {
+                        url:"http://localhost:8080/ketuan/backmanage/expressageChange",
+                        data:{
+                            expressageId:expressageId,
+                            expressageIsnew:expressageIsnew,
+                            expresageName:expresageName,
+                            shipAddress:shipAddress
+                        },
+                        type:"GET",
+                        dataType:"json",
+                        success:function(data){
+                            if(data="1"){
+                                alert("添加成功")
+                            }else {
+                                alert("添加失败")
+                            }
+                        }
+                    }
+                )
+                /*$(this).parent('.project-actions').prevAll('.project-completion').children('input').hide();
+                $(this).parent('.project-actions').prevAll('.project-title').children('input').hide();
+                $(this).parent('.project-actions').prevAll('.project-status').children('input').hide();
+
+                $(this).parent('.project-actions').prevAll('.project-completion').children('span').text(shipAddress);
+                $(this).parent('.project-actions').prevAll('.project-title').children('span').text(expresageName);
+                $(this).parent('.project-actions').prevAll('.project-status').children('span').text(expressageIsnew);*/
+
+            })
+
+
+        }
     }
     getAllExpressages();
 
@@ -178,7 +244,7 @@ $(function(){
 
 
 
-// $("#button").click(
+//创建快递
     $("#saveExpressButton").on("click",function (e){
         var expressageIsnew=$("#expressage_isnew").val();
         var expresageName=$("#expresageName").val();
@@ -206,6 +272,39 @@ $(function(){
 
 
 
+/*
+//搜索快递
+    $("#searchBtn").on("click",function(){
+        var expressageId=$("#searchKey").val();
+        if(!expressageId){
+            return;
+        }else {
+            $("#expressagesList tbody").empty();
+            $.get("expressageId:expressageId", function (data) {      //此次的data可能有错，具体指的是什么，下面有个data
+                for (var i = 0; i < data.length; i++) {
+                    $("#expressagesList tbody").append(
+                        '<tr>'
+                        + '          <td class="project-status">'
+                        + '             <span class="label label-primary">@' + expressage["isNew"] + '</span>' + '<input id="expressageDisplay" type="text" style="display: none"/>'
+                        + '          </td>'
+                        + '          <td class="project-title">'
+                        + '              <span>' + expressage["expressageName"] + '</span>' + '<input id="expressageDisplay" type="text" style="display: none"/>'
+                        + '          </td>'
+                        + '          <td class="project-completion">'
+                        + '              <small>发货起始地：</small>' + '<span>' + expressage["shipAddress"] + '</span>' + '<input id="expressageDisplay" type="text" style="display: none"/>'
+                        + '          </td>'
+                        + '         <td class="project-people">'
+                        + '          </td>'
+                        + '          <td class="project-actions">'
+                        + '           <button class="btn btn-white btn-sm change" id="change"><i class="fa fa-folder"></i>修改</button>' + '<button  id="que_change" class="btn btn-white btn-sm que_change"  style="display: none"><i class="fa fa-folder"></i>确定</button>'
+                        + '              <i class="fa fa-pencil"></i><span id="city-create" class="btn btn-white btn-sm" data-toggle="modal" data-target="#myModal" >创建</span>'
+                        + '          </td>'
+                        + '      </tr>'
+                    );
+                }
+            })
+        }
+
 
 
 
@@ -213,3 +312,22 @@ $(function(){
 
 
     })
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+})

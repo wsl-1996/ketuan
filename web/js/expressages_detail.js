@@ -12,7 +12,7 @@ $(document).ready(function() {
         async : false,//是否异步请求
         success : function(data) {   //如何发送成功
             var html = "";
-            var expressage = data["data"]["expressage"];
+            var expressage = data["data"]["expressages"];
             $("#expressage_name").html(expressage["expressageName"]);
             $("#expressage_Price").html(expressage["expressagePrice"]);
             $("#expressage_addressOfSevvice").html(expressage["addressOfSevvice"]);

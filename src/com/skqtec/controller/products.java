@@ -154,6 +154,8 @@ public class products {
             return responseData;
         }
     }
+
+
     //获取商品详情
     @RequestMapping(value="/getproductinfo",method=RequestMethod.GET)
     public @ResponseBody ResponseData getProductDetails(HttpServletRequest request){

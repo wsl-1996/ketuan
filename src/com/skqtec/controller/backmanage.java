@@ -212,14 +212,14 @@ public class backmanage {
 
     //订单搜索
     @RequestMapping(value="/searchorders",method = RequestMethod.GET)
-    public @ResponseBody ResponseData searchOrder(HttpServletRequest request){
+    public @ResponseBody ResponseData searchOrder(HttpServletRequest request,HttpServletResponse response){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
         String key=request.getParameter("key");
         try{
             List<JSONObject>j=new ArrayList<JSONObject>();
-            List<OrderEntity>orders=new ArrayList<OrderEntity>();
-            orders=orderRepository.search(userId,key);
+            List<OrderEntity>orders=orderRepository.search(key);
+            //orders=orderRepository.search(key);
             for(OrderEntity order:orders){
                 ProductEntity product=productRepository.get(order.getProductId());
                 String shopName=null;
@@ -231,6 +231,8 @@ public class backmanage {
                     UserEntity user=userRepository.get(product.getUserId());
                     shopName=user.getNickname();
                 }
+                String sendName = order.getSendName();
+                String paymethod=order.getPaymethod();
                 String orderId=order.getId();
                 String orderState=null;
                 switch(order.getState()){
@@ -247,6 +249,8 @@ public class backmanage {
                 String typeSpecification=order.getTypeSpecification();
                 String sumPrice=String.valueOf(order.getTotalPrice());
                 JSONObject jsonObject=new JSONObject();
+                jsonObject.put("sendName",sendName);
+                jsonObject.put("paymethod",paymethod);
                 jsonObject.put("shopName",shopName);
                 jsonObject.put("orderId",orderId);
                 jsonObject.put("orderState",orderState);
@@ -426,8 +430,7 @@ public class backmanage {
      * @return
      */
     @RequestMapping(value = "/productsearch", method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseData queryProducts(HttpServletRequest request) {
+    public @ResponseBody ResponseData queryProducts(HttpServletRequest request, HttpServletResponse response) {
         ResponseData responseData = new ResponseData();
         String key = request.getParameter("key");
         try {
@@ -528,7 +531,7 @@ public class backmanage {
      * @return
      */
     @RequestMapping(value="/usersearch",method=RequestMethod.GET)
-    public @ResponseBody ResponseData queryUsers(HttpServletRequest request){
+    public @ResponseBody ResponseData queryUsers(HttpServletRequest request,HttpServletResponse response){
         ResponseData responseData = new ResponseData();
         String key = request.getParameter("key");
         try {
@@ -681,7 +684,7 @@ public class backmanage {
 
 
 
-    //快递管理通过编辑存入需要的信息，并在前台展示
+    //创建快递
     @RequestMapping(value="/storeinformation",method = RequestMethod.GET)
     public @ResponseBody  ResponseData doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException,IOException{
@@ -717,13 +720,67 @@ public class backmanage {
 
 
 
+    //快递管理修改信息
+    @RequestMapping(value="/expressageChange",method = RequestMethod.GET)
+    public @ResponseBody  ResponseData changeInformation(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException,IOException{
+        ResponseData responseData = new ResponseData();
+        try {
+            String expressageId = request.getParameter("expressageId");
+            //1:查询数据库里面有没有这个id对应的快递
+            //有的话：更改，提交数据库保存
+            //没有的话：返回给前台一个错误信息        ;
+            String expresageName=request.getParameter("expresageName");
+            String expresage_shipAddress=request.getParameter("shipAddress");
+            String expressageIsnew = request.getParameter("expressageIsnew");
+            Integer isnew = Integer.parseInt(expressageIsnew);
 
-    /**
-     * 创建管理员
-     * @param request
-     * @param response
-     * @return
-     */
+            ExpressageEntity expressageEntity = expressageRepository.get(expressageId);
+            if(expressageEntity!=null){
+                expressageEntity.setExpressageName(expresageName);
+                expressageEntity.setShipAddress(expresage_shipAddress);
+                expressageEntity.setIsNew(isnew);
+                expressageRepository.saveOrUpdate(expressageEntity);
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("result",true);
+                responseData.setData(jsonObject);
+            }
+            else {
+                responseData.setFailed(true);
+                responseData.setFailedMessage("更新快递信息失败！");
+            }
+        }
+        catch (Exception e){
+               responseData.setFailed(true);
+               responseData.setFailedMessage("更新快递信息失败！");
+        }
+        finally {
+            return responseData;
+        }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /**
+         * 创建管理员
+         * @param request
+         * @param response
+         * @return
+         */
     @RequestMapping(value="/authority/addmanage",method=RequestMethod.GET)
     public @ResponseBody ResponseData addmanage(HttpServletRequest request, HttpServletResponse response){
         ResponseData responseData = new ResponseData();

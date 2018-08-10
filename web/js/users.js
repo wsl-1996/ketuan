@@ -21,9 +21,7 @@ $(function(){
                 }
                 else{
                     var users = data["data"]["users"];
-                    if(users.length==0){
                         $("#usersList tbody").html("");
-                    }
                     for(var i=0;i<users.length;i++){
                         appendTr(users[i]);
                     }
@@ -48,9 +46,6 @@ $(function(){
                 }
                 else{
                     var users = data["data"]["users"];
-                    if(users.length==0){
-                        $("#usersList tbody").html("");
-                    }
                     $("#usersList tbody").html("");
                     for(var i=0;i<users.length;i++){
                         appendTr(users[i]);

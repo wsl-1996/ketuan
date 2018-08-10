@@ -66,7 +66,7 @@ public class ExpressageRepositoryImpl implements ExpressageRepository {
         List<ExpressageEntity> list = new ArrayList<ExpressageEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `EXPRESSAGE` as a where a.name like '%"+key+"%' and a.discription like '%"+key+"%'").addEntity(ExpressageEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM EXPRESSAGE as a where a.expressage_name like '%"+key+"%' or a.expressage_details like '%"+key+"%'").addEntity(ExpressageEntity.class);
             list = q.list();
         }
         catch(Exception e){
@@ -84,7 +84,7 @@ public class ExpressageRepositoryImpl implements ExpressageRepository {
         List<ExpressageEntity> list = new ArrayList<ExpressageEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `EXPRESSAGE` as a where a.descript like '%"+key+"%' and a.expressage_id="+expressageId).addEntity(ExpressageEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM EXPRESSAGE as a where a.descript like '%"+key+"%' or a.expressage_id="+expressageId).addEntity(ExpressageEntity.class);
             list = q.list();
         }
         catch(Exception e){

@@ -39,7 +39,7 @@
                         </div>
                         <div class="col-md-11">
                             <div class="input-group">
-                                <input type="text" placeholder="请输入快递名称" class="input-sm form-control" id="searchKey"> <span class="input-group-btn">
+                                <input type="text" placeholder="请根据订单号，即ID号进行搜索！" class="input-sm form-control" id="searchKey"> <span class="input-group-btn">
                                         <button type="button" class="btn btn-sm btn-primary" id="searchBtn"> 搜索</button> </span>
                             </div>
                         </div>
@@ -75,31 +75,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <!--<script type="javascript">
-                        function  editor()  {
-                            var expressageIsnew=$("#expressage_isnew").val();
-                            $.ajax(
-                                {
-                                    url:"/backmanage/storeinformation",
-                                    data:{
-                                        expressageIsnew:expressageIsnew,
-                                        expresageName:expresageName,
-                                        shipAddress:expresage_shipAddress
-                                    },
-                                    type:"GET",
-                                    dataType:"json",
-                                    success:function(data){
-                                        if(data="1"){
-                                            alert("添加成功")
-                                        }else {
-                                            alert("添加失败")
-                                        }
-                                    }
-                                }
-                            )
 
-                        }
-                    </script>-->
                     <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content animated bounceInRight">
@@ -118,10 +94,7 @@
                                     </form>
                                     <form class="form-group"  method="get">
                                         <label class="col-sm-2 control-label">快递公司：</label>
-                                        <!--<select class="form-control">
-                                            <option value="expressage_state">已最新</option>
-                                            <option value="expressage_notstate">不是最新</option>
-                                        </select>-->
+
                                         <input type="text" class="form-control" name="expresageName" id="expresageName" placeholder="请输入你发货的公司如：韵达快递">
                                     </form>
                                     <form class="form-group" action="<%=request.getContextPath()%>/ExpressageServlet" method="get">

@@ -1,7 +1,6 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.GroupEntity;
 import com.skqtec.entity.ProductEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
@@ -66,7 +65,7 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         List<ProductEntity> list = new ArrayList<ProductEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM ketuanDB.`PRODUCT` as a where a.product_name like '%"+key+"%' and a.product_produce_address like '%"+key+"%' and a.product_info like '%"+key+"%' and a.product_label like '%"+key+"%'").addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM PRODUCT as a where a.product_name like '%"+key+"%' or a.product_produce_address like '%"+key+"%' or a.product_info like '%"+key+"%' or a.product_label like '%"+key+"%'").addEntity(ProductEntity.class);
             list = q.list();
         }
         catch(Exception e){

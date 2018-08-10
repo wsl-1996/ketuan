@@ -1,7 +1,6 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.GroupEntity;
 import com.skqtec.entity.UserEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
@@ -84,7 +83,7 @@ public class UserRepositoryImpl implements  UserRepository{
         List<UserEntity> list = new ArrayList<UserEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.nickname like '%"+key+"%' and a.email like '%"+key+"%' and a.phone like '%"+key+"%'").addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `USER` as a where a.nickname like '%"+key+"%' or a.email like '%"+key+"%' or a.phone like '%"+key+"%'").addEntity(UserEntity.class);
             list = q.list();
         }
         catch(Exception e){

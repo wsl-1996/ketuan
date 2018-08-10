@@ -21,9 +21,7 @@ $(function(){
                 }
                 else{
                     var groups = data["data"]["groups"];
-                    if(groups.length==0){
-                        $("#groupList tbody").html("");
-                    }
+                    $("#groupList tbody").html("");
                     for(var i=0;i<groups.length;i++){
                         appendTr(groups[i]);
                     }
@@ -48,9 +46,7 @@ $(function(){
                 }
                 else{
                     var groups = data["data"]["groups"];
-                    if(groups.length==0){
-                        $("#groupList tbody").html("");
-                    }
+                    $("#groupList tbody").html("");
                     for(var i=0;i<groups.length;i++){
                         appendTr(groups[i]);
                     }

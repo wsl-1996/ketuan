@@ -20,10 +20,8 @@ $(function(){
                     alert("搜索订单失败！"+data["failedMessage"]);
                 }
                 else{
-                    var orders = data["data"]["orders"];
-                    if(orders.length==0){
+                    var orders = data["data"]["searchResult"];
                         $("#ordersList tbody").html("");
-                    }
                     for(var i=0;i<orders.length;i++){
                         appendTr(orders[i]);
                     }
@@ -48,9 +46,6 @@ $(function(){
                 }
                 else{
                     var orders = data["data"]["orders"];
-                    if(orders.length==0){
-                        $("#ordersList tbody").html("");
-                    }
                     $("#ordersList tbody").html("");
                     for(var i=0;i<orders.length;i++){
                         appendTr(orders[i]);

@@ -21,9 +21,7 @@ $(function(){
                 }
                 else{
                     var products = data["data"]["products"];
-                    if(products.length==0){
                         $("#productsList tbody").html("");
-                    }
                     for(var i=0;i<products.length;i++){
                         appendTr(products[i]);
                     }
@@ -48,9 +46,7 @@ $(function(){
                 }
                 else{
                     var products = data["data"]["products"];
-                    if(products.length==0){
                         $("#productsList tbody").html("");
-                    }
                     for(var i=0;i<products.length;i++){
                         appendTr(products[i]);
                     }
