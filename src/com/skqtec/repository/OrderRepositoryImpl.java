@@ -35,7 +35,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     public List<OrderEntity> findAll() {
-        return getCurrentSession().createQuery("from "+OrderEntity.class.getSimpleName()).list();
+        Session session=getCurrentSession();
+        List<OrderEntity>list=session.createQuery("from "+OrderEntity.class.getSimpleName()).list();
+        session.close();
+        return  list;
     }
 
     public List<OrderEntity> query(JSONObject jsonObject) {

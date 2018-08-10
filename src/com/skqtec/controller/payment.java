@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -64,7 +65,7 @@ public class payment {
         data.put("fee_type", "CNY");
         data.put("total_fee", fee);
         data.put("spbill_create_ip", "114.212.81.63");
-        data.put("notify_url", "f6677120.ngrok.io/ketuan/paycallback");
+        data.put("notify_url", "9d44f04f.ngrok.io/ketuan/applet/payments/paycallback");
         data.put("trade_type", "JSAPI");
         data.put("product_id", productId);
         data.put("openid",openId);
@@ -92,7 +93,7 @@ public class payment {
             info = WXPayUtil.xmlToMap(body);
             String orderId=info.get("out_trade_no");
             int totalFee=Integer.parseInt(info.get("total_fee"));
-            String payTime=info.get("time_end");
+            //String payTime=info.get("time_end");
             OrderEntity order=orderRepository.get(orderId);
             if(totalFee!=order.getTotalPrice()) {
                 returns = "<xml>" +
@@ -105,7 +106,7 @@ public class payment {
                         "  <return_msg><![CDATA[OK]]></return_msg>" +
                         "</xml>";
                 order.setState(2);
-                order.setPayTime(Timestamp.valueOf(payTime));
+                order.setPayTime(new Timestamp(new Date().getTime()));
                 orderRepository.saveOrUpdate(order);
             }
         }catch(Exception e){
@@ -134,7 +135,7 @@ public class payment {
             }
             String outRefundNo=WXPayUtil.getOrderNo();
             OrderEntity order=orderRepository.get(orderId);
-            String totalFee=String.valueOf(order.getTotalPrice());
+            String totalFee=String.valueOf((int)order.getTotalPrice());
             order.setOutRefundNo(outRefundNo);
             HashMap<String, String> data = new HashMap<String, String>();
             data.put("out_trade_no",orderId);
@@ -146,7 +147,7 @@ public class payment {
             this.config=WXPayConfigImpl.getInstance();
             this.wxpay=new WXPay(config);
             r=wxpay.refund(data);
-            if(!r.get("return_code").equals("SUCCESS"));{
+            if(!r.get("result_code").equals("SUCCESS")){
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.REFUND_FAILED);
             }

@@ -16,6 +16,7 @@ public class CommentEntity {
     private String reply;
     private String evaluateLabel;
     private Timestamp commentTime;
+    private String productStyle;
 
     @Id
     @Column(name = "id")
@@ -153,5 +154,15 @@ public class CommentEntity {
         result = 31 * result + (evaluateLabel != null ? evaluateLabel.hashCode() : 0);
         result = 31 * result + (commentTime != null ? commentTime.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "product_style")
+    public String getProductStyle() {
+        return productStyle;
+    }
+
+    public void setProductStyle(String productStyle) {
+        this.productStyle = productStyle;
     }
 }

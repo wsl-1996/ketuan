@@ -11,7 +11,7 @@ public class WXPayConfigImpl extends WXPayConfig{
     private static WXPayConfigImpl INSTANCE;
 
     private WXPayConfigImpl() throws Exception{
-        String certPath = "D:/微信支付证书cert/apiclient_cert.p12";
+        String certPath = "D:/cert/apiclient_cert.p12";
         File file = new File(certPath);
         InputStream certStream = new FileInputStream(file);
         this.certData = new byte[(int) file.length()];
@@ -39,7 +39,7 @@ public class WXPayConfigImpl extends WXPayConfig{
     }
 
     public String getKey() {
-        return "lijie1987110801spaceorg1234qwerl";
+        return "lijie1108NANCYlijie1108skqtec01s";
     }
 
     public InputStream getCertStream() {

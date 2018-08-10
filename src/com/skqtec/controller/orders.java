@@ -6,6 +6,7 @@ import com.skqtec.common.ResponseData;
 import com.skqtec.entity.*;
 import com.skqtec.repository.*;
 import com.skqtec.tools.SessionTools;
+import com.skqtec.wxtools.WXPayConstants;
 import com.skqtec.wxtools.WXPayUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +22,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Controller
 @RequestMapping("/applet/orders")
@@ -94,9 +94,27 @@ public class orders {
         orderEntity.setDescript(product.getProductName()+product.getEvaluateLabel()+product.getProductInfo()+product.getProductLabel());
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
-            JSONObject data=null;
-            data=payment.payRequest(out_trade_no,productId,openId,totalPrice);
-            responseData.setData(data);
+            JSONObject j=null;
+            j=payment.payRequest(out_trade_no,productId,openId,totalPrice);
+            Map<String, String> data=(Map)j.get("data");
+            String timeStamp=String.valueOf(new Date().getTime()/1000);
+            String nonceStr=data.get("nonce_str");
+            String package1="prepay_id="+data.get("prepay_id");
+            String signType="MD5";
+            Map<String,String>reqData=new HashMap<String, String>();
+            reqData.put("appId","wx5733cafea467c980");
+            reqData.put("nonceStr",nonceStr);
+            reqData.put("package",package1);
+            reqData.put("signType",signType);
+            reqData.put("timeStamp",timeStamp);
+            String paySign=WXPayUtil.generateSignature(reqData,"lijie1108NANCYlijie1108skqtec01s",WXPayConstants.SignType.MD5);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("timeStamp",timeStamp);
+            jsonObject.put("nonceStr",nonceStr);
+            jsonObject.put("package",package1);
+            jsonObject.put("signType",signType);
+            jsonObject.put("paySign",paySign);
+            responseData.setData(jsonObject);
         }
         catch (Exception e){
             logger.error(e,e.fillInStackTrace());
@@ -111,9 +129,17 @@ public class orders {
     @RequestMapping(value="/getorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData getOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
         String orderState=request.getParameter("orderstate");
+        String sessionId=request.getParameter("sessionid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
+
             List<OrderEntity>orders=new ArrayList<OrderEntity>();
             List<JSONObject>j=new ArrayList<JSONObject>();
             orders=orderRepository.query(userId,orderState);
@@ -163,7 +189,14 @@ public class orders {
     public @ResponseBody ResponseData removeOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
         String orderId=request.getParameter("orderid");
+        String sessionId=request.getParameter("sessionid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             OrderEntity order=orderRepository.get(orderId);
             order.setState(-1);
             orderRepository.saveOrUpdate(order);
@@ -179,9 +212,16 @@ public class orders {
     @RequestMapping(value="/searchorders",method = RequestMethod.GET)
     public @ResponseBody ResponseData searchOrder(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
-        String userId=request.getParameter("userid");
+        //String userId=request.getParameter("userid");
         String key=request.getParameter("key");
+        String sessionId=request.getParameter("sessionid");
         try{
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             List<JSONObject>j=new ArrayList<JSONObject>();
             List<OrderEntity>orders=new ArrayList<OrderEntity>();
             orders=orderRepository.search(userId,key);
@@ -239,7 +279,14 @@ public class orders {
     public @ResponseBody ResponseData getOrderDetails(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String orderId = request.getParameter("orderid");
+        String sessionId=request.getParameter("sessionid");
         try {
+            String userId=SessionTools.sessionQuery(sessionId);
+            if(userId==null){
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
+                return responseData;
+            }
             OrderEntity order=orderRepository.get(orderId);
             ProductEntity product=productRepository.get(order.getProductId());
             String orderState=null;

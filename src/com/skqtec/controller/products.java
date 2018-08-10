@@ -180,7 +180,7 @@ public class products {
             jsonObject.put("ImageAddress",JSONArray.parseArray(product.getImagesAddress()));
             List<JSONObject>j=new ArrayList<JSONObject>();
             j.add(JSON.parseObject(product.getProductDetails()));
-            jsonObject.put("ProductDetails",j);
+            jsonObject.put("Details",j);
             jsonObject.put("SlideImage",JSONArray.parseArray(product.getProductSlideImg()));
             product.setImagesAddress("");
             product.setProductSlideImg("");
@@ -203,7 +203,7 @@ public class products {
     public @ResponseBody ResponseData getProductStyle(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String productId = request.getParameter("productid");
-        String sessionId = request.getParameter("sessionid");
+        //String sessionId = request.getParameter("sessionid");
         try {
             ProductEntity product=productRepository.get(productId);
             String productStyle=product.getProductStyle();
