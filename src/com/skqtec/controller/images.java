@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.entity.ImageEntity;
 import com.skqtec.repository.ImageRepository;
+import com.skqtec.tools.RedisAPI;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
@@ -15,16 +16,15 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @RequestMapping("/applet/images")
 
@@ -119,6 +119,69 @@ public class images {
         }
         return JSON.toJSONString(ids);
     }
+    //聊天室-接收图片
+    @RequestMapping(value = "/getimage",method = RequestMethod.POST)
+    public @ResponseBody String getImg(HttpServletRequest request)
+            throws ServletException, IOException {
+        String messageFrom=request.getParameter("messageFrom");
+        String messageTo=request.getParameter("messageTo");
+        String headOwner=request.getParameter("headOwner");
+        List<String> ids = new ArrayList<String>();
+        String uploadPath = request.getRealPath("/")+"imagesDir\\";
+        File tempPathFile = new File("d:\\tempPath\\");
+        try {
+            // Create a factory for disk-based file items
+            DiskFileItemFactory factory = new DiskFileItemFactory();
+
+            // Set factory constraints
+            factory.setSizeThreshold(4096); // 设置缓冲区大小，这里是4kb
+            factory.setRepository(tempPathFile);// 设置缓冲区目录
+
+            // Create a new file upload handler
+            ServletFileUpload upload = new ServletFileUpload(factory);
+            // Set overall request size constraint
+            upload.setSizeMax(4194304); // 设置最大文件尺寸，这里是4MB
+
+            List<FileItem> items = upload.parseRequest(request);// 得到所有的文件
+            Iterator<FileItem> i = items.iterator();
+            while (i.hasNext()) {
+                FileItem fi = (FileItem) i.next();
+                String fileName = fi.getName();
+                String fieldName = fi.getFieldName();
+                if ("file".equals(fieldName)) {
+                    ImageEntity image = new ImageEntity();
+                    String discription = fileName;
+                    String uuid = UUID.randomUUID().toString().replace("-", "");
+                    ids.add(uuid);
+                    image.setId(uuid);
+                    String imageName = uuid+".png";
+                    String url = "http://172.16.2.69:8080/ketuan/imagesDir/"+imageName;
+                    image.setUrl(url);
+                    image.setDiscription(discription);
+                    logger.info("********sava returned :  "+imagedao.save(image));
+                    //File fullFile = new File(new String(fi.getName().getBytes(), "utf-8")); // 解决文件名乱码问题
+                    File savedFile = new File(uploadPath, imageName);
+                    fi.write(savedFile);
+                    //存入redis
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("messageFrom", messageFrom);
+                    jsonObject.put("messageContent", url);
+                    jsonObject.put("contentType", "1");
+                    jsonObject.put("headOwner",headOwner);
+                    jsonObject.put("createTime", new Date());
+                    JedisPool pool = RedisAPI.getPool();
+                    Jedis jedis = pool.getResource();
+                    jedis.lpush(messageTo, jsonObject.toString());
+                    pool.returnResource(jedis);
+                }
+            }
+            System.out.print("upload succeed");
+        } catch (Exception e) {
+            logger.error(e,e.fillInStackTrace());
+        }
+        return JSON.toJSONString(ids);
+    }
+
 
     /**
      * 根据图片id获取图片信息

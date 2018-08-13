@@ -39,6 +39,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         String messageTo=(String)j.get("messageTo");
         String messageContent=(String)j.get("messageContent");
         String contentType=(String)j.get("contentType");
+        String headOwner=(String)j.get("headOwner");
         if(messageContent.equals("connect")&&contentType.equals("-1")){
             sessions.put(messageFrom,session);
         }else {
@@ -48,6 +49,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
                 jsonObject.put("messageFrom", messageFrom);
                 jsonObject.put("messageContent", messageContent);
                 jsonObject.put("contentType", contentType);
+                jsonObject.put("headOwner",headOwner);
                 jsonObject.put("createTime", new Date());
                 JedisPool pool = RedisAPI.getPool();
                 Jedis jedis = pool.getResource();
@@ -70,8 +72,8 @@ public class SystemWebSocketHandler implements WebSocketHandler {
     }
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         if (session.isOpen()) {
-            sessions.remove(session);
             session.close();
+            sessions.remove(session);
         }
 
     }

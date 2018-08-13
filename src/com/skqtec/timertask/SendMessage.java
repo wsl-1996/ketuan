@@ -14,7 +14,7 @@ import java.util.Map;
 //发送redis中的消息给客户端
 @Component
 class SendMessage{
-    @Scheduled(cron = "0 * * * * ? ")
+    @Scheduled(cron = "0/5 * * * * ? ")
     public void run(){
         Map<String,WebSocketSession> sessions=SystemWebSocketHandler.sessions;
         JedisPool pool=RedisAPI.getPool();

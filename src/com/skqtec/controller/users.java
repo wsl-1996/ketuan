@@ -333,11 +333,10 @@ public class users {
                 jsonObject.put("sessionId",sessionId);
                 jsonObject.put("userId",user.getId());
                 responseData.setData(jsonObject);
-                }else
-                {
-                    responseData.setFailed(true);
-                    responseData.setFailedMessage(CommonMessage.LOGIN_FAILED);
-                }
+            }else {
+                responseData.setFailed(true);
+                responseData.setFailedMessage(CommonMessage.LOGIN_FAILED);
+            }
         } catch (Exception e) {
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.LOGIN_FAILED);

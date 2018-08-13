@@ -135,7 +135,7 @@ public class sendadress {
             sendaddress.setUserId(userId);
             sendaddress.setSendName(sendName);
             sendaddress.setSendPhone(sendPhone);
-            sendaddress.setDefaultAddress(0);
+            sendaddress.setDefaultAddress(1);
             sendaddress.setAddressDetail(userAddressDetails);
             String uuid = UUID.randomUUID().toString().replace("-", "");
             sendaddress.setId(uuid);
@@ -200,9 +200,11 @@ public class sendadress {
             UserEntity user=userRepository.get(userId);
             String oldFirstDeliverAddress=user.getFirstDeliverAddress();
             user.setFirstDeliverAddress(FirstDeliverAddress);
-            SendaddressEntity oldSendaddress=sendAddressRepository.get(oldFirstDeliverAddress);
-            oldSendaddress.setDefaultAddress(1);
-            sendAddressRepository.saveOrUpdate(oldSendaddress);
+            if(oldFirstDeliverAddress!=""&&oldFirstDeliverAddress!=null) {
+                SendaddressEntity oldSendaddress = sendAddressRepository.get(oldFirstDeliverAddress);
+                oldSendaddress.setDefaultAddress(1);
+                sendAddressRepository.saveOrUpdate(oldSendaddress);
+            }
             SendaddressEntity sendaddress=sendAddressRepository.get(FirstDeliverAddress);
             sendaddress.setDefaultAddress(0);
             sendAddressRepository.saveOrUpdate(sendaddress);
@@ -220,7 +222,10 @@ public class sendadress {
     public @ResponseBody ResponseData deleteAddresss(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String fdid = request.getParameter("fdid");
+        //String sessionId=request.getParameter("sessionid");
         try {
+            //String userId=SessionTools.sessionQuery(sessionId);
+            //UserEntity user=userRepository.get(userId);
             sendAddressRepository.delete(fdid);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);

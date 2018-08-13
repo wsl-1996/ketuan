@@ -60,7 +60,7 @@ public class SendAddressRepositoryImpl implements SendAddressRepository{
         List<SendaddressEntity> list = new ArrayList<SendaddressEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `SENDADDRESS` as a where a.user_id="+userId).addEntity(SendaddressEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `SENDADDRESS` as a where a.USER_id='"+userId+"'").addEntity(SendaddressEntity.class);
             list = q.list();
         }
         catch(Exception e){
