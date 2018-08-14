@@ -25,7 +25,9 @@ class SendMessage{
             try {
                 while (jedis.exists(messageFrom) && jedis.llen(messageFrom) > 0) {
                     TextMessage textMessage = new TextMessage(jedis.lpop(messageFrom), true);
-                    session.sendMessage(textMessage);
+                    synchronized(session) {
+                        session.sendMessage(textMessage);
+                    }
                 }
             }catch(Exception e){
                 e.printStackTrace();

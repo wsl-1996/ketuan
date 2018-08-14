@@ -4,7 +4,7 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
-
+//实现jedis连接池
 public class RedisAPI {
     private static JedisPool pool = null;
 

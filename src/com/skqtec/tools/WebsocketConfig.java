@@ -10,7 +10,7 @@ import org.springframework.web.socket.client.standard.WebSocketContainerFactoryB
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
-
+//配置websocket
 @Configuration
 @EnableWebMvc
 @EnableWebSocket

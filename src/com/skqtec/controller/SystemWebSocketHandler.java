@@ -15,6 +15,8 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -42,6 +44,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         String headOwner=(String)j.get("headOwner");
         if(messageContent.equals("connect")&&contentType.equals("-1")){
             sessions.put(messageFrom,session);
+            return;
         }else {
             try {
                 //存入redis
@@ -50,10 +53,17 @@ public class SystemWebSocketHandler implements WebSocketHandler {
                 jsonObject.put("messageContent", messageContent);
                 jsonObject.put("contentType", contentType);
                 jsonObject.put("headOwner",headOwner);
-                jsonObject.put("createTime", new Date());
+                DateFormat sdf = new SimpleDateFormat("MM月dd日 HH:mm");
+                String date=sdf.format(new Date());
+                jsonObject.put("createTime", date);
                 JedisPool pool = RedisAPI.getPool();
                 Jedis jedis = pool.getResource();
-                jedis.lpush(messageTo, jsonObject.toString());
+                String jsonStr=jsonObject.toString();
+                jsonStr.replace("{\"","{'");
+                jsonStr.replace("\":","':");
+                jsonStr.replace(",\"",",'");
+                //System.out.println(jsonStr);
+                jedis.lpush(messageTo, jsonStr);
                 pool.returnResource(jedis);
                 //存入数据库
                 MessageEntity message = new MessageEntity();
