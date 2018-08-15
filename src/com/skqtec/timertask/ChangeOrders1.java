@@ -21,6 +21,7 @@ public class ChangeOrders1 {
     private CommentRepository commentRepository;
     @Scheduled(cron = "0 0 0 * * ? ")
     public void run(){
+
         List<OrderEntity>list=orderRepository.findAll();
         for(OrderEntity order:list){
             if(order.getDeliverTime()==null)

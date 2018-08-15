@@ -31,6 +31,7 @@ public class ChangeGroupState {
     //判断团购是否到期
     @Scheduled(cron = "0 * * * * ? ")
     public void changeGroupState(){
+
         JedisPool pool=RedisAPI.getPool();
         Jedis j=pool.getResource();
         for(int i=0;i<j.llen("changeGroupState");i++){

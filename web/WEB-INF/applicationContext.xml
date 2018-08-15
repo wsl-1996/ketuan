@@ -24,11 +24,11 @@
             <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
-    <context:annotation-config />
+    <!--<context:annotation-config />-->
     <!-- 处理器 -->
     <!-- <bean name="/hello" class="com.mvc.jn.controller.HelloWorldController"/> -->
     <context:component-scan base-package="com.skqtec"/>
-    <context:component-scan base-package="com.skqtec.tools"/>
+    <!--<context:component-scan base-package="com.skqtec.tools"/>-->
     <!-- websocket处理类 -->
     <bean id="myHandler" class="com.skqtec.controller.SystemWebSocketHandler"/>
     <!-- 握手接口/拦截器 -->
@@ -44,7 +44,7 @@
     <context:property-placeholder location="/WEB-INF/config.properties" />
     <task:annotation-driven />
     <!-- 扫描任务 -->
-    <context:component-scan base-package="com.skqtec.timertask" />
+    <!--<context:component-scan base-package="com.skqtec.timertask" />-->
 
     <!--配置数据源-->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource" >

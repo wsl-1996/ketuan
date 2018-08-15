@@ -19,13 +19,14 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
+
 @Controller
 public class SystemWebSocketHandler implements WebSocketHandler {
     @Autowired
     private MessageRepository messageRepository;
-    public static Map<String,WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
+    private String sessionKey;
+    public static HashMap<String,WebSocketSession> sessions = new HashMap<String, WebSocketSession>();
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         System.out.println("ConnectionEstablished");
         //String i = session.getId();
@@ -43,6 +44,7 @@ public class SystemWebSocketHandler implements WebSocketHandler {
         String contentType=(String)j.get("contentType");
         String headOwner=(String)j.get("headOwner");
         if(messageContent.equals("connect")&&contentType.equals("-1")){
+            sessionKey=messageFrom;
             sessions.put(messageFrom,session);
             return;
         }else {
@@ -83,13 +85,14 @@ public class SystemWebSocketHandler implements WebSocketHandler {
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
         if (session.isOpen()) {
             session.close();
-            sessions.remove(session);
+            sessions.remove(sessionKey);
         }
 
     }
     public void afterConnectionClosed(WebSocketSession session, CloseStatus closeStatus) throws Exception {
         System.out.println("ConnectionClosed");
-        sessions.remove(session);
+        sessions.remove(sessionKey);
+        System.out.println("已移除"+sessionKey);
     }
     public boolean supportsPartialMessages() {
         return false;

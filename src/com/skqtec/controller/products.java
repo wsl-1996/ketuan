@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.ProductEntity;
+import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.ProductRepository;
+import com.skqtec.repository.UserRepository;
 import com.skqtec.tools.DisposeUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,8 @@ public class products {
 
     @Autowired
     private ProductRepository productRepository;
-
+    @Autowired
+    private UserRepository userRepository;
     /***
      * 管理页面上传图片（买家秀页面上传图片也用该接口）
      * @return
@@ -187,6 +190,9 @@ public class products {
             product.setProductDetails("");
             jsonObject1 = DisposeUtil.dispose(product);
             jsonObject1.put("onlineTime",onlineTime);
+            UserEntity user=userRepository.get(product.getUserId());
+            jsonObject1.put("serviceNickname",user.getNickname());
+            jsonObject1.put("serviceHeadimg",user.getHeadImgUrl());
             jsonObject.put("product",jsonObject1);
             responseData.setData(jsonObject);
         } catch (Exception e){
