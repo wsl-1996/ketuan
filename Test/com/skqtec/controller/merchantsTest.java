@@ -1,7 +1,12 @@
 package com.skqtec.controller;
 
-import java.util.HashMap;
-
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 public class merchantsTest {
 
     @org.junit.Before
@@ -13,12 +18,44 @@ public class merchantsTest {
 
     @org.junit.Test
     public void main() {
-        HashMap<String,String> s=new HashMap<String, String>();
-        String str="ddd";
-        s.put("ss",str);
-        s.remove("ss");
-        for (HashMap.Entry<String, String>entry: s.entrySet()){
-            System.out.println(entry.getValue());
+        try {
+            //SessionFactory sessionFactory=new SessionFactoryImpl();
+            Class.forName("com.mysql.jdbc.Driver") ;
+        }catch(ClassNotFoundException e){
+            System.out.println("找不到驱动程序类 ，加载驱动失败！");
+            e.printStackTrace() ;
+        }
+            String url = "jdbc:mysql://121.196.202.96:3306/ketuanDB_test?useUnicode=true&characterEncoding=utf-8";
+            String username = "root";
+            String password = "01space.org";
+            Connection con=null;
+            Statement stmt=null;
+            try{
+                 con=DriverManager.getConnection(url , username , password );
+                 stmt=con.createStatement() ;
+            }catch(SQLException se){
+                System.out.println("数据库连接失败！");
+                se.printStackTrace() ;
+            }
+            try{
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("E:\\ProductClassifyCode.txt")));
+                String data=null;
+                int k=0;
+                while((data=br.readLine())!=null){
+                char a[]=data.toCharArray();
+                int i;
+                for(i=0;a[i]!='(';i++);
+                String name=data.substring(0,i);
+                String code=data.substring(i+1,i+7);
+                System.out.println(name+"***"+code);
+                int row=0;
+                do{
+                    row=stmt.executeUpdate("insert into PRODUCTCLASSIFYCODE values('"+k+"','"+code+"','"+name+"');");
+                }while(row!=1);
+                k++;
+                }
+            }catch (Exception e){
+                e.printStackTrace();
         }
     }
 

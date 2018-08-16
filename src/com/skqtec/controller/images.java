@@ -2,6 +2,7 @@ package com.skqtec.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.skqtec.common.CommonMessage;
 import com.skqtec.entity.ImageEntity;
 import com.skqtec.repository.ImageRepository;
 import com.skqtec.tools.RedisAPI;
@@ -157,7 +158,7 @@ public class images {
                     ids.add(uuid);
                     image.setId(uuid);
                     String imageName = uuid+".png";
-                    String url = "http://172.16.2.22:8080/ketuan/imagesDir/"+imageName;
+                    String url =CommonMessage.IMG_URL1+imageName;
                     image.setUrl(url);
                     image.setDiscription(discription);
                     logger.info("********sava returned :  "+imagedao.save(image));
@@ -173,9 +174,11 @@ public class images {
                     DateFormat sdf = new SimpleDateFormat("MM月dd日 HH:mm");
                     String date=sdf.format(new Date());
                     jsonObject.put("createTime", date);
+                    System.out.println("图片接受者"+messageTo);
                     JedisPool pool = RedisAPI.getPool();
                     Jedis jedis = pool.getResource();
                     jedis.lpush(messageTo, jsonObject.toString());
+                   // System.out.println(jsonObject.toString());
                     pool.returnResource(jedis);
                 }
             }

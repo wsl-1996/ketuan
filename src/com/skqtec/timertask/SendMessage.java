@@ -15,7 +15,7 @@ import java.util.HashMap;
 //发送redis中的消息给客户端
 @Component
 class SendMessage{
-    @Scheduled(cron = "1/5 * * * * ?")
+    @Scheduled(cron = "0/1 * * * * ?")
     public void sendMessage(){
         HashMap<String,WebSocketSession> sessions=SystemWebSocketHandler.sessions;
         //System.out.println((new Date())+"start111");
@@ -28,10 +28,12 @@ class SendMessage{
            try {
                while (jedis.exists(messageFrom) && jedis.llen(messageFrom) > 0) {
                    if(session.isOpen()) {
-                       TextMessage textMessage = new TextMessage(jedis.lpop(messageFrom), true);
+                       String msg=jedis.lpop(messageFrom);
+                       System.out.println(msg);
+                       TextMessage textMessage = new TextMessage(msg, true);
                        synchronized (session) {
                            session.sendMessage(textMessage);
-                           System.out.println("**sendSuccess:"+textMessage.toString());
+                           System.out.println("**sendSuccess:"+textMessage.getPayload());
                        }
                    }else{
                        System.out.println("connectover");

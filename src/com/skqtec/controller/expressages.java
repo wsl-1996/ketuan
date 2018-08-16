@@ -98,7 +98,7 @@ public class expressages {
 
 
 
-    //获取订单详情
+    //获取快递详情
     @RequestMapping(value="/getexpressagedetails",method = RequestMethod.GET)
     public @ResponseBody ResponseData getExpressageDetails(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
@@ -121,6 +121,7 @@ public class expressages {
             jsonObject.put("shipAddress",shipAddress);
             jsonObject.put("addressOfSevvice",addressOfSevvice);
             jsonObject.put("productId",productId);
+            jsonObject.put("expressageDetails",expressage.getExpressageDetails());
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1.put("expressage",expressage);
             responseData.setData(jsonObject1);
