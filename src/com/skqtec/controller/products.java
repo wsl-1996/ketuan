@@ -6,7 +6,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.ProductEntity;
+import com.skqtec.entity.ProductclassifycodeEntity;
 import com.skqtec.entity.UserEntity;
+import com.skqtec.repository.ProductClassifyCodeRepository;
 import com.skqtec.repository.ProductRepository;
 import com.skqtec.repository.UserRepository;
 import com.skqtec.tools.DisposeUtil;
@@ -37,6 +39,8 @@ public class products {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ProductClassifyCodeRepository productClassifyCodeRepository;
     /***
      * 管理页面上传图片（买家秀页面上传图片也用该接口）
      * @return
@@ -227,6 +231,22 @@ public class products {
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.GET_PRODUCT_STYLE_FAILED);
         } finally {
+            return responseData;
+        }
+    }
+    //获取商品类型code
+    @RequestMapping(value="/getproductclassify",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getProductClassify(HttpServletRequest request) {
+        ResponseData responseData=new ResponseData();
+        try{
+            List<ProductclassifycodeEntity>lists=productClassifyCodeRepository.findAll();
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("productclassify",lists);
+            responseData.setData(jsonObject);
+        }catch (Exception e){
+            e.printStackTrace();
+            responseData.setFailed(true);
+        }finally {
             return responseData;
         }
     }

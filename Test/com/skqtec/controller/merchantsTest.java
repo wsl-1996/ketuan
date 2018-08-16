@@ -1,14 +1,7 @@
 package com.skqtec.controller;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
 public class merchantsTest {
-
+/*
     @org.junit.Before
     public void setUp() throws Exception {
 
@@ -28,10 +21,9 @@ public class merchantsTest {
             String url = "jdbc:mysql://121.196.202.96:3306/ketuanDB_test?useUnicode=true&characterEncoding=utf-8";
             String username = "root";
             String password = "01space.org";
-            Connection con=null;
             Statement stmt=null;
             try{
-                 con=DriverManager.getConnection(url , username , password );
+                Connection con=DriverManager.getConnection(url , username , password );
                  stmt=con.createStatement() ;
             }catch(SQLException se){
                 System.out.println("数据库连接失败！");
