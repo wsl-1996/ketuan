@@ -50,6 +50,10 @@ public class backmanage {
     @Autowired
     private  ExpressageRepository  expressageRepository;
 
+
+    @Autowired
+    private  AuthorityRepository  authorityRepository;
+
     /**
      * 创建产品
      *
@@ -423,6 +427,12 @@ public class backmanage {
     }
 
 
+
+
+
+
+
+
     /**
      * 关键词查询商品
      *
@@ -459,6 +469,7 @@ public class backmanage {
             ProductEntity product = productRepository.get(productId);
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String onlineTime = sdf.format(product.getOnlineTime());
+            String offlineTime = sdf.format(product.getOfflineTime());
             product.setProductFistImg(CommonMessage.IMG_URL + product.getProductFistImg());
             product.setImagesAddress(CommonMessage.IMG_URL + product.getImagesAddress());
             product.setProductSlideImg(CommonMessage.IMG_URL + product.getProductSlideImg());
@@ -466,7 +477,7 @@ public class backmanage {
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1 = DisposeUtil.dispose(product);
             jsonObject1.put("onlineTime", onlineTime);
-
+            jsonObject1.put("offlineTime", offlineTime);
             jsonObject.put("productdetails", jsonObject1);
             responseData.setData(jsonObject);
         } catch (Exception e) {
@@ -499,6 +510,51 @@ public class backmanage {
                 return responseData;
             }
         }
+
+
+       /**
+         * 改变商品，使商品下线
+         * @return
+         */
+
+       @RequestMapping(value = "/productOffline", method = RequestMethod.GET)
+       public @ResponseBody ResponseData makeProductOffline(HttpServletRequest request,HttpServletResponse response) {
+           ResponseData responseData = new ResponseData();
+           String productState=request.getParameter("productState");
+           Integer state = Integer.parseInt(productState);
+           //String productId=request.getParameter("productId");
+           try {
+               String productId=request.getParameter("productId");
+               ProductEntity productEntity=productRepository.get(productId);
+              if(productEntity!=null)
+               {
+                   productEntity.setProductState(state);
+
+                   productRepository.saveOrUpdate(productEntity);
+                   JSONObject jsonObject=new JSONObject();
+                   jsonObject = DisposeUtil.dispose(productEntity);
+                   jsonObject.put("productState", state);
+                   responseData.setData(jsonObject);
+               }
+               else{
+                  responseData.setFailed(true);
+                  responseData.setFailedMessage("更新商品失败！");
+              }
+           } catch (Exception e) {
+               logger.error(e.getMessage(), e);
+               responseData.setFailed(true);
+               responseData.setFailedMessage(CommonMessage.GET_PRODUCT_DETAILS_FAILED);
+           } finally {
+               return responseData;
+           }
+       }
+
+
+
+
+
+
+
 
 
     /**
@@ -781,14 +837,14 @@ public class backmanage {
          * @param response
          * @return
          */
-    @RequestMapping(value="/authority/addmanage",method=RequestMethod.GET)
+    @RequestMapping(value="/addmanage",method=RequestMethod.GET)
     public @ResponseBody ResponseData addmanage(HttpServletRequest request, HttpServletResponse response){
         ResponseData responseData = new ResponseData();
         String key = request.getParameter("key");
         try {
-            List<ExpressageEntity> expressages = expressageRepository.search(key);
+            List<AuthorityEntity> authoritys = authorityRepository.search(key);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("expressages",expressages);
+            jsonObject.put("authoritys",authoritys);
             responseData.setData(jsonObject);
         }
         catch (Exception e){
@@ -811,7 +867,7 @@ public class backmanage {
 
 
     //管理员权限设定（增加管理员权限）
-    @RequestMapping(value="/authority/setmanageauth",method=RequestMethod.GET)
+    @RequestMapping(value="/setmanageauth",method=RequestMethod.GET)
     public @ResponseBody ResponseData setmanageauth(HttpServletRequest request, HttpServletResponse response){
         ResponseData responseData = new ResponseData();
         String key = request.getParameter("key");
@@ -839,9 +895,7 @@ public class backmanage {
 
 
     //删除管理员
-
-
-    @RequestMapping(value="/authority/deletemanage",method=RequestMethod.GET)
+    @RequestMapping(value="/deletemanage",method=RequestMethod.GET)
     public @ResponseBody ResponseData deletemanage(HttpServletRequest request, HttpServletResponse response){
         ResponseData responseData = new ResponseData();
         String key = request.getParameter("key");
@@ -864,6 +918,102 @@ public class backmanage {
 
 
 
+
+    /**
+     * 关键词查询管理员
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value="/authoritySearch",method=RequestMethod.GET)
+    public @ResponseBody ResponseData queryAuthoritys(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        String key = request.getParameter("key");
+        try {
+            List<AuthorityEntity> authoritys = authorityRepository.search(key);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("authoritys",authoritys);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
+
+
+
+    /**
+     * 获取管理员的详情信息
+     * @param request
+     * @return
+     */
+    @RequestMapping(value="/getAuthorityDetails",method = RequestMethod.GET)
+    public @ResponseBody ResponseData getAuthorityDetails(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String expressageId = request.getParameter("expressageid");
+        try {
+            ExpressageEntity expressage=expressageRepository.get(expressageId);
+            ProductEntity product=productRepository.get(expressage.getProductId());
+            String expressageIsnew=null;
+            switch(expressage.getIsNew()){
+                case 1:expressageIsnew="已最新";break;
+                case 2:expressageIsnew="待更新";break;
+            }
+            String expressageName=expressage.getExpressageName();
+            String shipAddress=expressage.getShipAddress();
+            String addressOfSevvice=expressage.getAddressOfSevvice();
+            String productId=product.getId();
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("expressageIsnew",expressageIsnew);
+            jsonObject.put("expressageName",expressageName);
+            jsonObject.put("shipAddress",shipAddress);
+            jsonObject.put("addressOfSevvice",addressOfSevvice);
+            jsonObject.put("productId",productId);
+            JSONObject jsonObject1 = new JSONObject();
+            jsonObject1.put("expressage",expressage);
+            responseData.setData(jsonObject1);
+        } catch (Exception e) {
+            logger.error(e,e.fillInStackTrace());
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_ORDER_DETAILS_FAILED);
+        } finally {
+            return  responseData;
+        }
+    }
+
+
+
+
+    /**
+     * 获取所有的管理员
+     * @param request
+     * @param response
+     * @return
+     */
+
+    @RequestMapping(value="/authorityListall",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getAllAuthoritys(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        try {
+            List<AuthorityEntity> authoritys = authorityRepository.findAll();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("authoritys",authoritys);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
 
 
 

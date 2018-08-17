@@ -1,16 +1,18 @@
 package com.skqtec.entity;
 
-import javax.persistence.Basic;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
-@javax.persistence.Table(name = "AUTHORITY", schema = "ketuanDB_test", catalog = "")
+@Table(name = "AUTHORITY", schema = "ketuanDB_test", catalog = "")
 public class AuthorityEntity {
     private String authorityId;
+    private String adminName;
+    private String adminCount;
+    private String adminPass;
+    private String adminAuthor;
 
     @Id
-    @javax.persistence.Column(name = "authority_id")
+    @Column(name = "authority_id")
     public String getAuthorityId() {
         return authorityId;
     }
@@ -19,10 +21,8 @@ public class AuthorityEntity {
         this.authorityId = authorityId;
     }
 
-    private String adminName;
-
     @Basic
-    @javax.persistence.Column(name = "admin_name")
+    @Column(name = "admin_name")
     public String getAdminName() {
         return adminName;
     }
@@ -31,10 +31,8 @@ public class AuthorityEntity {
         this.adminName = adminName;
     }
 
-    private String adminCount;
-
     @Basic
-    @javax.persistence.Column(name = "admin_count")
+    @Column(name = "admin_count")
     public String getAdminCount() {
         return adminCount;
     }
@@ -43,10 +41,8 @@ public class AuthorityEntity {
         this.adminCount = adminCount;
     }
 
-    private String adminPass;
-
     @Basic
-    @javax.persistence.Column(name = "admin_pass")
+    @Column(name = "admin_pass")
     public String getAdminPass() {
         return adminPass;
     }
@@ -55,10 +51,8 @@ public class AuthorityEntity {
         this.adminPass = adminPass;
     }
 
-    private String adminAuthor;
-
     @Basic
-    @javax.persistence.Column(name = "admin_author")
+    @Column(name = "admin_author")
     public String getAdminAuthor() {
         return adminAuthor;
     }

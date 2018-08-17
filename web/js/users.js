@@ -90,7 +90,7 @@ $(function(){
             +'          </td>'
             +'          <td class="project-actions">'
             +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-folder"></i> 查看 </a>'
-            +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 下线 </a>'
+            +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 删除</a>'
             +'          </td>'
             +'      </tr>'
         /*$("#usersList tbody").html("");*/

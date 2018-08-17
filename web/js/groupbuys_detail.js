@@ -15,10 +15,18 @@ $(document).ready(function() {
             var group = data["data"]["groupdetails"];
             $("#group_name").html(group["groupName"]);
             $("#group_count").html(group["groupCount"]);
-            $("#group_price").html(group["group_price"]);
-            $("#group_type").html(group["group_type"]);
+            $("#group_price").html(group["groupPrice"]);
+            $("#group_type").html(group["groupType"]);
             $("#group_id").html(group["id"]);
-            $("#groupState").html(group["groupState"]);
+            $("#group_userId").html(group["userId"]);
+            $("#group_productId").html(group["productId"]);
+            $("#group_offeredCount").html(group["offeredCount"]);
+            $("#group_offeredUserId").html(group["offeredUserId"]);
+            $("#group_groupState").html(group["groupState"]);
+            $("#group_endTime").html(group["endTime"]);
+            $("#group_customerService").html(group["customerService"]);
+            $("#group_groupDiscription").html(group["groupDiscription"]);
+            $("#group_deliverCity").html(group["deliverCity"]);
             // for(var i=0;i<data.length;i++){    //遍历data数组
             //     var ls = data[i];
             //     html +="<li><a href='second page text.html?newsid="+ls.news_id+"'class='infNews_wrod_a'><span>"+ls.news_name+"</span></a><span class='date'>"+ls.news_time+"</span></li>";
