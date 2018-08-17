@@ -1,6 +1,7 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
+import com.skqtec.entity.AuthorityEntity;
 import com.skqtec.entity.ProductEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
@@ -13,8 +14,8 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository
-public class ProductRepositoryImpl  implements  ProductRepository{
-    static Logger logger = Logger.getLogger(ProductRepositoryImpl.class.getName());
+public class AuthorityRepositoryImpl  implements  AuthorityRepository{
+    static Logger logger = Logger.getLogger(AuthorityRepositoryImpl.class.getName());
     @Autowired
     private SessionFactory sessionFactory;
 
@@ -22,27 +23,27 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         return this.sessionFactory.openSession();
     }
 
-    public ProductEntity load(String id) {
-        return (ProductEntity)getCurrentSession().load(ProductEntity.class,id);
+    public AuthorityEntity load(String  id) {
+        return (AuthorityEntity)getCurrentSession().load(AuthorityEntity.class,id);
     }
 
-    public ProductEntity get(String id) {
+    public AuthorityEntity get(String id) {
         Session session=getCurrentSession();
-        ProductEntity productEntity=(ProductEntity)session.get(ProductEntity.class,id);
+        AuthorityEntity AuthorityEntity=(AuthorityEntity)session.get(AuthorityEntity.class,id);
         session.close();
-        return productEntity;
+        return AuthorityEntity;
     }
 
-    public List<ProductEntity> findAll() {
-        return getCurrentSession().createQuery("from "+ProductEntity.class.getSimpleName()).list();
+    public List<AuthorityEntity> findAll() {
+        return getCurrentSession().createQuery("from "+AuthorityEntity.class.getSimpleName()).list();
     }
 
-    public List<ProductEntity> query(JSONObject jsonObject) {
+    public List<AuthorityEntity> query(JSONObject jsonObject) {
         Session s = null;
-        List<ProductEntity> list = new ArrayList<ProductEntity>();
+        List<AuthorityEntity> list = new ArrayList<AuthorityEntity>();
         try {
             s = getCurrentSession();
-            Criteria c = s.createCriteria(ProductEntity.class);
+            Criteria c = s.createCriteria(AuthorityEntity.class);
             Iterator it = jsonObject.keySet().iterator();
             while (it.hasNext()){
                 String key = (String)it.next();
@@ -50,8 +51,8 @@ public class ProductRepositoryImpl  implements  ProductRepository{
                 c.add(Restrictions.eq(key, value));
             }
             list = c.list();
-            for (ProductEntity image : list) {
-                System.out.println(image.getProductName());
+            for (AuthorityEntity image : list) {
+                System.out.println(image.getAuthorityName());
             }
         } finally {
             if (s != null)
@@ -60,12 +61,12 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         }
     }
 
-    public List<ProductEntity> search(String key) {
+    public List<AuthorityEntity> search(String key) {
         Session s = null;
-        List<ProductEntity> list = new ArrayList<ProductEntity>();
+        List<AuthorityEntity> list = new ArrayList<AuthorityEntity>();
         try {
-            s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM PRODUCT as a where a.product_name like '%"+key+"%' or a.product_produce_address like '%"+key+"%' or a.product_info like '%"+key+"%' or a.product_label like '%"+key+"%'").addEntity(ProductEntity.class);
+            s = getCurrentSession();                                //SELECT语句有错误，需要改正
+            Query q = s.createSQLQuery("SELECT * FROM AUTHORITY as a where a.authority_name like '%"+key+"%' or a.authority_id like '%"+key+"%' or a.product_info like '%"+key+"%' or a.product_label like '%"+key+"%'").addEntity(ProductEntity.class);
             list = q.list();
         }
         catch(Exception e){
@@ -78,12 +79,12 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         }
     }
 
-    public void persist(ProductEntity entity) {
+    public void persist(AuthorityEntity entity) {
         Session session = getCurrentSession();
         session.persist(entity);
     }
 
-    public String save(ProductEntity entity) {
+    public String save(AuthorityEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
         String result = (String)session.save(entity);
@@ -92,7 +93,7 @@ public class ProductRepositoryImpl  implements  ProductRepository{
         return  result;
     }
 
-    public void saveOrUpdate(ProductEntity entity) {
+    public void saveOrUpdate(AuthorityEntity entity) {
         Session session = getCurrentSession();
         Transaction transaction = session.beginTransaction();
         session.saveOrUpdate(entity);
@@ -101,12 +102,8 @@ public class ProductRepositoryImpl  implements  ProductRepository{
     }
 
     public void delete(String id) {
-        Session session = getCurrentSession();
-        Transaction transaction = session.beginTransaction();
-        ProductEntity product = load(id);
+        AuthorityEntity product = load(id);
         getCurrentSession().delete(product);
-        transaction.commit();
-        session.close();
     }
 
     public void flush() {

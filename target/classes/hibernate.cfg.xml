@@ -7,6 +7,7 @@
     <property name="connection.url">jdbc:mysql://121.196.202.96:3306/ketuanDB_test</property>
     <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
       <mapping class="com.skqtec.entity.ExpressageEntity"/>
+      <mapping class="com.skqtec.entity.AuthorityEntity"/>
       <!-- <property name="connection.username"/> -->
     <!-- <property name="connection.password"/> -->
 

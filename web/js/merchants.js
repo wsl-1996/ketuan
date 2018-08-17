@@ -60,7 +60,7 @@ $(function(){
     }
 
     function appendTr(merchant){
-        var s = '<tr>'
+        var s = '<tr id="'+merchant["id"]+'">'
             +'          <td class="project-status">'
             + '             <span class="label label-primary">@'
             +'          </td>'
@@ -75,11 +75,43 @@ $(function(){
             +'          </td>'
             +'          <td class="project-actions">'
             +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-folder"></i> 查看 </a>'
-            +'              <a href="projects.html#" class="btn btn-white btn-sm"><i class="fa fa-pencil"></i> 下线 </a>'
+            +'              <button class="btn btn-white btn-sm" id="delete_merchant"><i class="fa fa-pencil"></i>编辑信息</button>'
             +'          </td>'
             +'      </tr>'
 
         $("#merchantsList tbody").append(s);
+
+
+        /*//进行删除操作
+                       for (var i=0;i<$("#expressagesList tbody tr").length;i++) {
+                    $("#expressagesList tbody tr").eq(i).children('td').last().children('button').on("click", function (e){
+                        alert("确定要删除该商品吗？");
+                        var merchantId =$(this).parent('.project-actions').parent('tr').attr("id");
+
+                $.ajax(
+                    {
+                        url:"http://localhost:8080/ketuan/backmanage/expressageChange",
+                        data:{
+                            merchantId:merchantId
+                        },
+                        type:"GET",
+                        dataType:"json",
+                        success:function(data){
+                            if(data="1"){
+                                alert("添加成功")
+                            }else {
+                                alert("添加失败")
+                            }
+                        }
+                    }
+                )
+            })
+        }*/
+
+
+
+
+
     }
     getAllMerchants();
 

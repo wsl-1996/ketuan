@@ -37,6 +37,7 @@
                 $("#merchant_phone").html(merchant["phone"]);
                 $("#merchant_address").html(merchant["address"]);
                 $("#merchant_accountname").html(merchant["accountname"]);
+                $("#merchant_headImgUrl").html(merchant["headImgUrl"]);
                 // for(var i=0;i<data.length;i++){    //遍历data数组
                 //     var ls = data[i];
                 //     html +="<li><a href='second page text.html?newsid="+ls.news_id+"'class='infNews_wrod_a'><span>"+ls.news_name+"</span></a><span class='date'>"+ls.news_time+"</span></li>";

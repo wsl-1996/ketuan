@@ -29,7 +29,7 @@
                 <div class="ibox-title">
                     <h5>所有快递</h5>
                     <div class="ibox-tools">
-                        <a href="expressages.html" class="btn btn-primary btn-xs">创建快递</a>
+                        <span id="create_expressage" class="btn btn-primary btn-xs" data-toggle="modal" data-target="#myModal">创建快递</span>
                     </div>
                 </div>
                 <div class="ibox-content">
@@ -84,7 +84,8 @@
                                     </button>
                                     <i class="fa fa-laptop modal-icon"></i>
                                     <h4 class="modal-title">快递管理</h4>
-                                    <form class="form-group" action="<%=request.getContextPath()%>/ExpressageServlet" method="get">
+                                    <div class="expressage_modal">
+                                    <form class="form-group"  method="get">
                                         <label class="col-sm-2 control-label">是否最新：</label>
                                            <!--<select class="form-control">
                                                <option value="expressage_state">已最新</option>
@@ -92,12 +93,16 @@
                                            </select>-->
                                         <input type="text" class="form-control" name="expressage_isnew" id="expressage_isnew" placeholder="是否最新">
                                     </form>
+                                    </div>
+                                    <div class="expressage_modal">
                                     <form class="form-group"  method="get">
                                         <label class="col-sm-2 control-label">快递公司：</label>
 
                                         <input type="text" class="form-control" name="expresageName" id="expresageName" placeholder="请输入你发货的公司如：韵达快递">
                                     </form>
-                                    <form class="form-group" action="<%=request.getContextPath()%>/ExpressageServlet" method="get">
+                                    </div>
+                                    <div class="expressage_modal">
+                                    <form class="form-group"  method="get">
                                         <label class="col-sm-2 control-label">商品发货地：</label>
                                         <!--<select class="form-control">
                                             <option value="expressage_state">已最新</option>
@@ -105,6 +110,7 @@
                                         </select>-->
                                         <input type="text" class="form-control" name="expresage_shipAddress" id="expresage_shipAddress" placeholder="请输入你的当前收货地址">
                                     </form>
+                                    </div>
 
                                 </div>
 

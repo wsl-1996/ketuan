@@ -137,7 +137,7 @@ $(function(){
             +'          </td>'
             +'          <td class="project-actions">'
             +'           <button class="btn btn-white btn-sm change" id="change"><i class="fa fa-folder"></i>修改</button>'+'<button  id="que_change" class="btn btn-white btn-sm que_change"  style="display: none"><i class="fa fa-folder"></i>确定</button>'
-            +'              <i class="fa fa-pencil"></i><span id="city-create" class="btn btn-white btn-sm" data-toggle="modal" data-target="#myModal" >创建</span>'
+            +'              <span id="city-create" class="btn btn-white btn-sm" data-toggle="modal" data-target="#myModal" ><i class="fa fa-pencil"></i>创建</span>'
             +'          </td>'
             +'      </tr>';
 

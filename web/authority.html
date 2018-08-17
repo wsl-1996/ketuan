@@ -47,7 +47,7 @@
 
                     <div class="project-list">
 
-                        <table class="table table-hover" id="merchantsList">
+                        <table class="table table-hover" id="authoritysList">
                             <tbody>
 
 
@@ -56,6 +56,52 @@
                             </tbody>
                         </table>
                     </div>
+
+
+
+                    <div class="modal inmodal" id="myModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content animated bounceInRight">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">关闭</span>
+                                    </button>
+                                    <i class="fa fa-laptop modal-icon"></i>
+                                    <h4 class="modal-title">快递管理</h4>
+                                    <form class="form-group"  method="get">
+                                        <label class="col-sm-2 control-label">是否最新：</label>
+                                        <!--<select class="form-control">
+                                            <option value="expressage_state">已最新</option>
+                                            <option value="expressage_notstate">不是最新</option>
+                                        </select>-->
+                                        <input type="text" class="form-control" name="expressage_isnew" id="expressage_isnew" placeholder="是否最新">
+                                    </form>
+                                    <form class="form-group"  method="get">
+                                        <label class="col-sm-2 control-label">快递公司：</label>
+
+                                        <input type="text" class="form-control" name="expresageName" id="expresageName" placeholder="请输入你发货的公司如：韵达快递">
+                                    </form>
+                                    <form class="form-group" action="<%=request.getContextPath()%>/ExpressageServlet" method="get">
+                                        <label class="col-sm-2 control-label">商品发货地：</label>
+                                        <!--<select class="form-control">
+                                            <option value="expressage_state">已最新</option>
+                                            <option value="expressage_notstate">不是最新</option>
+                                        </select>-->
+                                        <input type="text" class="form-control" name="expresage_shipAddress" id="expresage_shipAddress" placeholder="请输入你的当前收货地址">
+                                    </form>
+
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-white" data-dismiss="modal">关闭</button>
+                                    <input type="button" value="保存" class="btn btn-primary"  id="saveExpressButton" data-dismiss="modal" >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
                 </div>
             </div>
         </div>
