@@ -10,8 +10,17 @@ public class CashbackCalculateStandEntity {
     private int suitLevel;
     private int suitType;
     private double calculateRate;
+
+    public void setCalculateRate(Double calculateRate) {
+        this.calculateRate = calculateRate;
+    }
+
     private Timestamp periodDate;
     private double cashbackLimit;
+
+    public void setCashbackLimit(Double cashbackLimit) {
+        this.cashbackLimit = cashbackLimit;
+    }
 
     @Id
     @Column(name = "id")

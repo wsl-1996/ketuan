@@ -9,6 +9,7 @@ public class TrackEntity {
     private String trackNumber;
     private String trackCode;
     private String track;
+    private String trackName;
 
     @Id
     @Column(name = "id")
@@ -72,5 +73,15 @@ public class TrackEntity {
         result = 31 * result + (trackCode != null ? trackCode.hashCode() : 0);
         result = 31 * result + (track != null ? track.hashCode() : 0);
         return result;
+    }
+
+    @Basic
+    @Column(name = "track_name")
+    public String getTrackName() {
+        return trackName;
+    }
+
+    public void setTrackName(String trackName) {
+        this.trackName = trackName;
     }
 }

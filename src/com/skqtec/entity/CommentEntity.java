@@ -13,6 +13,11 @@ public class CommentEntity {
     private String productId;
     private String groupId;
     private int starLevel;
+
+    public void setStarLevel(Integer starLevel) {
+        this.starLevel = starLevel;
+    }
+
     private String reply;
     private String evaluateLabel;
     private Timestamp commentTime;

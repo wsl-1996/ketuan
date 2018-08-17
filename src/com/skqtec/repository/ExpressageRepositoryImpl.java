@@ -78,23 +78,7 @@ public class ExpressageRepositoryImpl implements ExpressageRepository {
             return list;
         }
     }
-    public List<ExpressageEntity> query(String isAccomplish){
-        Session s = null;
-        List<ExpressageEntity> list = new ArrayList<ExpressageEntity>();
-        try {
-            s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `EXPRESSAGE` as a where a.is_accomplish="+isAccomplish).addEntity(ExpressageEntity.class);
-            list = q.list();
-        }
-        catch(Exception e){
-            logger.error(e.getMessage(),e);
-        }
-        finally {
-            if (s != null)
-                s.close();
-            return list;
-        }
-    }
+
     public List<ExpressageEntity> search(String expressageId,String key) {
         Session s = null;
         List<ExpressageEntity> list = new ArrayList<ExpressageEntity>();

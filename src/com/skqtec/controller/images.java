@@ -130,8 +130,8 @@ public class images {
         String messageTo=request.getParameter("messageTo");
         String headOwner=request.getParameter("headOwner");
         List<String> ids = new ArrayList<String>();
-        String uploadPath = request.getRealPath("/")+"imagesDir\\";
-        File tempPathFile = new File("d:\\tempPath\\");
+        String uploadPath = request.getRealPath("/")+"imagesDir/";
+        File tempPathFile = new File("/ketuanTempDir/");
         try {
             // Create a factory for disk-based file items
             DiskFileItemFactory factory = new DiskFileItemFactory();

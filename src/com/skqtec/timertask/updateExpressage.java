@@ -3,8 +3,8 @@ package com.skqtec.timertask;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.ExpressageEntity;
-import com.skqtec.repository.ExpressageRepository;
+import com.skqtec.entity.TrackEntity;
+import com.skqtec.repository.TrackRepository;
 import com.skqtec.tools.KdniaoTrackQueryAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,20 +15,20 @@ import java.util.List;
 @Component
 public class updateExpressage {
     @Autowired
-    private ExpressageRepository expressageRepository;
+    private TrackRepository trackRepository;
     @Scheduled(cron = "0 0 * * * ? ")
     public void run(){
         try{
             KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
-            List<ExpressageEntity>list=expressageRepository.query("0");
-            for(ExpressageEntity expressage:list) {
-                String expCode=KdniaoTrackQueryAPI.getCompanyCode(expressage.getExpressageName());
-                String expNo=expressage.getId();
+            List<TrackEntity>list=trackRepository.query("0");
+            for(TrackEntity track:list) {
+                String expCode=KdniaoTrackQueryAPI.getCompanyCode(track.getTrackName());
+                String expNo=track.getTrackNumber();
                 String result = api.getOrderTracesByJson(expCode, expNo);
                 JSONObject jsonObject=JSON.parseObject(result);
                 JSONArray traces=(JSONArray)jsonObject.get("Traces");
-                expressage.setExpressageDetails(traces.toString());
-                expressageRepository.saveOrUpdate(expressage);
+                track.setTrack(traces.toString());
+                trackRepository.saveOrUpdate(track);
             }
 
         }catch(Exception e){

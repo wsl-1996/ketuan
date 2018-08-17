@@ -1,0 +1,83 @@
+package com.skqtec.repository;
+
+import com.alibaba.fastjson.JSONObject;
+import com.skqtec.entity.TrackEntity;
+import org.apache.log4j.Logger;
+import org.hibernate.Query;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
+import java.util.ArrayList;
+import java.util.List;
+@Repository
+public class TrackRepositoryImpl implements TrackRepository {
+    static Logger logger = Logger.getLogger(TrackRepositoryImpl.class.getName());
+    @Autowired
+    private SessionFactory sessionFactory;
+    private Session getCurrentSession() {
+        return this.sessionFactory.openSession();
+    }
+    public List<TrackEntity> query(String isAccomplish){
+        Session s = null;
+        List<TrackEntity> list = new ArrayList<TrackEntity>();
+        try {
+            s = getCurrentSession();
+            Query q = s.createSQLQuery("SELECT * FROM `TRACK` as a where a.is_accomplish="+isAccomplish).addEntity(TrackEntity.class);
+            list = q.list();
+        }
+        catch(Exception e){
+            logger.error(e.getMessage(),e);
+        }
+        finally {
+            if (s != null)
+                s.close();
+            return list;
+        }
+    }
+    public TrackEntity load(String id) {
+        return null;
+    }
+
+    public TrackEntity get(String id) {
+        return null;
+    }
+
+    public List<TrackEntity> findAll() {
+        return null;
+    }
+
+    public List<TrackEntity> query(JSONObject jsonObject) {
+        return null;
+    }
+
+    public List<TrackEntity> search(String key) {
+        return null;
+    }
+
+    public void persist(TrackEntity entity) {
+
+    }
+
+    public String save(TrackEntity entity) {
+        return null;
+    }
+
+    public void saveOrUpdate(TrackEntity entity) {
+        Session session = getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(entity);
+        transaction.commit();
+        session.close();
+    }
+
+    public void delete(String id) {
+
+    }
+
+    public void flush() {
+
+    }
+}

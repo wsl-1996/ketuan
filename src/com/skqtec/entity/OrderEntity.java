@@ -26,6 +26,11 @@ public class OrderEntity {
     private Timestamp receiptTime;
     private double productPrice;
     private double carriagePrice;
+
+    public void setCarriagePrice(Double carriagePrice) {
+        this.carriagePrice = carriagePrice;
+    }
+
     private String descript;
     private Integer sums;
     private String typeSpecification;

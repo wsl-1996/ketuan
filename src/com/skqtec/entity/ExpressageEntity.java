@@ -8,7 +8,12 @@ public class ExpressageEntity {
     private String id;
     private String expressageName;
     private String addressOfSevvice;
-    private Integer expressagePrice;
+    private double expressagePrice;
+
+    public void setExpressagePrice(Double expressagePrice) {
+        this.expressagePrice = expressagePrice;
+    }
+
     private String productId;
     private Integer isNew;
     private String shipAddress;
@@ -47,7 +52,7 @@ public class ExpressageEntity {
 
     @Basic
     @Column(name = "expressage_price")
-    public Integer getExpressagePrice() {
+    public double getExpressagePrice() {
         return expressagePrice;
     }
 
@@ -85,7 +90,7 @@ public class ExpressageEntity {
         this.shipAddress = shipAddress;
     }
 
-    @Override
+    /*@Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -117,7 +122,7 @@ public class ExpressageEntity {
         result = 31 * result + (shipAddress != null ? shipAddress.hashCode() : 0);
         return result;
     }
-
+*/
     @Basic
     @Column(name = "is_accomplish")
     public Integer getIsAccomplish() {
@@ -136,5 +141,17 @@ public class ExpressageEntity {
 
     public void setExpressageDetails(String expressageDetails) {
         this.expressageDetails = expressageDetails;
+    }
+
+    private String expressCode;
+
+    @Basic
+    @Column(name = "express_code")
+    public String getExpressCode() {
+        return expressCode;
+    }
+
+    public void setExpressCode(String expressCode) {
+        this.expressCode = expressCode;
     }
 }
