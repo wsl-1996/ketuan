@@ -1,6 +1,7 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
+import com.skqtec.entity.AuthorityEntity;
 import com.skqtec.entity.ProductEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.*;
@@ -50,9 +51,9 @@ public class AuthorityRepositoryImpl  implements  AuthorityRepository{
                 c.add(Restrictions.eq(key, value));
             }
             list = c.list();
-            for (AuthorityEntity image : list) {
-                System.out.println(image.getAuthorityName());
-            }
+//            for (AuthorityEntity image : list) {
+//                System.out.println(image.getAuthorityName());
+//            }
         } finally {
             if (s != null)
                 s.close();
