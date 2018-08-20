@@ -3,8 +3,8 @@ package com.skqtec.entity;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "PRODUCTCLASSIFYCODE", schema = "ketuanDB_test", catalog = "")
-public class ProductclassifycodeEntity {
+@Table(name = "PRODUCT_CLASSIFY_CODE", schema = "ketuanDB_test", catalog = "")
+public class ProductClassifyCodeEntity {
     private String id;
     private String code;
     private String name;
@@ -44,7 +44,7 @@ public class ProductclassifycodeEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        ProductclassifycodeEntity that = (ProductclassifycodeEntity) o;
+        ProductClassifyCodeEntity that = (ProductClassifyCodeEntity) o;
 
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (code != null ? !code.equals(that.code) : that.code != null) return false;
