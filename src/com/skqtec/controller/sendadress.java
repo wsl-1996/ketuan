@@ -200,7 +200,7 @@ public class sendadress {
             UserEntity user=userRepository.get(userId);
             String oldFirstDeliverAddress=user.getFirstDeliverAddress();
             user.setFirstDeliverAddress(FirstDeliverAddress);
-            if(oldFirstDeliverAddress!=""&&oldFirstDeliverAddress!=null) {
+            if(!oldFirstDeliverAddress.equals("")&&oldFirstDeliverAddress!=null) {
                 SendaddressEntity oldSendaddress = sendAddressRepository.get(oldFirstDeliverAddress);
                 oldSendaddress.setDefaultAddress(1);
                 sendAddressRepository.saveOrUpdate(oldSendaddress);
