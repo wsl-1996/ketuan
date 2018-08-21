@@ -43,99 +43,101 @@ public class users {
     private UserRepository userRepository;
     @Autowired
     private SendAddressRepository sendAddressRepository;
+
     /**
      * 获取所有用户
+     *
      * @return
      */
-    @RequestMapping(value="/listall",method=RequestMethod.GET)
-    public @ResponseBody ResponseData getAllUsers(){
+    @RequestMapping(value = "/listall", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData getAllUsers() {
         ResponseData responseData = new ResponseData();
         try {
             List<UserEntity> users = userRepository.findAll();
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("users",users);
+            jsonObject.put("users", users);
             responseData.setData(jsonObject);
-        }
-        catch (Exception e){
-            logger.error(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
-        }
-        finally {
+        } finally {
             return responseData;
         }
     }
 
     /**
      * 关键词查询用户
+     *
      * @param request
      * @return
      */
-    @RequestMapping(value="/search",method=RequestMethod.GET)
-    public @ResponseBody ResponseData queryUsers(HttpServletRequest request){
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData queryUsers(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String key = request.getParameter("key");
         try {
             List<UserEntity> users = userRepository.search(key);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("users",users);
+            jsonObject.put("users", users);
             responseData.setData(jsonObject);
-        }
-        catch (Exception e){
-            logger.error(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
-        }
-        finally {
+        } finally {
             return responseData;
         }
     }
-
 
 
     /**
      * 获取用户详细信息
+     *
      * @param request
      * @param response
      * @return
      */
-    @RequestMapping(value="/getdetail",method=RequestMethod.GET)
-    public @ResponseBody ResponseData getuser(HttpServletRequest request, HttpServletResponse response){
+    @RequestMapping(value = "/getdetail", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData getuser(HttpServletRequest request, HttpServletResponse response) {
         ResponseData responseData = new ResponseData();
         //String usersid = request.getParameter("userid");
-        String sessionId=request.getParameter("sessionid");
+        String sessionId = request.getParameter("sessionid");
         try {
             //判断是否登录
-            String userId=SessionTools.sessionQuery(sessionId);
-            if(userId==null){
+            String userId = SessionTools.sessionQuery(sessionId);
+            if (userId == null) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
             }
-            UserEntity user= userRepository.get(userId);
+            UserEntity user = userRepository.get(userId);
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("user",user);
+            jsonObject.put("user", user);
             responseData.setData(jsonObject);
-        }
-        catch (Exception e){
-            logger.error(e.getMessage(),e);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
-        }
-        finally {
+        } finally {
             return responseData;
         }
     }
+
     //获取用户账户等级
-    @RequestMapping(value="/getusergrade",method=RequestMethod.GET)
-    public @ResponseBody ResponseData getUserGrade(HttpServletRequest request) {
+    @RequestMapping(value = "/getusergrade", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData getUserGrade(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         //String userId = request.getParameter("userid");
-        String sessionId=request.getParameter("sessionid");
+        String sessionId = request.getParameter("sessionid");
         try {
             //判断是否登录
-            String userId=SessionTools.sessionQuery(sessionId);
-            if(userId==null){
+            String userId = SessionTools.sessionQuery(sessionId);
+            if (userId == null) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
@@ -153,36 +155,38 @@ public class users {
             return responseData;
         }
     }
+
     //获取children信息
-    @RequestMapping(value="/getchildren",method=RequestMethod.GET)
-    public @ResponseBody ResponseData getChildren(HttpServletRequest request) {
+    @RequestMapping(value = "/getchildren", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData getChildren(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         //String userId=request.getParameter("userid");
-        String sessionId=request.getParameter("sessionid");
+        String sessionId = request.getParameter("sessionid");
         try {
             //判断是否登录
-            String userId=SessionTools.sessionQuery(sessionId);
-            if(userId==null){
+            String userId = SessionTools.sessionQuery(sessionId);
+            if (userId == null) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
             }
-            UserEntity user=userRepository.get(userId);
-            String childrens=user.getChildren();
+            UserEntity user = userRepository.get(userId);
+            String childrens = user.getChildren();
             JSONArray jChildrens = JSONArray.parseArray(childrens);
-            List<JSONObject>jsonObject1=new ArrayList<JSONObject>();
-            for(int i=0;i<jChildrens.size();i++){
-                String childId=jChildrens.getString(i);
-                UserEntity child=userRepository.get(childId);
-                String nickName=child.getNickname();
-                String headImg=CommonMessage.IMG_URL+child.getHeadImgUrl();
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("nickName",nickName);
-                jsonObject.put("headImg",headImg);
+            List<JSONObject> jsonObject1 = new ArrayList<JSONObject>();
+            for (int i = 0; i < jChildrens.size(); i++) {
+                String childId = jChildrens.getString(i);
+                UserEntity child = userRepository.get(childId);
+                String nickName = child.getNickname();
+                String headImg = CommonMessage.IMG_URL + child.getHeadImgUrl();
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("nickName", nickName);
+                jsonObject.put("headImg", headImg);
                 jsonObject1.add(jsonObject);
             }
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("childrenInfo",jsonObject1);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("childrenInfo", jsonObject1);
             responseData.setData(jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -194,15 +198,16 @@ public class users {
     }
 
     //绑定手机号-发送验证码
-    @RequestMapping(value="/sendverficationcode",method=RequestMethod.GET)
-    public @ResponseBody ResponseData sendVerficationCode(HttpServletRequest request) {
+    @RequestMapping(value = "/sendverficationcode", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData sendVerficationCode(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String phone = request.getParameter("phone");
-        String sessionId=request.getParameter("sessionid");
+        String sessionId = request.getParameter("sessionid");
         try {
             //判断是否登录
-           String userId=SessionTools.sessionQuery(sessionId);
-            if(userId==null){
+            String userId = SessionTools.sessionQuery(sessionId);
+            if (userId == null) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
@@ -215,9 +220,9 @@ public class users {
                 int number = random.nextInt(base.length());
                 sb.append(base.charAt(number));
             }
-            String verficationCode=sb.toString();
-            StoreTools.storeInfo(sessionId+"0",verficationCode,900);
-            StoreTools.storeInfo(sessionId+"1",phone,900);
+            String verficationCode = sb.toString();
+            StoreTools.storeInfo(sessionId + "0", verficationCode, 900);
+            StoreTools.storeInfo(sessionId + "1", phone, 900);
             HttpClient client = new HttpClient();
             PostMethod post = new PostMethod("http://sms.webchinese.cn/web_api/");
             post.addRequestHeader("Content-Type",
@@ -225,7 +230,7 @@ public class users {
             NameValuePair[] data = {new NameValuePair("Uid", "lijie1108"), // 注册的用户名
                     new NameValuePair("Key", "d41d8cd98f00b204e980"), // 注册成功后,登录网站使用的密钥
                     new NameValuePair("smsMob", phone), // 手机号码
-                    new NameValuePair("smsText", "您的验证码是"+verficationCode+"，在十五分钟内有效。如非本人操作请忽略本短信。")};//设置短信内容
+                    new NameValuePair("smsText", "您的验证码是" + verficationCode + "，在十五分钟内有效。如非本人操作请忽略本短信。")};//设置短信内容
             post.setRequestBody(data);
             client.executeMethod(post);
             Header[] headers = post.getResponseHeaders();
@@ -249,76 +254,77 @@ public class users {
     }
 
     //绑定手机号-验证验证码
-    @RequestMapping(value="/checkverficationcode",method=RequestMethod.GET)
-    public @ResponseBody ResponseData checkVerficationCode(HttpServletRequest request) {
+    @RequestMapping(value = "/checkverficationcode", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData checkVerficationCode(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
-        String verficationCode=request.getParameter("verficationcode");
-        String sessionId=request.getParameter("sessionid");
-        try{
+        String verficationCode = request.getParameter("verficationcode");
+        String sessionId = request.getParameter("sessionid");
+        try {
             //判断是否登录
-           String userId=SessionTools.sessionQuery(sessionId);
-            if(userId==null){
+            String userId = SessionTools.sessionQuery(sessionId);
+            if (userId == null) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
             }
-            if(!verficationCode.equals(StoreTools.getInfo(sessionId+"0"))) {
+            if (!verficationCode.equals(StoreTools.getInfo(sessionId + "0"))) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.CHECK_VERFICATION_CODE_FAILED);
             }
-            String phone=StoreTools.getInfo(sessionId+"1");
-            UserEntity user=userRepository.get(userId);
+            String phone = StoreTools.getInfo(sessionId + "1");
+            UserEntity user = userRepository.get(userId);
             user.setPhone(phone);
             userRepository.saveOrUpdate(user);
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.CHECK_VERFICATION_CODE_FAILED);
-        }finally{
+        } finally {
             return responseData;
         }
     }
 
     //用户登录
-    @RequestMapping(value="/login",method=RequestMethod.GET)
-    public @ResponseBody ResponseData login(HttpServletRequest request) {
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseData login(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         try {
-            String code=request.getParameter("code");
+            String code = request.getParameter("code");
             //WXUtils wxUtils = new WXUtils();
-            String rawData=request.getParameter("rawData");
-            String signature=request.getParameter("signature");
+            String rawData = request.getParameter("rawData");
+            String signature = request.getParameter("signature");
             //String encryptedData=request.getParameter("encryptedData");
             //String iv=request.getParameter("iv");
-            String APPID="wx5733cafea467c980";
-            String APPSECRET="5c0e7f53469730421e2d7a5e9464df4f";
-            String url = "https://api.weixin.qq.com/sns/jscode2session?appid="+APPID+"&secret="+APPSECRET+"&js_code="+code+"&grant_type=authorization_code";
+            String APPID = "wx5733cafea467c980";
+            String APPSECRET = "5c0e7f53469730421e2d7a5e9464df4f";
+            String url = "https://api.weixin.qq.com/sns/jscode2session?appid=" + APPID + "&secret=" + APPSECRET + "&js_code=" + code + "&grant_type=authorization_code";
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, null, String.class);
-            if(responseEntity != null && responseEntity.getStatusCode() == HttpStatus.OK)
-            {
+            if (responseEntity != null && responseEntity.getStatusCode() == HttpStatus.OK) {
                 String sessionData = responseEntity.getBody();
-                logger.info("sessionData = "+ sessionData);
+                logger.info("sessionData = " + sessionData);
                 JSONObject jsonObj = JSON.parseObject(sessionData);
                 String openId = jsonObj.getString("openid");
                 String sessionKey = jsonObj.getString("session_key");
-                UserEntity user=userRepository.query(openId);
-                if(user==null){
+                UserEntity user = userRepository.query(openId);
+                if (user == null) {
                     //创建用户
-                    user=new UserEntity();
+                    user = new UserEntity();
                     String uuid = UUID.randomUUID().toString().replace("-", "");
                     user.setId(uuid);
                     user.setOpenid(openId);
                 }
-                String signature1 = DigestUtils.shaHex(rawData+sessionKey);
-                if(!signature1.equals(signature)) //验证签名
+                String signature1 = DigestUtils.shaHex(rawData + sessionKey);
+                if (!signature1.equals(signature)) //验证签名
                 {
-                    logger.info(" req signature="+signature);
-                    logger.info(" java signature="+signature);
+                    logger.info(" req signature=" + signature);
+                    logger.info(" java signature=" + signature);
                     responseData.setFailed(true);
                     responseData.setFailedMessage(CommonMessage.LOGIN_FAILED);
                 }
-                JSONObject resultJson =JSON.parseObject(rawData);
+                JSONObject resultJson = JSON.parseObject(rawData);
                 //resultJson = WXUtils.getUserInfo(encryptedData,sessionKey,iv);
                 user.setNickname(resultJson.getString("nickName"));
                 user.setSex(resultJson.getIntValue("gender"));
@@ -328,12 +334,12 @@ public class users {
                 user.setCountry(resultJson.getString("country"));
                 user.setProvince(resultJson.getString("province"));
                 userRepository.saveOrUpdate(user);
-                String sessionId=SessionTools.setSession(user.getId());
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("sessionId",sessionId);
-                jsonObject.put("userId",user.getId());
+                String sessionId = SessionTools.setSession(user.getId());
+                JSONObject jsonObject = new JSONObject();
+                jsonObject.put("sessionId", sessionId);
+                jsonObject.put("userId", user.getId());
                 responseData.setData(jsonObject);
-            }else {
+            } else {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.LOGIN_FAILED);
             }
@@ -341,6 +347,28 @@ public class users {
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.LOGIN_FAILED);
         } finally {
+            return responseData;
+        }
+    }
+
+    //判断登录是否到期
+    @RequestMapping(value = "/islogin", method = RequestMethod.GET)
+    public @ResponseBody ResponseData isLogin(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String sessionId=request.getParameter("sessionid");
+        System.out.println(sessionId);
+        try{
+            String userId = SessionTools.sessionQuery(sessionId);
+            JSONObject jsonObject=new JSONObject();
+            if (userId == null) {
+                jsonObject.put("isLogin","false");
+            }else{
+                jsonObject.put("isLogin","true");
+            }
+            responseData.setData(jsonObject);
+        }catch(Exception e){
+            responseData.setFailed(true);
+        }finally{
             return responseData;
         }
     }

@@ -35,7 +35,8 @@ public class expressages {
     private UserRepository userRepository;
     @Autowired
     private ExpressageRepository expressageRepository;
-
+    @Autowired
+    private TrackRepository trackRepository;
 
 
 /**
@@ -133,9 +134,26 @@ public class expressages {
             return  responseData;
         }
     }
+    //获取快递轨迹
+    @RequestMapping(value="/gettrack",method = RequestMethod.GET)
+    public @ResponseBody ResponseData getTrack(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String orderId = request.getParameter("orderid");
+        try {
+            String trackId=orderRepository.get(orderId).getTrackId();
+            JSONObject jsonObject=new JSONObject();
+            String track=trackRepository.find(trackId);
+            jsonObject.put("track",track);
+            responseData.setData(jsonObject);
+        } catch (Exception e) {
+            logger.error(e, e.fillInStackTrace());
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_TRACK_FAILED);
+        } finally {
+            return responseData;
+        }
 
-
-
+    }
 
 
 

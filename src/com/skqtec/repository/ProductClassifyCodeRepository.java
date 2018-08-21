@@ -1,6 +1,6 @@
 package com.skqtec.repository;
 
-import com.skqtec.entity.ProductclassifycodeEntity;
+import com.skqtec.entity.ProductClassifyCodeEntity;
 
-public interface ProductClassifyCodeRepository extends DomainRepository<ProductclassifycodeEntity,String>{
+public interface ProductClassifyCodeRepository extends DomainRepository<ProductClassifyCodeEntity,String>{
 }

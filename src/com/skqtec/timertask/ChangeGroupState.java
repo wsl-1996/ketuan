@@ -44,9 +44,9 @@ public class ChangeGroupState {
                 group.setGroupState(0);
                 groupRepository.saveOrUpdate(group);
                 j.lrem("changeGroupState",0,jsonObject.toString());
-                pool.returnResource(j);
+
             }
         }
-
+        pool.returnResource(j);
     }
 }

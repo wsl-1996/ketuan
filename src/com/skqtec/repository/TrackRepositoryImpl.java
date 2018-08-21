@@ -72,7 +72,13 @@ public class TrackRepositoryImpl implements TrackRepository {
         transaction.commit();
         session.close();
     }
-
+    public String find(String trackId){
+        Session session=getCurrentSession();
+        Transaction transaction = session.beginTransaction();
+        Query q=session.createSQLQuery("select * from `TRACK` where track_number="+trackId).addEntity(TrackEntity.class);
+        List<TrackEntity>list=q.list();
+        return list.get(0).getTrack();
+    }
     public void delete(String id) {
 
     }

@@ -12,7 +12,7 @@ public class SessionTools {
         Jedis jedis=jedisPool.getResource();
         String userId=jedis.get(sessionId);
         if(userId!=null)
-        jedis.expire(sessionId,600);
+        jedis.expire(sessionId,60*60*24*3);
         jedisPool.returnResource(jedis);
         return userId;
     }

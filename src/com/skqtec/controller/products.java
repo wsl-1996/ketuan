@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
+import com.skqtec.entity.ProductClassifyCodeEntity;
 import com.skqtec.entity.ProductEntity;
-import com.skqtec.entity.ProductclassifycodeEntity;
 import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.ProductClassifyCodeRepository;
 import com.skqtec.repository.ProductRepository;
@@ -239,7 +239,7 @@ public class products {
     public @ResponseBody ResponseData getProductClassify(HttpServletRequest request) {
         ResponseData responseData=new ResponseData();
         try{
-            List<ProductclassifycodeEntity>lists=productClassifyCodeRepository.findAll();
+            List<ProductClassifyCodeEntity>lists=productClassifyCodeRepository.findAll();
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("productclassify",lists);
             responseData.setData(jsonObject);

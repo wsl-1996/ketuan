@@ -31,4 +31,5 @@ public class CommonMessage {
     public static String TEST_FAILED="测试失败";
     public static String REFUND_FAILED="退款失败";
     public static String SEND_MESSAGE_FAILED="发送消息失败";
+    public static String GET_TRACK_FAILED="获取快递轨迹失败";
 }

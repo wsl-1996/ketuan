@@ -1,51 +1,50 @@
 package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
-import com.skqtec.entity.ProductclassifycodeEntity;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
+import com.skqtec.entity.ProductClassifyCodeEntity;
 import java.util.List;
 @Repository
 public class ProductClassifyCodeRepositoryImpl implements ProductClassifyCodeRepository {
     static Logger logger = Logger.getLogger(ProductClassifyCodeRepositoryImpl.class.getName());
     @Autowired
     SessionFactory sessionFactory;
-    public ProductclassifycodeEntity load(String id) {
+    public ProductClassifyCodeEntity load(String id) {
         return null;
     }
 
-    public ProductclassifycodeEntity get(String id) {
+    public ProductClassifyCodeEntity get(String id) {
         return null;
     }
 
-    public List<ProductclassifycodeEntity> findAll() {
+    public List<ProductClassifyCodeEntity> findAll() {
         Session session=sessionFactory.openSession();
-        List<ProductclassifycodeEntity>list=session.createQuery("from "+ProductclassifycodeEntity.class.getSimpleName()).list();
+        List<ProductClassifyCodeEntity>list=session.createQuery("from "+ProductClassifyCodeEntity.class.getSimpleName()).list();
         session.close();
         return list;
     }
 
-    public List<ProductclassifycodeEntity> query(JSONObject jsonObject) {
+    public List<ProductClassifyCodeEntity> query(JSONObject jsonObject) {
         return null;
     }
 
-    public List<ProductclassifycodeEntity> search(String key) {
+    public List<ProductClassifyCodeEntity> search(String key) {
         return null;
     }
 
-    public void persist(ProductclassifycodeEntity entity) {
+    public void persist(ProductClassifyCodeEntity entity) {
 
     }
 
-    public String save(ProductclassifycodeEntity entity) {
+    public String save(ProductClassifyCodeEntity entity) {
         return null;
     }
 
-    public void saveOrUpdate(ProductclassifycodeEntity entity) {
+    public void saveOrUpdate(ProductClassifyCodeEntity entity) {
 
     }
 
