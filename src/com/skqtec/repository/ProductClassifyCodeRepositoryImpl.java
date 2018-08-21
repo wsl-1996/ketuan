@@ -2,6 +2,7 @@ package com.skqtec.repository;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,8 @@ public class ProductClassifyCodeRepositoryImpl implements ProductClassifyCodeRep
 
     public List<ProductClassifyCodeEntity> findAll() {
         Session session=sessionFactory.openSession();
-        List<ProductClassifyCodeEntity>list=session.createQuery("from "+ProductClassifyCodeEntity.class.getSimpleName()).list();
+        Query q=session.createSQLQuery("select * from `PRODUCT_CLASSIFY_CODE` order by code").addEntity(ProductClassifyCodeEntity.class);
+        List<ProductClassifyCodeEntity>list=q.list();
         session.close();
         return list;
     }
