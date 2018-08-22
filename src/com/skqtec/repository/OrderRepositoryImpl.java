@@ -110,9 +110,9 @@ public class OrderRepositoryImpl implements OrderRepository {
             int state=Integer.parseInt(orderState);
             Query q=null;
             if(state==0)//获取全部订单
-                q= s.createSQLQuery("SELECT * FROM `ORDER` as a where a.user_id="+userId+" and a.state>"+state).addEntity(OrderEntity.class);
+                q= s.createSQLQuery("SELECT * FROM `ORDER` as a where a.user_id='"+userId+"' and a.state>"+state).addEntity(OrderEntity.class);
             else
-                q= s.createSQLQuery("SELECT * FROM `ORDER` as a where a.user_id="+userId+" and a.state="+state).addEntity(OrderEntity.class);
+                q= s.createSQLQuery("SELECT * FROM `ORDER` as a where a.user_id='"+userId+"' and a.state="+state).addEntity(OrderEntity.class);
             list = q.list();
         }
         catch(Exception e){

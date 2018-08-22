@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.OrderEntity;
+import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.OrderRepository;
 import com.skqtec.repository.UserRepository;
 import com.skqtec.tools.SessionTools;
@@ -95,7 +96,10 @@ public class payment {
             int totalFee=Integer.parseInt(info.get("total_fee"));
             //String payTime=info.get("time_end");
             OrderEntity order=orderRepository.get(orderId);
-            if(totalFee!=order.getTotalPrice()) {
+            //修改客团账户余额
+            UserEntity user=userRepository.get(order.getUserId());
+            user.setBalance(user.getBalance()-order.getDeduction());
+            if(totalFee!=order.getTotalPrice()-order.getDeduction()) {
                 returns = "<xml>" +
                         "  <return_code><![CDATA[FAIL]]></return_code>" +
                         "  <return_msg><![CDATA[OK]]></return_msg>" +
@@ -135,7 +139,7 @@ public class payment {
             }
             String outRefundNo=WXPayUtil.getOrderNo();
             OrderEntity order=orderRepository.get(orderId);
-            String totalFee=String.valueOf((int)order.getTotalPrice());
+            String totalFee=String.valueOf((int)(order.getTotalPrice()-order.getDeduction()));
             order.setOutRefundNo(outRefundNo);
             HashMap<String, String> data = new HashMap<String, String>();
             data.put("out_trade_no",orderId);

@@ -44,6 +44,7 @@ public class orders {
     public @ResponseBody ResponseData createProduct(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ResponseData responseData=new ResponseData();
+        String deduction=request.getParameter("deduction");//抵扣金额
         String productId=request.getParameter("productid");
         String groupId=request.getParameter("groupid");
         String sessionId=request.getParameter("sessionid");
@@ -91,11 +92,15 @@ public class orders {
         orderEntity.setPaymethod("微信支付");
         orderEntity.setTypeSpecification(productStyle);
         orderEntity.setSums(sums);
+        orderEntity.setDeduction(Double.parseDouble(deduction));
         orderEntity.setDescript(product.getProductName()+product.getEvaluateLabel()+product.getProductInfo()+product.getProductLabel());
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
+            //支付
             JSONObject j=null;
-            j=payment.payRequest(out_trade_no,productId,openId,totalPrice);
+            String payMoney=String.valueOf((int)((Double.parseDouble(totalPrice)-Double.parseDouble(deduction))*100));
+            System.out.println(payMoney);
+            j=payment.payRequest(out_trade_no,productId,openId,payMoney);
             Map<String, String> data=(Map)j.get("data");
             String timeStamp=String.valueOf(new Date().getTime()/1000);
             String nonceStr=data.get("nonce_str");
@@ -146,7 +151,7 @@ public class orders {
             for(OrderEntity order:orders){
                 ProductEntity product=productRepository.get(order.getProductId());
                 String shopName=null;
-                if(product.getOwnerType()==0) {
+                if(product.getOwnerType()==1) {
                     MerchantEntity merchant = merchantRepository.get(product.getMerchantId());
                     shopName=merchant.getName();
                 }
@@ -155,12 +160,13 @@ public class orders {
                     shopName=user.getNickname();
                 }
                 String orderId=order.getId();
-                String productImg=CommonMessage.IMG_URL+product.getProductFistImg();
+                String productImg=product.getProductFistImg();
                 String productTitle=product.getProductName();
                 String productPrice=String.valueOf(product.getPrice());
                 String sums=String.valueOf(order.getSums());
                 String typeSpecification=order.getTypeSpecification();
                 String sumPrice=String.valueOf(order.getTotalPrice());
+                String deduction=String.valueOf(order.getDeduction());
                 JSONObject jsonObject=new JSONObject();
                 jsonObject.put("shopName",shopName);
                 jsonObject.put("orderId",orderId);
@@ -169,6 +175,7 @@ public class orders {
                 jsonObject.put("productTitle",productTitle);
                 jsonObject.put("productPrice",productPrice);
                 jsonObject.put("sums",sums);
+                jsonObject.put("deduction",deduction);
                 jsonObject.put("typeSpecification",typeSpecification);
                 jsonObject.put("sumPrice",sumPrice);
                 j.add(jsonObject);
@@ -300,7 +307,7 @@ public class orders {
             String sendName=order.getSendName();
             String sendAddress=order.getSendAddress();
             String sendTel=order.getSendTel();
-            String productImg=CommonMessage.IMG_URL+product.getProductFistImg();
+            String productImg=product.getProductFistImg();
             String productTitle=product.getProductName();
             String productPrice=String.valueOf(product.getPrice());
             String sums=String.valueOf(order.getSums());
@@ -308,8 +315,12 @@ public class orders {
             String sumPrice=String.valueOf(order.getTotalPrice());
             String carriagePrice=String.valueOf(order.getCarriagePrice());
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            String payTime=sdf.format(order.getPayTime());
-            String deliverTime=sdf.format(order.getDeliverTime());
+            String payTime=null;
+            if(order.getState()>=2)
+                payTime=sdf.format(order.getPayTime());
+            String deliverTime=null;
+            if(order.getState()>=3)
+                deliverTime=sdf.format(order.getDeliverTime());
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("orderState",orderState);
             jsonObject.put("sendName",sendName);

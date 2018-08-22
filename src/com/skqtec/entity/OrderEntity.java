@@ -26,15 +26,15 @@ public class OrderEntity {
     private Timestamp receiptTime;
     private double productPrice;
     private double carriagePrice;
-
-    public void setCarriagePrice(Double carriagePrice) {
-        this.carriagePrice = carriagePrice;
-    }
-
     private String descript;
     private Integer sums;
     private String typeSpecification;
     private String outRefundNo;
+    private Double deduction;
+
+    public void setCarriagePrice(Double carriagePrice) {
+        this.carriagePrice = carriagePrice;
+    }
 
     @Id
     @Column(name = "id")
@@ -335,5 +335,15 @@ public class OrderEntity {
 
     public void setOutRefundNo(String outRefundNo) {
         this.outRefundNo = outRefundNo;
+    }
+
+    @Basic
+    @Column(name = "deduction")
+    public Double getDeduction() {
+        return deduction;
+    }
+
+    public void setDeduction(Double deduction) {
+        this.deduction = deduction;
     }
 }
