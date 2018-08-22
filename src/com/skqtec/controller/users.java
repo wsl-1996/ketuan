@@ -126,8 +126,7 @@ public class users {
             return responseData;
         }
     }
-
-    //获取用户账户等级
+    //获取用户账户等级和余额
     @RequestMapping(value = "/getusergrade", method = RequestMethod.GET)
     public @ResponseBody
     ResponseData getUserGrade(HttpServletRequest request) {
@@ -144,8 +143,10 @@ public class users {
             }
             UserEntity user = userRepository.get(userId);
             String userGrade = String.valueOf(user.getGrade());
+            double userBalanse=user.getBalance();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("userGrade", userGrade);
+            jsonObject.put("userBalance",userBalanse);
             responseData.setData(jsonObject);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -295,6 +296,7 @@ public class users {
             //WXUtils wxUtils = new WXUtils();
             String rawData = request.getParameter("rawData");
             String signature = request.getParameter("signature");
+            String parentid=request.getParameter("parentid");
             //String encryptedData=request.getParameter("encryptedData");
             //String iv=request.getParameter("iv");
             String APPID = "wx5733cafea467c980";
@@ -315,6 +317,11 @@ public class users {
                     String uuid = UUID.randomUUID().toString().replace("-", "");
                     user.setId(uuid);
                     user.setOpenid(openId);
+                    user.setInviteUserId(parentid);
+                    UserEntity parentUser=userRepository.get(parentid);
+                    JSONArray jsonArray=JSONArray.parseArray(parentUser.getChildren());
+                    jsonArray.add(uuid);
+                    parentUser.setChildren(jsonArray.toString());
                 }
                 String signature1 = DigestUtils.shaHex(rawData + sessionKey);
                 if (!signature1.equals(signature)) //验证签名

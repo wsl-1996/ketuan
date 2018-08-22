@@ -889,13 +889,6 @@ public class backmanage {
         }
     }
 
-
-
-
-
-
-
-
     //删除管理员
     @RequestMapping(value="/deletemanage",method=RequestMethod.GET)
     public @ResponseBody ResponseData deletemanage(HttpServletRequest request, HttpServletResponse response){
