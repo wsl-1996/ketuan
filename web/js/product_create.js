@@ -1,5 +1,95 @@
 $(function(){
 
+    function getAllClassifyCode() {
+        $.ajax({
+            url:"/ketuan/applet/products/getproductclassify",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.info(JSON.stringify(data));
+                if (data["failed"]) {
+                    alert("获取所有分类失败！" + data["failedMessage"]);
+                }
+                else {
+                    var classifyCode = data["data"]["productclassify"];
+                    for(var i=0; i<classifyCode.length;i++){
+                        appendClassifyCode(classifyCode[i]);
+                    }
+                    $("#classify_code_list tbody tr").on("click", getClassifyCode);
+                }
+            },
+            error: function (e) {
+                console.error(JSON.stringify(e));
+                alert("获取所有分类失败！" + JSON.stringify(e));
+            }
+        })
+    }
+    function appendClassifyCode(classifyCode){
+        var code = classifyCode["code"];
+        var name = classifyCode["name"];
+        var g1 = code.substr(0,2);
+        var g2= code.substr(2,2);
+        var g3= code.substr(4,2);
+        var classify_row ="";
+        if(g2=="00" && g3=="00"){
+            classify_row='<tr id="'+code+'"> <td>'+name+'</td><td></td><td></td></tr>';
+        }
+        else if(g3=="00"){
+            classify_row='<tr id="'+code+'"> <td></td><td>'+name+'</td><td></td></tr>';
+        }
+        else{
+            classify_row='<tr id="'+code+'"> <td></td><td></td><td>'+name+'</td></tr>';
+        }
+        $("#classify_code_list tbody").append(classify_row);
+    }
+
+    function getClassifyCode(data) {
+        var currentId = $(this).attr("id");
+        $("#product_classifyCode").val(currentId);
+        //$("#product_create_search").hide();
+    }
+
+    getAllClassifyCode();
+
+    function getAllHotLabels() {
+        $.ajax({
+            url:"/ketuan/backmanage/hostlabels",
+            type: "GET",
+            dataType: "json",
+            success: function (data) {
+                console.info(JSON.stringify(data));
+                if (data["failed"]) {
+                    alert("获取所有热门标签失败！" + data["failedMessage"]);
+                }
+                else {
+                    var labels = data["data"]["labels"];
+                    for(var i=0; i<labels.length;i++){
+                        appendHotLabels(labels[i]);
+                    }
+                    $(".hotlabel").on("click", addLabel);
+                }
+            },
+            error: function (e) {
+                console.error(JSON.stringify(e));
+                alert("获取所有热门标签失败！" + JSON.stringify(e));
+            }
+        })
+    }
+    
+    function addLabel(data) {
+        var labelId = $(this).attr("id");
+        var labelName=$(this).find("#"+labelId).context.innerHTML;
+        var label_before1=$("#product_lable").val();
+        $("#product_lable").val(label_before1+" "+labelName);
+    }
+
+    function appendHotLabels(label) {
+        var labelBtn = '<button type="button" class="label label-primary hotlabel" id="'+label["id"]+'">'+label["name"]+'</button>';
+        $("#label_select_div").append(labelBtn);
+    }
+
+    getAllHotLabels();
+    
     var val=$("#product_lable").val();
     $("#label_1").on("click",function (e) {
         var label_before1=$("#product_lable").val();//先获取之前输入的值
@@ -45,8 +135,6 @@ $(function(){
 
     })
 
-
-
     //发货地址的获取值
    $('#distpicker2').on("change",function (data) {
        var address_before1=$("#productshipment").val();    //当我选中省级时，input显示三级下拉值
@@ -67,8 +155,6 @@ $(function(){
        $("#productshipment").val(province3+city3+district3);
     })
 
-
-
     //供货人的选择和获取
     $("#ownerid").on("click",function (e) {
         $("#product_create_search").show();
@@ -76,6 +162,10 @@ $(function(){
         $("#ownerid").attr('placeholder',null);
     })
 
+    $("#product_classifyCode").on("click",function (e) {
+        $("#classify_code_modal").modal("show");
+    })
+    
     $("#searchBtn").on("click", function (e) {
         var key = $("#searchKey")[0].value;
         if (key == "" || key == undefined) {
@@ -134,6 +224,10 @@ $(function(){
                 alert("搜索商家失败！请试着搜索用户！" + JSON.stringify(e));
             }
         })
+    })
+
+    $("#createBtn").on("click",function(e){
+
     })
 
     function getAllMerchants() {
@@ -204,8 +298,8 @@ $(function(){
             + '             <span class="label label-primary">' + sex
             + '          </td>'
             + '          <td class="project-title">'
-            + '              <img alt="image" class="img-circle" src="' + user["headImgUrl"] + '">'
-            + '              <a href="#">' + user["nickname"]
+            + '              <img alt="image" style="width:30px" class="img-circle" src="' + user["headImgUrl"] + '">'
+            + '              <a>' + user["nickname"]
             + '              </a>'
             + '          </td>'
             + '          <td class="project-completion">'
@@ -213,12 +307,12 @@ $(function(){
             + '              <small>' + user["city"] + '</small>'
             + '          </td>'
             + '          <td class="project-people">'
-            + '              <small>业绩：</small>' + user["controbution"]
+            //+ '              <small>业绩：</small>' + user["controbution"]
             + '          </td>'
             + '      </tr>'
         /*$("#usersList tbody").html("");*/
         $("#searchList tbody").append(s);
-            $("#searchList tbody tr").on("click", getid);
+        $("#searchList tbody tr").on("click", getid);
     }
     
     function getid(data) {
@@ -233,7 +327,7 @@ $(function(){
             + '             <span class="label label-primary">@'
             + '          </td>'
             + '          <td class="project-title">'
-            + '              <a href="#">' + merchant["name"]
+            + '              <a>' + merchant["name"]
             + '              </a>'
             + '          </td>'
             + '          <td class="project-completion">'
@@ -251,10 +345,6 @@ $(function(){
 
     }
 
-   // $("#product_createList tbody tr").live('click', function (){alert("执行了");})
-
-
-
     $("#input_productCreate input").on("click",function () {
         var name_choose=$('input:radio[name="a"]:checked').val();
         if(name_choose==1) {
@@ -266,6 +356,11 @@ $(function(){
             getAllMerchants();
         }
     })
+
+    function trim(str){
+        var newStr = str.replace(/^\s*$/g,'');
+        return newStr;
+    }
 
     $("#createBtn").on("click",function (e) {
         console.info("创建产品");
@@ -299,14 +394,36 @@ $(function(){
         var productinfo = $("#product_info")[0].value;
         var productcode = $("#product_classifyCode")[0].value;
         var productlable = $("#product_lable")[0].value;
+
+        var labels = trim(productlable);
+        var labelarr=labels.split(" ")
+        var selectedLlabels = JSON.stringify( labelarr );
+
+        var type_choose=$('input:radio[name="a"]:checked').val();
         //var productownertype = $()
         var productownerid = $("#ownerid")[0].value;
         var productcount = $("#productcount")[0].value;
         var productprice = $("#productprice")[0].value;
         var productcost = $("#product_cost")[0].value;
         var productproduceadd = $("#productproduceadd")[0].value;
-        var productpackstand = $("#productpackstand")[0].value;
-        var productaftersale = $("#productaftersale")[0].value;
+        var productIntroduction = $("#productIntroduction")[0].value;
+
+        var packInfo = $("#package_info")[0].value;
+        var after_sale_info = $("#after_sale_info")[0].value;
+        var prise_instration = $("#prise_instration")[0].value;
+        var productaftersale = {"包装清单":packInfo,"售后服务":after_sale_info,"价格说明":prise_instration};
+
+        var productpackstand={} ;
+
+        $("#parameter_list tr").each(function(){
+            var key=$(this).find(".key_input")[0].value;
+            var value=$(this).find(".value_input")[0].value;
+            productpackstand[key]=value;
+        });
+
+        var startTime = $("#datetimepicker_start").val();
+        var endTime = $("#datetimepicker_end").val();
+
         $.ajax({
             url:"http://localhost:8080/ketuan/applet/products/create",
             type:"POST",
@@ -314,18 +431,21 @@ $(function(){
                 "productname":productname,
                 "productinfo":productinfo,
                 "productcode":productcode,
-                "productlable":productlable,
-                "productownertype":0,
+                "productlable":selectedLlabels,
+                "productownertype":type_choose,
                 "productownerid":productownerid,
                 "productcount":productcount,
                 "productprice":productprice,
                 "productcost":productcost,
                 "productproduceadd":productproduceadd,
-                "productpackstand":productpackstand,
-                "productaftersale":productaftersale,
+                "productpackstand":JSON.stringify(productpackstand),
+                "productaftersale":JSON.stringify(productaftersale),
+                "productIntroduction":productIntroduction,
                 "productFirstImg":firstImg,
                 "productSlideimgs":slideImgs,
-                "productContentimgs":contentImgs
+                "productContentimgs":contentImgs,
+                "offlinetime":endTime,
+                "onlinetime":startTime
             },
             dataType: "json",
             success:function (data) {
@@ -341,22 +461,7 @@ $(function(){
                 console.error(JSON.stringify(e));
                 alert("商家添加失败！"+JSON.stringify(e));
             }
-
         })
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     })
 
 })

@@ -46,13 +46,15 @@ public class backmanage {
     @Autowired
     private UserRepository userRepository;
 
-
     @Autowired
     private  ExpressageRepository  expressageRepository;
 
 
     @Autowired
     private  AuthorityRepository  authorityRepository;
+
+    @Autowired
+    private LabelRepository labelRepository;
 
     /**
      * 创建产品
@@ -470,9 +472,9 @@ public class backmanage {
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String onlineTime = sdf.format(product.getOnlineTime());
             String offlineTime = sdf.format(product.getOfflineTime());
-            product.setProductFistImg(CommonMessage.IMG_URL + product.getProductFistImg());
-            product.setImagesAddress(CommonMessage.IMG_URL + product.getImagesAddress());
-            product.setProductSlideImg(CommonMessage.IMG_URL + product.getProductSlideImg());
+            product.setProductFistImg(product.getProductFistImg());
+            product.setImagesAddress(product.getImagesAddress());
+            product.setProductSlideImg(product.getProductSlideImg());
 
             JSONObject jsonObject1 = new JSONObject();
             jsonObject1 = DisposeUtil.dispose(product);
@@ -1003,6 +1005,25 @@ public class backmanage {
             List<AuthorityEntity> authoritys = authorityRepository.findAll();
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("authoritys",authoritys);
+            responseData.setData(jsonObject);
+        }
+        catch (Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_GROUP_LIST_FAILED);
+        }
+        finally {
+            return responseData;
+        }
+    }
+
+    @RequestMapping(value="/hostlabels",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getHotLabels(HttpServletRequest request, HttpServletResponse response){
+        ResponseData responseData = new ResponseData();
+        try {
+            List<LabelEntity> labels = labelRepository.getHotLabels();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("labels",labels);
             responseData.setData(jsonObject);
         }
         catch (Exception e){
