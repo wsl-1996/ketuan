@@ -66,7 +66,7 @@ public class payment {
         data.put("fee_type", "CNY");
         data.put("total_fee", fee);
         data.put("spbill_create_ip", "114.212.81.63");
-        data.put("notify_url", "9d44f04f.ngrok.io/ketuan/applet/payments/paycallback");
+        data.put("notify_url", "http://www.skqtec.com:8080/ketuan/applet/payments/paycallback");
         data.put("trade_type", "JSAPI");
         data.put("product_id", productId);
         data.put("openid",openId);
@@ -99,6 +99,7 @@ public class payment {
             //修改客团账户余额
             UserEntity user=userRepository.get(order.getUserId());
             user.setBalance(user.getBalance()-order.getDeduction());
+            userRepository.saveOrUpdate(user);
             if(totalFee!=order.getTotalPrice()-order.getDeduction()) {
                 returns = "<xml>" +
                         "  <return_code><![CDATA[FAIL]]></return_code>" +

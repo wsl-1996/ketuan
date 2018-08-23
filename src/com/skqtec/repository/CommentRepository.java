@@ -6,4 +6,5 @@ import java.util.List;
 public interface CommentRepository extends DomainRepository<CommentEntity,String> {
     public String getDegereeOfPraise(String groupId);
     public List<CommentEntity>query(String page,String productId);
+    void saveImg(String commentId,String imgs);
 }

@@ -41,7 +41,7 @@ public class orders {
     private SendAddressRepository sendAddressRepository;
     //生成订单
     @RequestMapping(value="/createorder",method = RequestMethod.GET)
-    public @ResponseBody ResponseData createProduct(HttpServletRequest request, HttpServletResponse response)
+    public @ResponseBody ResponseData createOrder(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ResponseData responseData=new ResponseData();
         String deduction=request.getParameter("deduction");//抵扣金额
@@ -130,6 +130,50 @@ public class orders {
             return responseData;
         }
     }
+    //未支付订单支付接口
+    @RequestMapping(value="/orderpay",method = RequestMethod.GET)
+    public @ResponseBody ResponseData orderPay(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        ResponseData responseData = new ResponseData();
+        String orderId = request.getParameter("orderid");
+        try {
+            OrderEntity order = orderRepository.get(orderId);
+            UserEntity user = userRepository.get(order.getUserId());
+            double totalPrice = order.getTotalPrice();
+            double deduction = order.getDeduction();
+            String productId = order.getProductId();
+            String openId = user.getOpenid();
+            String payMoney = String.valueOf((int) ((totalPrice - deduction) * 100));
+            String out_trade_no = orderId;
+            JSONObject j = payment.payRequest(out_trade_no, productId, openId, payMoney);
+            Map<String, String> data = (Map) j.get("data");
+            String timeStamp = String.valueOf(new Date().getTime() / 1000);
+            String nonceStr = data.get("nonce_str");
+            String package1 = "prepay_id=" + data.get("prepay_id");
+            String signType = "MD5";
+            Map<String, String> reqData = new HashMap<String, String>();
+            reqData.put("appId", "wx5733cafea467c980");
+            reqData.put("nonceStr", nonceStr);
+            reqData.put("package", package1);
+            reqData.put("signType", signType);
+            reqData.put("timeStamp", timeStamp);
+            String paySign = WXPayUtil.generateSignature(reqData, "lijie1108NANCYlijie1108skqtec01s", WXPayConstants.SignType.MD5);
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("timeStamp", timeStamp);
+            jsonObject.put("nonceStr", nonceStr);
+            jsonObject.put("package", package1);
+            jsonObject.put("signType", signType);
+            jsonObject.put("paySign", paySign);
+            responseData.setData(jsonObject);
+        } catch (Exception e) {
+            logger.error(e, e.fillInStackTrace());
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.PAY_FAILED);
+        } finally {
+            return responseData;
+        }
+    }
+
     //获取订单
     @RequestMapping(value="/getorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData getOrder(HttpServletRequest request){
@@ -245,13 +289,13 @@ public class orders {
                 }
                 String orderId=order.getId();
                 String orderState=null;
-                switch(order.getState()){
+               /* switch(order.getState()){
                     case 1:orderState="待付款";break;
                     case 2:orderState="待发货";break;
                     case 3:orderState="待收货";break;
                     case 4:orderState="待评价";break;
                     case 5:orderState="已评价";break;
-                }
+                }*/
                 String productImg=CommonMessage.IMG_URL+product.getProductFistImg();
                 String productTitle=product.getProductName();
                 String productPrice=String.valueOf(product.getPrice());
@@ -298,14 +342,16 @@ public class orders {
             ProductEntity product=productRepository.get(order.getProductId());
             String orderState=null;
             switch(order.getState()){
+                case 0:orderState="已完成";break;
                 case 1:orderState="待付款";break;
                 case 2:orderState="待发货";break;
                 case 3:orderState="待收货";break;
                 case 4:orderState="待评价";break;
-                case 5:orderState="已评价";break;
+                //case 5:orderState="已评价";break;
             }
             String sendName=order.getSendName();
-            String sendAddress=order.getSendAddress();
+            SendaddressEntity sendaddressEntity=sendAddressRepository.get(order.getSendAddress());
+            String sendAddress=sendaddressEntity.getProvince()+sendaddressEntity.getCity()+sendaddressEntity.getDistricts()+sendaddressEntity.getAddressDetail();
             String sendTel=order.getSendTel();
             String productImg=product.getProductFistImg();
             String productTitle=product.getProductName();
@@ -316,10 +362,10 @@ public class orders {
             String carriagePrice=String.valueOf(order.getCarriagePrice());
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             String payTime=null;
-            if(order.getState()>=2)
+            if(order.getState()>=2||order.getState()==0)
                 payTime=sdf.format(order.getPayTime());
             String deliverTime=null;
-            if(order.getState()>=3)
+            if(order.getState()>=3||order.getState()==0)
                 deliverTime=sdf.format(order.getDeliverTime());
             JSONObject jsonObject=new JSONObject();
             jsonObject.put("orderState",orderState);

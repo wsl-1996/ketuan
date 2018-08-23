@@ -4,7 +4,6 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.repository.CashBackRepository;
 import com.skqtec.repository.GroupRepository;
-import com.skqtec.tools.KdniaoTrackQueryAPI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,14 +51,15 @@ public class test {
             jsonObject.put("id",id);
             List<GroupEntity> groups = groupRepository.query(jsonObject);
             System.out.println(groups.toString());*/
-            KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
+
+            /*KdniaoTrackQueryAPI api = new KdniaoTrackQueryAPI();
             try {
                 String result = api.getOrderTracesByJson("ZTO", "219094353460");
                 System.out.print(result);
 
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            }*/
 
         } catch (Exception e) {
             responseData.setFailed(true);

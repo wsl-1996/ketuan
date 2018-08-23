@@ -138,9 +138,24 @@ import java.util.List;
         }
 
         public void saveOrUpdate(CommentEntity entity) {
-            getCurrentSession().saveOrUpdate(entity);
+            Session s=getCurrentSession();
+            Transaction transaction=s.beginTransaction();
+            s.saveOrUpdate(entity);
+            transaction.commit();
+            s.close();
         }
-
+        public void saveImg(String commentId,String imgs){
+            Session s = getCurrentSession();
+            try {
+                Transaction transaction=s.beginTransaction();
+                Query q=s.createSQLQuery("UPDATE `COMMENT` set attach_imgs='"+imgs+"' where id='"+commentId+"'");
+                q.executeUpdate();
+                transaction.commit();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            s.close();
+        }
         public void delete(String id) {
             CommentEntity image = load(id);
             getCurrentSession().delete(image);

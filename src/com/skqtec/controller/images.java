@@ -1,9 +1,12 @@
 package com.skqtec.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
+import com.skqtec.entity.CommentEntity;
 import com.skqtec.entity.ImageEntity;
+import com.skqtec.repository.CommentRepository;
 import com.skqtec.repository.ImageRepository;
 import com.skqtec.tools.RedisAPI;
 import org.apache.commons.fileupload.FileItem;
@@ -28,6 +31,8 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RequestMapping("/applet/images")
 
@@ -38,8 +43,9 @@ public class images {
 
     @Autowired
     private ImageRepository imagedao;
-
-
+    @Autowired
+    private CommentRepository commentRepository;
+    final Lock lock = new ReentrantLock();
 
     @RequestMapping("/hello")
     public @ResponseBody String hello() {
@@ -122,6 +128,74 @@ public class images {
         }
         return JSON.toJSONString(ids);
     }
+    //用户发评价图片接口
+    @RequestMapping(value = "/sendcommentimage",method = RequestMethod.POST)
+    public @ResponseBody String sendCommentImg(HttpServletRequest request)
+            throws ServletException, IOException {
+            String orderId=request.getParameter("orderid");
+            String commentId=orderId;
+            List<String> ids = new ArrayList<String>();
+            String uploadPath = request.getRealPath("/")+"imagesDir/";
+            File tempPathFile = new File("D:\\ketuanTempDir/");
+            try {
+                // Create a factory for disk-based file items
+                DiskFileItemFactory factory = new DiskFileItemFactory();
+
+                // Set factory constraints
+                factory.setSizeThreshold(4096); // 设置缓冲区大小，这里是4kb
+                factory.setRepository(tempPathFile);// 设置缓冲区目录
+
+                // Create a new file upload handler
+                ServletFileUpload upload = new ServletFileUpload(factory);
+                // Set overall request size constraint
+                upload.setSizeMax(4194304); // 设置最大文件尺寸，这里是4MB
+
+                List<FileItem> items = upload.parseRequest(request);// 得到所有的文件
+                Iterator<FileItem> i = items.iterator();
+                //comment.setId(orderId);
+                while (i.hasNext()) {
+                    FileItem fi = (FileItem) i.next();
+                    String fileName = fi.getName();
+                    String fieldName = fi.getFieldName();
+                    if ("file".equals(fieldName)) {
+                        ImageEntity image = new ImageEntity();
+                        String discription = fileName;
+                        String uuid = UUID.randomUUID().toString().replace("-", "");
+                        ids.add(uuid);
+                        image.setId(uuid);
+                        String imageName = uuid + ".png";
+                        String url = CommonMessage.IMG_URL1 + imageName;
+                        image.setUrl(url);
+                        image.setDiscription(discription);
+                        logger.info("********sava returned :  " + imagedao.save(image));
+                        //File fullFile = new File(new String(fi.getName().getBytes(), "utf-8")); // 解决文件名乱码问题
+                        File savedFile = new File(uploadPath, imageName);
+                        fi.write(savedFile);
+                        lock.lock();
+                        CommentEntity comment=commentRepository.get(commentId);
+                        JSONArray jsonArray=null;
+                        if(comment.getAttachImgs()!=null) {
+                            System.out.println("111111111111111111111");
+                             jsonArray= JSONArray.parseArray(comment.getAttachImgs());
+                             jsonArray.add(url);
+                        }else {
+                            System.out.println("0000000000000000000000");
+                            jsonArray = new JSONArray();
+                            jsonArray.add(url);
+                        }
+                        comment.setAttachImgs(jsonArray.toString());
+                        commentRepository.saveOrUpdate(comment);
+                        lock.unlock();
+                        //commentRepository.saveImg(commentId,jsonArray.toString());
+                    }
+                }
+                //commentRepository.saveOrUpdate(comment);
+            }catch(Exception e){
+                logger.error(e,e.fillInStackTrace());
+            }finally{
+                return JSON.toJSONString(ids);
+            }
+    }
     //聊天室-接收图片
     @RequestMapping(value = "/getimage",method = RequestMethod.POST)
     public @ResponseBody String getImg(HttpServletRequest request)
@@ -130,41 +204,41 @@ public class images {
         String messageTo=request.getParameter("messageTo");
         String headOwner=request.getParameter("headOwner");
         List<String> ids = new ArrayList<String>();
-        String uploadPath = request.getRealPath("/")+"imagesDir/";
-        File tempPathFile = new File("/ketuanTempDir/");
-        try {
-            // Create a factory for disk-based file items
-            DiskFileItemFactory factory = new DiskFileItemFactory();
+                    String uploadPath = request.getRealPath("/")+"imagesDir/";
+                    File tempPathFile = new File("/ketuanTempDir/");
+                    try {
+                        // Create a factory for disk-based file items
+                        DiskFileItemFactory factory = new DiskFileItemFactory();
 
-            // Set factory constraints
-            factory.setSizeThreshold(4096); // 设置缓冲区大小，这里是4kb
-            factory.setRepository(tempPathFile);// 设置缓冲区目录
+                        // Set factory constraints
+                        factory.setSizeThreshold(4096); // 设置缓冲区大小，这里是4kb
+                        factory.setRepository(tempPathFile);// 设置缓冲区目录
 
-            // Create a new file upload handler
-            ServletFileUpload upload = new ServletFileUpload(factory);
-            // Set overall request size constraint
-            upload.setSizeMax(4194304); // 设置最大文件尺寸，这里是4MB
+                        // Create a new file upload handler
+                        ServletFileUpload upload = new ServletFileUpload(factory);
+                        // Set overall request size constraint
+                        upload.setSizeMax(4194304); // 设置最大文件尺寸，这里是4MB
 
-            List<FileItem> items = upload.parseRequest(request);// 得到所有的文件
-            Iterator<FileItem> i = items.iterator();
-            while (i.hasNext()) {
-                FileItem fi = (FileItem) i.next();
-                String fileName = fi.getName();
-                String fieldName = fi.getFieldName();
-                if ("file".equals(fieldName)) {
-                    ImageEntity image = new ImageEntity();
-                    String discription = fileName;
-                    String uuid = UUID.randomUUID().toString().replace("-", "");
-                    ids.add(uuid);
-                    image.setId(uuid);
-                    String imageName = uuid+".png";
-                    String url =CommonMessage.IMG_URL1+imageName;
-                    image.setUrl(url);
-                    image.setDiscription(discription);
-                    logger.info("********sava returned :  "+imagedao.save(image));
-                    //File fullFile = new File(new String(fi.getName().getBytes(), "utf-8")); // 解决文件名乱码问题
-                    File savedFile = new File(uploadPath, imageName);
-                    fi.write(savedFile);
+                        List<FileItem> items = upload.parseRequest(request);// 得到所有的文件
+                        Iterator<FileItem> i = items.iterator();
+                        while (i.hasNext()) {
+                            FileItem fi = (FileItem) i.next();
+                            String fileName = fi.getName();
+                            String fieldName = fi.getFieldName();
+                            if ("file".equals(fieldName)) {
+                                ImageEntity image = new ImageEntity();
+                                String discription = fileName;
+                                String uuid = UUID.randomUUID().toString().replace("-", "");
+                                ids.add(uuid);
+                                image.setId(uuid);
+                                String imageName = uuid+".png";
+                                String url =CommonMessage.IMG_URL1+imageName;
+                                image.setUrl(url);
+                                image.setDiscription(discription);
+                                logger.info("********sava returned :  "+imagedao.save(image));
+                                //File fullFile = new File(new String(fi.getName().getBytes(), "utf-8")); // 解决文件名乱码问题
+                                File savedFile = new File(uploadPath, imageName);
+                                fi.write(savedFile);
                     //存入redis
                     JSONObject jsonObject = new JSONObject();
                     jsonObject.put("messageFrom", messageFrom);

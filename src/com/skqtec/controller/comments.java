@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -45,7 +47,7 @@ public class comments {
                 JSONObject j=new JSONObject();
                 UserEntity user=userRepository.get(comment.getUserId());
                 OrderEntity order=orderRepository.get(comment.getId());
-                String userImg=CommonMessage.IMG_URL+user.getHeadImgUrl();
+                String userImg=user.getHeadImgUrl();
                 String userName=user.getNickname();
                 String starLevel=String.valueOf(comment.getStarLevel());
                 String commentTime=String.valueOf(comment.getCommentTime());
@@ -73,6 +75,40 @@ public class comments {
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.GET_COMMENT_LIST_FAILED);
         }finally{
+            return responseData;
+        }
+    }
+    //用户发评价接口
+    @RequestMapping(value="/sendcomment",method=RequestMethod.GET)
+    public @ResponseBody ResponseData sendComment(HttpServletRequest request){
+        ResponseData responseData=new ResponseData();
+        String orderId=request.getParameter("orderid");
+        String starLevel=request.getParameter("starlevel");
+        String commentContent=request.getParameter("commentcontent");
+        String evaluateLabel=request.getParameter("evaluateLabel");
+        OrderEntity order=orderRepository.get(orderId);
+        try{
+            CommentEntity comment=new CommentEntity();
+            comment.setUserId(order.getUserId());
+            comment.setStarLevel(Integer.parseInt(starLevel));
+            comment.setProductStyle(order.getTypeSpecification());
+            comment.setProductId(order.getProductId());
+            comment.setGroupId(order.getGroupId());
+            comment.setEvaluateLabel(evaluateLabel);
+            comment.setId(orderId);
+            comment.setCommentTime(new Timestamp(new Date().getTime()));
+            comment.setCommentContent(commentContent);
+            commentRepository.saveOrUpdate(comment);
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("success","success");
+            responseData.setData(jsonObject);
+        }catch(Exception e){
+            logger.error(e.getMessage(),e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.SEND_COMMENT_FAILED);
+        }finally{
+            order.setState(0);
+            orderRepository.saveOrUpdate(order);
             return responseData;
         }
     }
