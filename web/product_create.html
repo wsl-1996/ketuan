@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:ime-mode="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,9 @@
     <meta name="keywords" content="客团 团购 商城 后台">
     <meta name="description" content="H+是一个完全响应式，基于Bootstrap3最新版本开发的扁平化主题，她采用了主流的左右两栏式布局，使用了Html5+CSS3等现代技术">
 
-    <link rel="shortcut icon" href="favicon.ico"> <link href="css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link href="css/bootstrap.min.css?v=3.3.5" rel="stylesheet">
+    <link href="css/bootstrap-datetimepicker.css" rel="stylesheet">
     <link href="css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
     <link href="css/plugins/iCheck/custom.css" rel="stylesheet">
     <link href="css/animate.min.css" rel="stylesheet">
@@ -65,25 +67,15 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">商品分类代码：</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="product_classifyCode">
+                                    <input type="text" class="form-control" id="product_classifyCode" data-target="#classify_code_modal">
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">商品标签</label>
-                                <div class="col-sm-10">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" id="product_lable">
-                                        <span class="input-group-btn">
-                                            <button type="button" class="btn btn-primary">添加标签
-                                            </button>
-                                        </span>
-                                    </div>
+                                <div class="col-sm-10" id="label_select_div">
+                                    <input type="textarea" width="100%" class="form-control" id="product_lable">
                                     <br/>
-                                    <button type="button" class="label label-primary" id="label_1">包邮</button>
-                                    <button type="button" class="label label-warning" id="label_2">7天无理由包换</button>
-                                    <button type="button" class="label label-primary" id="label_3">大空间</button>
-                                    <button type="button" class="label label-primary" id="label_4">省心</button>
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
@@ -124,8 +116,9 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">商品供货量：</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" id="productcount">
-                                    <!--<span class="help-block m-b-none">填写供货人的id</span>-->
+                                    <input type="text" class="form-control" id="productcount"  ime-mode:disabled"
+                                    onkeydown="if(event.keyCode==13)event.keyCode=9" onKeypress="if
+                                    ((event.keyCode<48 || event.keyCode>57)) event.returnValue=false">
                                 </div>
                             </div>
                             <div class="form-group">
@@ -145,54 +138,59 @@
                                 </div>
                             </div>
                             <div class="hr-line-dashed"></div>
-                            <div class="form-group">
+                            <div class="form-group" style="margin-bottom: 10px">
                                 <label class="col-sm-2 control-label">商品产地：</label>
                                 <div class="col-sm-10">
                                     <div data-toggle="distpicker" id="distpicker">
-                                        <div class="form-group">
-                                            <!--<label class="sr-only" for="province">省</label>-->
-                                            <select class="form-control" id="province" ></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <!--<label class="sr-only" for="city">市</label>-->
-                                            <select class="form-control" id="city"></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <!--<label class="sr-only" for="district">区</label>-->
-                                            <select class="form-control" id="district" ></select>
+                                        <div class="row">
+                                            <div class="form-group col-sm-4">
+                                                <!--<label class="sr-only" for="province">省</label>-->
+                                                <select class="form-control" id="province" ></select>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <!--<label class="sr-only" for="city">市</label>-->
+                                                <select class="form-control" id="city"></select>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <!--<label class="sr-only" for="district">区</label>-->
+                                                <select class="form-control" id="district" ></select>
+                                            </div>
                                         </div>
                                     </div>
                                     <br/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="margin-bottom: 30px">
                                 <label class="col-sm-2 control-label">产地详细地址：</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="productproduceadd">
                                 </div>
                             </div>
-
-                            <div class="form-group">
+                            <div class="hr-line-dashed"></div>
+                            <div class="form-group" style="margin-bottom: 10px">
                                 <label class="col-sm-2 control-label">商品发货地址：</label>
                                 <div class="col-sm-10">
                                     <div data-toggle="distpicker2"  id="distpicker2">
-                                        <div class="form-group">
-                                            <!--<label class="sr-only" for="province2">省</label>-->
-                                            <select class="form-control" id="province2" ></select>
+                                        <div class="row">
+                                            <div class="form-group col-sm-4">
+                                                <!--<label class="sr-only" for="province2">省</label>-->
+                                                <select class="form-control" id="province2" ></select>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <!--<label class="sr-only" for="city2">市</label>-->
+                                                <select class="form-control" id="city2" ></select>
+                                            </div>
+                                            <div class="form-group col-sm-4">
+                                                <!--<label class="sr-only" for="district2">区</label>-->
+                                                <select class="form-control" id="district2" ></select>
+                                            </div>
                                         </div>
-                                        <div class="form-group">
-                                            <!--<label class="sr-only" for="city2">市</label>-->
-                                            <select class="form-control" id="city2" ></select>
-                                        </div>
-                                        <div class="form-group">
-                                            <!--<label class="sr-only" for="district2">区</label>-->
-                                            <select class="form-control" id="district2" ></select>
-                                        </div>
+
                                     </div>
                                     <br/>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group" style="margin-bottom: 30px">
                                 <label class="col-sm-2 control-label">发货详细地址：</label>
                                 <div class="col-sm-10">
                                     <input type="text" class="form-control" id="productshipment">
@@ -288,39 +286,63 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">商品介绍：</label>
                                 <div class="col-sm-10">
-                                    <small>按以下格式填写：项目名:项目内容，逗号分隔多个项目</small>
+                                    <small>请用文字详细介绍产品的各项参数特性：</small>
                                     <textarea class="form-control" rows="5" warp="virtual" id="productIntroduction"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">规格参数：</label>
                                 <div class="col-sm-10">
-                                    <small>按以下格式填写：项目名:项目内容，逗号分隔多个项目</small>
                                     <div class="ibox-content">
-                                        <table class="Specification_table">
-                                            <tr>
-                                                <th class="table_th" ><input type="text"></th>
-                                                <td class="table_th_td" ><input type="text" ><i class="fa fa-plus-square-o"></i></td>
-                                            </tr>
-                                            <tr>
+                                        <table class="table table-hover" id="parameter_list">
+                                            <tbody>
+                                                <tr>
+                                                    <th class="table_th" >
+                                                        <input style="text-align: left" class="key_input" type="text"  placeholder="品牌">
+                                                    </th>
+                                                    <th class="table_th" >
+                                                        <input style="text-align: left" class="value_input" type="text" placeholder="思克奇@">
+                                                        <i class="fa fa-plus-square-o fa-3x" onclick="addParameter()"></i>
+                                                    </th>
+                                                </tr>
+                                            </tbody>
                                         </table>
 
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">售后保障：</label>
+                                <label class="col-sm-2 control-label">包装及售后说明：</label>
                                 <div class="col-sm-10">
-                                    <small>按以下格式填写：项目名:项目内容，逗号分隔多个项目</small>
-                                    <textarea class="form-control" rows="5" warp="virtual" id="productaftersale"></textarea>
+                                    <small>包装清单</small>
+                                    <textarea class="form-control" rows="5" warp="virtual" id="package_info"></textarea>
+                                    <small>售后服务</small>
+                                    <textarea class="form-control" rows="5" warp="virtual" id="after_sale_info"></textarea>
+                                    <small>价格说明</small>
+                                    <textarea class="form-control" rows="5" warp="virtual" id="prise_instration"></textarea>
                                 </div>
                             </div>
 
                             <div class="hr-line-dashed"></div>
+
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">上线时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" value="2018-05-20 13:14:20" id="datetimepicker_start" data-date-format="yyyy-mm-dd hh:ii:ss">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">下线时间：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" value="2020-05-20 13:14:20" id="datetimepicker_end" data-date-format="yyyy-mm-dd hh:ii:ss">
+                                </div>
+                            </div>
+                            <div class="hr-line-dashed"></div>
+
                             <div class="form-group">
                                 <div class="col-sm-4 col-sm-offset-2">
                                     <button class="btn btn-primary" id="createBtn">创建产品</button>
-                                    <button class="btn btn-white">取消</button>
+                                    <!--<button class="btn btn-white">取消</button>-->
                                 </div>
                             </div>
                         </form>
@@ -369,8 +391,38 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="classify_code_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="classify_code_modal_label">选择商品所属分类</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="panel-body" style="height: 400px;overflow:scroll;">
+                        <table class="table table-hover" id="classify_code_list">
+                            <tbody>
+                            <tr>
+                                <td style="font-size: 20px;font-weight:bold;">一级分类</td>
+                                <td style="font-size: 20px;font-weight:bold;">二级分类</td>
+                                <td style="font-size: 20px;font-weight:bold;">三级分类</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="js/jquery.min.js?v=2.1.4"></script>
     <script src="js/bootstrap.min.js?v=3.3.5"></script>
+    <script src="js/bootstrap-datetimepicker.js"></script>
+    <script src="js/bootstrap-datetimepicker.zh-CN.js"></script>
     <script src="js/content.min.js?v=1.0.0"></script>
     <script src="js/plugins/iCheck/icheck.min.js"></script>
     <script src="js/plugins/peity/jquery.peity.min.js"></script>
@@ -383,6 +435,21 @@
             console.info("changed");
             console.info(JSON.stringify(e));
         }
+        function addParameter() {
+            var newRow = '<tr>\n' +
+                '                                                    <th class="table_th" >\n' +
+                '                                                        <input style="text-align: left" class="key_input" type="text"  placeholder="品牌">\n' +
+                '                                                    </th>\n' +
+                '                                                    <th class="table_th" >\n' +
+                '                                                        <input style="text-align: left" class="value_input"  type="text" placeholder="思克奇@">\n' +
+                '                                                        <i class="fa fa-plus-square-o fa-3x" onclick="addParameter()"></i>\n' +
+                '                                                    </th>\n' +
+                '                                                </tr>'
+            $("#parameter_list tbody").append(newRow);
+        }
+
+        $('#datetimepicker_start').datetimepicker();
+        $('#datetimepicker_end').datetimepicker();
 
     </script>
     <script>

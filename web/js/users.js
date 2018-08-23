@@ -77,7 +77,7 @@ $(function(){
             + '             <span class="label label-primary">'+sex
             +'          </td>'
             +'          <td class="project-title">'
-            +'              <img alt="image" class="img-circle" src="'+user["headImgUrl"]+'">'
+            +'              <img alt="image" style="width: 40px" class="img-circle" src="'+user["headImgUrl"]+'">'
             +'              <a href="users_detail.html?userid='+user["id"]+'">'+user["nickname"]
             +'              </a>'
             +'          </td>'

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
+import com.skqtec.common.ConfigProperty;
 import com.skqtec.entity.CommentEntity;
 import com.skqtec.entity.ImageEntity;
 import com.skqtec.repository.CommentRepository;
@@ -46,6 +47,11 @@ public class images {
     @Autowired
     private CommentRepository commentRepository;
     final Lock lock = new ReentrantLock();
+
+    @Autowired
+    private ConfigProperty config;
+
+
 
     @RequestMapping("/hello")
     public @ResponseBody String hello() {
@@ -110,13 +116,13 @@ public class images {
                     ImageEntity image = new ImageEntity();
                     String discription = fileName;
                     String uuid = UUID.randomUUID().toString().replace("-", "");
-                    ids.add(uuid);
                     image.setId(uuid);
                     String imageName = uuid+".png";
-                    String url = "http://www.ketuan.com/imagesDir/"+imageName;
+                    String url = config.getHost()+"imagesDir/"+imageName;
+                    ids.add(url);
                     image.setUrl(url);
                     image.setDiscription(discription);
-                    logger.info("********sava returned :  "+imagedao.save(image));
+                    logger.info("********save returned :  "+imagedao.save(image));
                     //File fullFile = new File(new String(fi.getName().getBytes(), "utf-8")); // 解决文件名乱码问题
                     File savedFile = new File(uploadPath, imageName);
                     fi.write(savedFile);
