@@ -11,10 +11,12 @@ import redis.clients.jedis.JedisPool;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 //发送redis中的消息给客户端
 @Component
-class SendMessage{
+public class SendMessage{
+    Logger logger=Logger.getLogger(SendMessage.class.getName());
     @Scheduled(cron = "0/1 * * * * ?")
     public void sendMessage(){
         HashMap<String,WebSocketSession> sessions=SystemWebSocketHandler.sessions;
@@ -23,17 +25,17 @@ class SendMessage{
        Jedis jedis=pool.getResource();
        for (HashMap.Entry<String, WebSocketSession>entry: sessions.entrySet()){
            String messageFrom=entry.getKey();
-           System.out.println(new Date()+"接受者ID"+messageFrom);
+           logger.info(new Date()+"接受者ID"+messageFrom);
            WebSocketSession session=entry.getValue();
            try {
                while (jedis.exists(messageFrom) && jedis.llen(messageFrom) > 0) {
                    if(session.isOpen()) {
                        String msg=jedis.lpop(messageFrom);
-                       System.out.println(msg);
+                       logger.info(msg);
                        TextMessage textMessage = new TextMessage(msg, true);
                        synchronized (session) {
                            session.sendMessage(textMessage);
-                           System.out.println("**sendSuccess:"+textMessage.getPayload());
+                           logger.info("**sendSuccess:"+textMessage.getPayload());
                        }
                    }else{
                        System.out.println("connectover");

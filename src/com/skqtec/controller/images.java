@@ -142,7 +142,7 @@ public class images {
             String commentId=orderId;
             List<String> ids = new ArrayList<String>();
             String uploadPath = request.getRealPath("/")+"imagesDir/";
-            File tempPathFile = new File("D:\\ketuanTempDir/");
+            File tempPathFile = new File("/ketuanTempDir/");
             try {
                 // Create a factory for disk-based file items
                 DiskFileItemFactory factory = new DiskFileItemFactory();
@@ -211,7 +211,7 @@ public class images {
         String headOwner=request.getParameter("headOwner");
         List<String> ids = new ArrayList<String>();
                     String uploadPath = request.getRealPath("/")+"imagesDir/";
-                    File tempPathFile = new File("/ketuanTempDir/");
+                    File tempPathFile = new File("D:/ketuanTempDir/");
                     try {
                         // Create a factory for disk-based file items
                         DiskFileItemFactory factory = new DiskFileItemFactory();

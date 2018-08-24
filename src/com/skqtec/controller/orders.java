@@ -1,5 +1,6 @@
 package com.skqtec.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
@@ -53,7 +54,7 @@ public class orders {
         String meno=request.getParameter("meno");
         String productPrice=request.getParameter("productprice");
         int sums=Integer.parseInt(request.getParameter("sums"));
-        int carriagePrice=Integer.parseInt(request.getParameter("carriageprice"));
+        Double carriagePrice=Double.parseDouble(request.getParameter("carriageprice"));
         //判断是否登录
         String userId=SessionTools.sessionQuery(sessionId);
         if(userId==null){
@@ -77,9 +78,9 @@ public class orders {
         orderEntity.setGroupId(groupId);
         orderEntity.setId(out_trade_no);
         orderEntity.setMeno(meno);
-        orderEntity.setOrderTime( new Timestamp(System.currentTimeMillis()));
+        orderEntity.setOrderTime( new Timestamp(new Date().getTime()));
         orderEntity.setProductId(productId);
-        orderEntity.setProductPrice(Integer.parseInt(productPrice));
+        orderEntity.setProductPrice(Double.parseDouble(productPrice));
         ProductEntity product=productRepository.get(productId);
         SendaddressEntity sendaddress=sendAddressRepository.get(fdAddress);
         orderEntity.setSendAddress(sendaddress.getId());
@@ -87,7 +88,7 @@ public class orders {
         orderEntity.setSendTel(sendaddress.getSendPhone());
         orderEntity.setSendZip(sendaddress.getZip());
         orderEntity.setState(1);
-        orderEntity.setTotalPrice(Integer.parseInt(totalPrice));
+        orderEntity.setTotalPrice(Double.parseDouble(totalPrice));
         orderEntity.setUserId(userId);
         orderEntity.setPaymethod("微信支付");
         orderEntity.setTypeSpecification(productStyle);
@@ -102,7 +103,10 @@ public class orders {
             System.out.println(payMoney);
             j=payment.payRequest(out_trade_no,productId,openId,payMoney);
             Map<String, String> data=(Map)j.get("data");
+            logger.info("***********data :    "+JSON.toJSONString(data) +"*****************");
             String timeStamp=String.valueOf(new Date().getTime()/1000);
+            System.out.println("**********"+timeStamp+"************");
+            logger.info("***************"+timeStamp+"*****************");
             String nonceStr=data.get("nonce_str");
             String package1="prepay_id="+data.get("prepay_id");
             String signType="MD5";
@@ -122,7 +126,7 @@ public class orders {
             responseData.setData(jsonObject);
         }
         catch (Exception e){
-            logger.error(e,e.fillInStackTrace());
+            logger.error(e);
             responseData.setFailed(true);
             responseData.setFailedMessage(CommonMessage.CREATE_ORDER_FAILED);
         }

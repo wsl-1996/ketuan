@@ -1,8 +1,8 @@
 package com.skqtec.common;
 
 public class CommonMessage {
-    public static String IMG_URL = "http://121.196.202.96:8080/ketuan/img/";
-    public static String IMG_URL1="http://121.196.202.96:8080/ketuan/imagesDir/";
+    public static String IMG_URL = "http://192.168.0.104:8080/ketuan/img/";
+    public static String IMG_URL1="http://192.168.0.104:8080/ketuan/imagesDir/";
     public static String MERCHANT_ACOUNT_EXISTS = "商家账户已存在！";
     public static String SAVE_MERCHANT_INFO_FAILED = "商家账户已存在！";
     public static String CREATE_GROUP_FAILED = "创建团购失败！";

@@ -75,6 +75,7 @@ public class payment {
             WXPayConfigImpl config=WXPayConfigImpl.getInstance();
             WXPay wxpay=new WXPay(config);
             r = wxpay.unifiedOrder(data);
+            logger.info(JSONObject.toJSONString(r));
             System.out.println(r);
             jsonobject.put("data",r);
             //responseData.setData(jsonobject);
@@ -88,24 +89,28 @@ public class payment {
     //支付回调接口
     @RequestMapping(value="/paycallback",method=RequestMethod.POST)
     public @ResponseBody String payCallBack(@RequestBody String body){
+        logger.info("***********收到了支付回调***********");
         Map<String,String>info=new HashMap<String, String>();
         String returns=null;
         try {
             info = WXPayUtil.xmlToMap(body);
             String orderId=info.get("out_trade_no");
-            int totalFee=Integer.parseInt(info.get("total_fee"));
+            double totalFee=Double.parseDouble(info.get("total_fee"))/100;
             //String payTime=info.get("time_end");
             OrderEntity order=orderRepository.get(orderId);
             //修改客团账户余额
             UserEntity user=userRepository.get(order.getUserId());
             user.setBalance(user.getBalance()-order.getDeduction());
             userRepository.saveOrUpdate(user);
+            logger.info("****"+totalFee+"****");
             if(totalFee!=order.getTotalPrice()-order.getDeduction()) {
+                logger.info("*****true*****");
                 returns = "<xml>" +
                         "  <return_code><![CDATA[FAIL]]></return_code>" +
                         "  <return_msg><![CDATA[OK]]></return_msg>" +
                         "</xml>";
             } else {
+                logger.info("*****false*****");
                 returns = "<xml>" +
                         "  <return_code><![CDATA[SUCCESS]]></return_code>" +
                         "  <return_msg><![CDATA[OK]]></return_msg>" +
