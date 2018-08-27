@@ -90,7 +90,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         List<OrderEntity> list = new ArrayList<OrderEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.descript like '%"+key+"%' or a.user_id="+userId).addEntity(OrderEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `ORDER` as a where a.descript like '%"+key+"%' and a.user_id='"+userId+"' and a.state>=0").addEntity(OrderEntity.class);
             list = q.list();
         }
         catch(Exception e){

@@ -283,7 +283,7 @@ public class orders {
             for(OrderEntity order:orders){
                 ProductEntity product=productRepository.get(order.getProductId());
                 String shopName=null;
-                if(product.getOwnerType()==0) {
+                if(product.getOwnerType()==1) {
                     MerchantEntity merchant = merchantRepository.get(product.getMerchantId());
                     shopName=merchant.getName();
                 }

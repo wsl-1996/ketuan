@@ -170,7 +170,7 @@ public class products {
 
     //获取商品详情
     @RequestMapping(value="/getproductinfo",method=RequestMethod.GET)
-    public @ResponseBody ResponseData getProductDetails(HttpServletRequest request){
+    public @ResponseBody ResponseData getProductInfo(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
         String productId=request.getParameter("productid");
         String sessionId=request.getParameter("sessionid");
@@ -252,6 +252,25 @@ public class products {
             e.printStackTrace();
             responseData.setFailed(true);
         }finally {
+            return responseData;
+        }
+    }
+    //获取商品参数
+    @RequestMapping(value="/getproductparameter",method=RequestMethod.GET)
+    public @ResponseBody ResponseData getProductParameter(HttpServletRequest request) {
+        ResponseData responseData = new ResponseData();
+        String productId = request.getParameter("productid");
+        try {
+            ProductEntity product = productRepository.get(productId);
+            //JSONObject jsonObject = new JSONObject();
+            JSONObject jsonObject=JSON.parseObject(product.getTypeSpecification());
+            System.out.println(jsonObject.toString());
+            responseData.setData(jsonObject);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            responseData.setFailed(true);
+            responseData.setFailedMessage(CommonMessage.GET_PRODUCT_PARAMETER_FAILED);
+        } finally {
             return responseData;
         }
     }
