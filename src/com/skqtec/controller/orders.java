@@ -98,31 +98,7 @@ public class orders {
         try{
             logger.info("********product save returned :  "+orderRepository.save(orderEntity));
             //支付
-            JSONObject j=null;
-            String payMoney=String.valueOf((int)((Double.parseDouble(totalPrice)-Double.parseDouble(deduction))*100));
-            System.out.println(payMoney);
-            j=payment.payRequest(out_trade_no,productId,openId,payMoney);
-            Map<String, String> data=(Map)j.get("data");
-            logger.info("***********data :    "+JSON.toJSONString(data) +"*****************");
-            String timeStamp=String.valueOf(new Date().getTime()/1000);
-            System.out.println("**********"+timeStamp+"************");
-            logger.info("***************"+timeStamp+"*****************");
-            String nonceStr=data.get("nonce_str");
-            String package1="prepay_id="+data.get("prepay_id");
-            String signType="MD5";
-            Map<String,String>reqData=new HashMap<String, String>();
-            reqData.put("appId","wx5733cafea467c980");
-            reqData.put("nonceStr",nonceStr);
-            reqData.put("package",package1);
-            reqData.put("signType",signType);
-            reqData.put("timeStamp",timeStamp);
-            String paySign=WXPayUtil.generateSignature(reqData,"lijie1108NANCYlijie1108skqtec01s",WXPayConstants.SignType.MD5);
-            JSONObject jsonObject=new JSONObject();
-            jsonObject.put("timeStamp",timeStamp);
-            jsonObject.put("nonceStr",nonceStr);
-            jsonObject.put("package",package1);
-            jsonObject.put("signType",signType);
-            jsonObject.put("paySign",paySign);
+            JSONObject jsonObject = payOrder(deduction, productId, totalPrice, openId, out_trade_no);
             responseData.setData(jsonObject);
         }
         catch (Exception e){
@@ -134,6 +110,36 @@ public class orders {
             return responseData;
         }
     }
+
+    private JSONObject payOrder(String deduction, String productId, String totalPrice, String openId, String out_trade_no) throws Exception {
+        JSONObject j=null;
+        String payMoney=String.valueOf((int)((Double.parseDouble(totalPrice)-Double.parseDouble(deduction))*100));
+        System.out.println(payMoney);
+        j=payment.payRequest(out_trade_no,productId,openId,payMoney);
+        Map<String, String> data=(Map)j.get("data");
+        logger.info("***********data :    "+JSON.toJSONString(data) +"*****************");
+        String timeStamp=String.valueOf(new Date().getTime()/1000);
+        System.out.println("**********"+timeStamp+"************");
+        logger.info("***************"+timeStamp+"*****************");
+        String nonceStr=data.get("nonce_str");
+        String package1="prepay_id="+data.get("prepay_id");
+        String signType="MD5";
+        Map<String,String>reqData=new HashMap<String, String>();
+        reqData.put("appId","wx5733cafea467c980");
+        reqData.put("nonceStr",nonceStr);
+        reqData.put("package",package1);
+        reqData.put("signType",signType);
+        reqData.put("timeStamp",timeStamp);
+        String paySign=WXPayUtil.generateSignature(reqData,"lijie1108NANCYlijie1108skqtec01s",WXPayConstants.SignType.MD5);
+        JSONObject jsonObject=new JSONObject();
+        jsonObject.put("timeStamp",timeStamp);
+        jsonObject.put("nonceStr",nonceStr);
+        jsonObject.put("package",package1);
+        jsonObject.put("signType",signType);
+        jsonObject.put("paySign",paySign);
+        return jsonObject;
+    }
+
     //未支付订单支付接口
     @RequestMapping(value="/orderpay",method = RequestMethod.GET)
     public @ResponseBody ResponseData orderPay(HttpServletRequest request, HttpServletResponse response)
@@ -143,31 +149,13 @@ public class orders {
         try {
             OrderEntity order = orderRepository.get(orderId);
             UserEntity user = userRepository.get(order.getUserId());
-            double totalPrice = order.getTotalPrice();
-            double deduction = order.getDeduction();
+            String totalPrice = String.valueOf(order.getTotalPrice());
+            String deduction = String.valueOf(order.getDeduction());
             String productId = order.getProductId();
             String openId = user.getOpenid();
-            String payMoney = String.valueOf((int) ((totalPrice - deduction) * 100));
+            //String payMoney = String.valueOf((int) ((totalPrice - deduction) * 100));
             String out_trade_no = orderId;
-            JSONObject j = payment.payRequest(out_trade_no, productId, openId, payMoney);
-            Map<String, String> data = (Map) j.get("data");
-            String timeStamp = String.valueOf(new Date().getTime() / 1000);
-            String nonceStr = data.get("nonce_str");
-            String package1 = "prepay_id=" + data.get("prepay_id");
-            String signType = "MD5";
-            Map<String, String> reqData = new HashMap<String, String>();
-            reqData.put("appId", "wx5733cafea467c980");
-            reqData.put("nonceStr", nonceStr);
-            reqData.put("package", package1);
-            reqData.put("signType", signType);
-            reqData.put("timeStamp", timeStamp);
-            String paySign = WXPayUtil.generateSignature(reqData, "lijie1108NANCYlijie1108skqtec01s", WXPayConstants.SignType.MD5);
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("timeStamp", timeStamp);
-            jsonObject.put("nonceStr", nonceStr);
-            jsonObject.put("package", package1);
-            jsonObject.put("signType", signType);
-            jsonObject.put("paySign", paySign);
+            JSONObject jsonObject = payOrder(deduction, productId, totalPrice, openId, out_trade_no);
             responseData.setData(jsonObject);
         } catch (Exception e) {
             logger.error(e, e.fillInStackTrace());
@@ -194,42 +182,9 @@ public class orders {
             }
 
             List<OrderEntity>orders=new ArrayList<OrderEntity>();
-            List<JSONObject>j=new ArrayList<JSONObject>();
+
             orders=orderRepository.query(userId,orderState);
-            for(OrderEntity order:orders){
-                ProductEntity product=productRepository.get(order.getProductId());
-                String shopName=null;
-                if(product.getOwnerType()==1) {
-                    MerchantEntity merchant = merchantRepository.get(product.getMerchantId());
-                    shopName=merchant.getName();
-                }
-                else{
-                    UserEntity user=userRepository.get(product.getUserId());
-                    shopName=user.getNickname();
-                }
-                String orderId=order.getId();
-                String productImg=product.getProductFistImg();
-                String productTitle=product.getProductName();
-                String productPrice=String.valueOf(product.getPrice());
-                String sums=String.valueOf(order.getSums());
-                String typeSpecification=order.getTypeSpecification();
-                String sumPrice=String.valueOf(order.getTotalPrice());
-                String deduction=String.valueOf(order.getDeduction());
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("shopName",shopName);
-                jsonObject.put("orderId",orderId);
-                jsonObject.put("orderState",orderState);
-                jsonObject.put("productImg",productImg);
-                jsonObject.put("productTitle",productTitle);
-                jsonObject.put("productPrice",productPrice);
-                jsonObject.put("sums",sums);
-                jsonObject.put("deduction",deduction);
-                jsonObject.put("typeSpecification",typeSpecification);
-                jsonObject.put("sumPrice",sumPrice);
-                j.add(jsonObject);
-            }
-            JSONObject jsonObject1=new JSONObject();
-            jsonObject1.put("searchResult",j);
+            JSONObject jsonObject1 = getJsonObject(orders);
             responseData.setData(jsonObject1);
         }catch(Exception e){
             logger.error(e,e.fillInStackTrace());
@@ -239,6 +194,47 @@ public class orders {
             return responseData;
         }
     }
+
+    private JSONObject getJsonObject(List<OrderEntity> orders) {
+        List<JSONObject>j=new ArrayList<JSONObject>();
+        for(OrderEntity order:orders){
+            ProductEntity product=productRepository.get(order.getProductId());
+            String shopName=null;
+            if(product.getOwnerType()==1) {
+                MerchantEntity merchant = merchantRepository.get(product.getMerchantId());
+                shopName=merchant.getName();
+            }
+            else{
+                UserEntity user=userRepository.get(product.getUserId());
+                shopName=user.getNickname();
+            }
+            String orderId=order.getId();
+            String productImg=product.getProductFistImg();
+            String productTitle=product.getProductName();
+            String productPrice=String.valueOf(product.getPrice());
+            String sums=String.valueOf(order.getSums());
+            String typeSpecification=order.getTypeSpecification();
+            String sumPrice=String.valueOf(order.getTotalPrice());
+            String deduction=String.valueOf(order.getDeduction());
+            String orderState=String.valueOf(order.getState());
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("shopName",shopName);
+            jsonObject.put("orderId",orderId);
+            jsonObject.put("orderState",orderState);
+            jsonObject.put("productImg",productImg);
+            jsonObject.put("productTitle",productTitle);
+            jsonObject.put("productPrice",productPrice);
+            jsonObject.put("sums",sums);
+            jsonObject.put("deduction",deduction);
+            jsonObject.put("typeSpecification",typeSpecification);
+            jsonObject.put("sumPrice",sumPrice);
+            j.add(jsonObject);
+        }
+        JSONObject jsonObject1=new JSONObject();
+        jsonObject1.put("searchResult",j);
+        return jsonObject1;
+    }
+
     //删除订单
     @RequestMapping(value="/removeorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData removeOrder(HttpServletRequest request){
@@ -277,49 +273,9 @@ public class orders {
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
             }
-            List<JSONObject>j=new ArrayList<JSONObject>();
             List<OrderEntity>orders=new ArrayList<OrderEntity>();
             orders=orderRepository.search(userId,key);
-            for(OrderEntity order:orders){
-                ProductEntity product=productRepository.get(order.getProductId());
-                String shopName=null;
-                if(product.getOwnerType()==1) {
-                    MerchantEntity merchant = merchantRepository.get(product.getMerchantId());
-                    shopName=merchant.getName();
-                }
-                else{
-                    UserEntity user=userRepository.get(product.getUserId());
-                    shopName=user.getNickname();
-                }
-                String orderId=order.getId();
-                String orderState=null;
-               /* switch(order.getState()){
-                    case 1:orderState="待付款";break;
-                    case 2:orderState="待发货";break;
-                    case 3:orderState="待收货";break;
-                    case 4:orderState="待评价";break;
-                    case 5:orderState="已评价";break;
-                }*/
-                String productImg=CommonMessage.IMG_URL+product.getProductFistImg();
-                String productTitle=product.getProductName();
-                String productPrice=String.valueOf(product.getPrice());
-                String sums=String.valueOf(order.getSums());
-                String typeSpecification=order.getTypeSpecification();
-                String sumPrice=String.valueOf(order.getTotalPrice());
-                JSONObject jsonObject=new JSONObject();
-                jsonObject.put("shopName",shopName);
-                jsonObject.put("orderId",orderId);
-                jsonObject.put("orderState",orderState);
-                jsonObject.put("productImg",productImg);
-                jsonObject.put("productTitle",productTitle);
-                jsonObject.put("productPrice",productPrice);
-                jsonObject.put("sums",sums);
-                jsonObject.put("typeSpecification",typeSpecification);
-                jsonObject.put("sumPrice",sumPrice);
-                j.add(jsonObject);
-            }
-            JSONObject jsonObject1=new JSONObject();
-            jsonObject1.put("searchResult",j);
+            JSONObject jsonObject1 = getJsonObject(orders);
             responseData.setData(jsonObject1);
         }catch(Exception e){
             logger.error(e,e.fillInStackTrace());

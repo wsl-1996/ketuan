@@ -8,6 +8,7 @@ import com.skqtec.common.ResponseData;
 import com.skqtec.entity.ProductClassifyCodeEntity;
 import com.skqtec.entity.ProductEntity;
 import com.skqtec.entity.UserEntity;
+import com.skqtec.repository.GroupRepository;
 import com.skqtec.repository.ProductClassifyCodeRepository;
 import com.skqtec.repository.ProductRepository;
 import com.skqtec.repository.UserRepository;
@@ -42,6 +43,8 @@ public class products {
     private UserRepository userRepository;
     @Autowired
     private ProductClassifyCodeRepository productClassifyCodeRepository;
+    @Autowired
+    private GroupRepository groupRepository;
     /***
      * 管理页面上传图片（买家秀页面上传图片也用该接口）
      * @return
@@ -183,6 +186,7 @@ public class products {
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
             }*/
+
             JSONObject jsonObject=new JSONObject();
             ProductEntity product=productRepository.get(productId);
             DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");

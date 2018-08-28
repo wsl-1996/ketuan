@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 
 public class Datetools{
-    public Date timeStampToDate(Timestamp ts){
+    public static Date timeStampToDate(Timestamp ts){
         Date date = new Date();
         try {
             date = ts;
@@ -14,7 +14,7 @@ public class Datetools{
         }
         return date;
     }
-    public String[] time_diff(Date date1,Date date2){
+    public static String[] time_diff(Date date1,Date date2){
         long diff = date2.getTime() - date1.getTime();
         String timeDiff[]=new String[3];
         long days = diff / (1000 * 60 * 60 * 24);

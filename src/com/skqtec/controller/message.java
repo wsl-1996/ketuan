@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -28,7 +29,7 @@ public class message {
     static Logger logger = Logger.getLogger(message.class.getName());
     @Autowired
     private MessageRepository messageRepository;
-    @RequestMapping("/sendMessage")
+    @RequestMapping(value="/sendMessage",method = RequestMethod.GET)
     public @ResponseBody ResponseData sendMessages(HttpServletRequest request) {
         ResponseData responseData = new ResponseData();
         String data=request.getParameter("data");
