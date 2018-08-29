@@ -72,10 +72,10 @@ public class comments {
                 j.put("payTime",payTime);
                 jsonObject.add(j);
             }
-            String favorableInfo=commentRepository.getDegereeOfPraise(p)
+            //String favorableInfo=commentRepository.getDegereeOfPraise(p)
             JSONObject jsonObject1=new JSONObject();
             jsonObject1.put("commentList",jsonObject);
-            jsonObject1.put("favorableInfo",favorableInfo);
+            //jsonObject1.put("favorableInfo",favorableInfo);
             responseData.setData(jsonObject1);
         }catch(Exception e){
             logger.error(e.getMessage(),e);
