@@ -313,15 +313,7 @@ public class users {
                 UserEntity user = userRepository.query(openId);
                 if (user == null) {
                     //创建用户
-                    user = new UserEntity();
-                    String uuid = UUID.randomUUID().toString().replace("-", "");
-                    user.setId(uuid);
-                    user.setOpenid(openId);
-                    user.setInviteUserId(parentid);
-                    UserEntity parentUser=userRepository.get(parentid);
-                    JSONArray jsonArray=JSONArray.parseArray(parentUser.getChildren());
-                    jsonArray.add(uuid);
-                    parentUser.setChildren(jsonArray.toString());
+                    user = crearUser(parentid, openId);
                 }
                 String signature1 = DigestUtils.shaHex(rawData + sessionKey);
                 if (!signature1.equals(signature)) //验证签名
@@ -356,6 +348,20 @@ public class users {
         } finally {
             return responseData;
         }
+    }
+
+    private UserEntity crearUser(String parentid, String openId) {
+        UserEntity user;
+        user = new UserEntity();
+        String uuid = UUID.randomUUID().toString().replace("-", "");
+        user.setId(uuid);
+        user.setOpenid(openId);
+        user.setInviteUserId(parentid);
+        UserEntity parentUser=userRepository.get(parentid);
+        JSONArray jsonArray=JSONArray.parseArray(parentUser.getChildren());
+        jsonArray.add(uuid);
+        parentUser.setChildren(jsonArray.toString());
+        return user;
     }
 
     //判断登录是否到期

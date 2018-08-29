@@ -6,9 +6,11 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.CommentEntity;
 import com.skqtec.entity.OrderEntity;
+import com.skqtec.entity.ProductEntity;
 import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.CommentRepository;
 import com.skqtec.repository.OrderRepository;
+import com.skqtec.repository.ProductRepository;
 import com.skqtec.repository.UserRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +35,15 @@ public class comments {
     private UserRepository userRepository;
     @Autowired
     private OrderRepository orderRepository;
+    @Autowired
+    private ProductRepository productRepository;
     //获取某商品的评价信息
     @RequestMapping(value="/getcommentlist",method=RequestMethod.GET)
     public @ResponseBody ResponseData getComments(HttpServletRequest request){
         ResponseData responseData=new ResponseData();
         String page=request.getParameter("page");
         String productId=request.getParameter("productid");
+        ProductEntity product=productRepository.get(productId);
         try{
             List<CommentEntity>comments=new ArrayList<CommentEntity>();
             comments=commentRepository.query(page,productId);
@@ -67,8 +72,10 @@ public class comments {
                 j.put("payTime",payTime);
                 jsonObject.add(j);
             }
+            String favorableInfo=commentRepository.getDegereeOfPraise(p)
             JSONObject jsonObject1=new JSONObject();
             jsonObject1.put("commentList",jsonObject);
+            jsonObject1.put("favorableInfo",favorableInfo);
             responseData.setData(jsonObject1);
         }catch(Exception e){
             logger.error(e.getMessage(),e);

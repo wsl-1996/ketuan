@@ -23,30 +23,33 @@ public class SendMessage{
         //System.out.println((new Date())+"start111");
        JedisPool pool=RedisAPI.getPool();
        Jedis jedis=pool.getResource();
-       for (HashMap.Entry<String, WebSocketSession>entry: sessions.entrySet()){
-           String messageFrom=entry.getKey();
-           logger.info(new Date()+"接受者ID"+messageFrom);
-           WebSocketSession session=entry.getValue();
-           try {
-               while (jedis.exists(messageFrom) && jedis.llen(messageFrom) > 0) {
-                   if(session.isOpen()) {
-                       String msg=jedis.lpop(messageFrom);
-                       logger.info(msg);
-                       TextMessage textMessage = new TextMessage(msg, true);
-                       synchronized (session) {
-                           session.sendMessage(textMessage);
-                           logger.info("**sendSuccess:"+textMessage.getPayload());
-                       }
-                   }else{
-                       System.out.println("connectover");
-                       break;
+       try{
+       for (HashMap.Entry<String, WebSocketSession>entry: sessions.entrySet()) {
+           String messageFrom = entry.getKey();
+           logger.info(new Date() + "接受者ID" + messageFrom);
+           WebSocketSession session = entry.getValue();
+
+           while (jedis.exists(messageFrom) && jedis.llen(messageFrom) > 0) {
+               if (session.isOpen()) {
+                   String msg = jedis.lpop(messageFrom);
+                   logger.info(msg);
+                   TextMessage textMessage = new TextMessage(msg, true);
+                   synchronized (session) {
+                       session.sendMessage(textMessage);
+                       logger.info("**sendSuccess:" + textMessage.getPayload());
                    }
+               } else {
+                   System.out.println("connectover");
+                   break;
                }
-            }catch(Exception e){
+           }
+       }
+           }catch(Exception e){
               e.printStackTrace();
-          }
-        }
+           }finally{
+           pool.returnResource(jedis);
+           }
+       }
         //System.out.println((new Date())+"end");
-        pool.returnResource(jedis);
+
     }
-}

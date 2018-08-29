@@ -41,7 +41,7 @@ public class ChangeOrders2 {
                 orderRepository.saveOrUpdate(order);
                 j.lrem("changeOrder",0,jsonObject.toString());
             }
-            pool.returnResource(j);
         }
+        pool.returnResource(j);
     }
 }

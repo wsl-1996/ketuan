@@ -61,7 +61,7 @@ public class BillRepositoryImpl implements BillRepository {
         List<BillEntity> list = new ArrayList<BillEntity>();
         try {
             s = getCurrentSession();
-            Query q = s.createSQLQuery("SELECT * FROM `BILL` as a where a.user_id="+userId+" and a.type="+type).addEntity(BillEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `BILL` as a where a.user_id='"+userId+"' and a.type="+type).addEntity(BillEntity.class);
             list = q.list();
         }
         catch(Exception e){

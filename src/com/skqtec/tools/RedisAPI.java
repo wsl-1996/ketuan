@@ -12,7 +12,7 @@ public class RedisAPI {
     public static JedisPool getPool() {
         if (pool == null) {
             JedisPoolConfig config = new JedisPoolConfig();
-            config.setMaxTotal(2000);
+            config.setMaxTotal(200);
             config.setMaxIdle(50);
             config.setMinIdle(8);//设置最小空闲数
             config.setMaxWaitMillis(10000);

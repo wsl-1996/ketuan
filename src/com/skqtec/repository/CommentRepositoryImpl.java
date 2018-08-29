@@ -81,6 +81,7 @@ import java.util.List;
         public String getDegereeOfPraise(String groupId){
             Session s=null;
             double k=0;
+            JSONObject jsonObject=new JSONObject();
             try {
                 s = getCurrentSession();
                 Query q1 = s.createSQLQuery("SELECT * FROM `COMMENT` as a where a.group_id="+groupId);
@@ -99,7 +100,9 @@ import java.util.List;
             finally {
                 if (s != null)
                     s.close();
-                return String.valueOf(k*100)+"%";
+                jsonObject.put("favorableRate",String.valueOf(k*100)+"%");
+                jsonObject.put("favorableNums",k);
+                return jsonObject.toJSONString();
             }
 
         }
