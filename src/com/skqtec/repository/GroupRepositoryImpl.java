@@ -92,7 +92,7 @@ public class GroupRepositoryImpl implements  GroupRepository{
 //            c.add(Restrictions.like("groupDiscription", "%"+key+"%"));
 //            c.add(Restrictions.like("deliverAddress", "%"+key+"%"));
 //            list = c.list();
-            Query q = s.createSQLQuery("SELECT * FROM `GROUP` as a where a.group_name like '%"+key+"%' or a.group_discription like '%"+key+"%'").addEntity(GroupEntity.class);
+            Query q = s.createSQLQuery("SELECT * FROM `GROUP` as a where (a.group_name like '%"+key+"%' or a.group_discription like '%"+key+"%') and a.group_state=1").addEntity(GroupEntity.class);
             list = q.list();
             for (GroupEntity group : list) {
                 System.out.println(group.getGroupName());

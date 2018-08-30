@@ -152,11 +152,11 @@ public class groups {
         for(GroupEntity group:groups){
             JSONObject jsonObject=new JSONObject();
             ProductEntity product=productRepository.get(group.getProductId());
-            String product_name=product.getProductName();
+            String group_name=group.getGroupName();
             String product_first_image=CommonMessage.IMG_URL+product.getProductFistImg();
             JSONObject degree_of_praise=commentRepository.getDegereeOfPraise(group.getProductId());
-            Date date2=Datetools.timeStampToDate(group.getEndTime());
-            String last_time[]=Datetools.time_diff(new Date(),date2);
+            Date end_time=Datetools.timeStampToDate(group.getEndTime());
+            //String last_time[]=Datetools.time_diff(new Date(),date2);
             //String last_time_info=last_time[0]+"天"+last_time[1]+"小时"+last_time[2]+"分钟";
             String product_id=group.getProductId();
             String group_id=group.getId();
@@ -175,10 +175,10 @@ public class groups {
             jsonObject.put("product_id",product_id);
             jsonObject.put("group_id",group_id);
             jsonObject.put("product_first_image",product_first_image);
-            jsonObject.put("product_name",product_name);
+            jsonObject.put("group_name",group_name);
             jsonObject.put("product_price",group.getGroupPrice());
             jsonObject.put("degree_of_praise",degree_of_praise);
-            jsonObject.put("last_time",last_time);
+            jsonObject.put("last_time",end_time);
             jsonObject.put("product_state",product_state_info);
             jsonObject.put("group_type",group_type_info);
             jsonObject.put("group_count",group.getGroupCount());

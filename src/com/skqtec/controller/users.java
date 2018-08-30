@@ -213,15 +213,8 @@ public class users {
                 responseData.setFailedMessage(CommonMessage.NOT_LOG_IN);
                 return responseData;
             }
-            //生成六位随机数
-            String base = "0123456789";
-            Random random = new Random();
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < 6; i++) {
-                int number = random.nextInt(base.length());
-                sb.append(base.charAt(number));
-            }
-            String verficationCode = sb.toString();
+            //生成验证码（六位随机数）
+            String verficationCode = creatVerficationCode();
             StoreTools.storeInfo(sessionId + "0", verficationCode, 900);
             StoreTools.storeInfo(sessionId + "1", phone, 900);
             HttpClient client = new HttpClient();
@@ -254,6 +247,17 @@ public class users {
         }
     }
 
+    private String creatVerficationCode() {
+        String base = "0123456789";
+        Random random = new Random();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < 6; i++) {
+            int number = random.nextInt(base.length());
+            sb.append(base.charAt(number));
+        }
+        return sb.toString();
+    }
+
     //绑定手机号-验证验证码
     @RequestMapping(value = "/checkverficationcode", method = RequestMethod.GET)
     public @ResponseBody
@@ -272,11 +276,12 @@ public class users {
             if (!verficationCode.equals(StoreTools.getInfo(sessionId + "0"))) {
                 responseData.setFailed(true);
                 responseData.setFailedMessage(CommonMessage.CHECK_VERFICATION_CODE_FAILED);
+            }else {
+                String phone = StoreTools.getInfo(sessionId + "1");
+                UserEntity user = userRepository.get(userId);
+                user.setPhone(phone);
+                userRepository.saveOrUpdate(user);
             }
-            String phone = StoreTools.getInfo(sessionId + "1");
-            UserEntity user = userRepository.get(userId);
-            user.setPhone(phone);
-            userRepository.saveOrUpdate(user);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             responseData.setFailed(true);
