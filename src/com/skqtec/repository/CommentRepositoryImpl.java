@@ -78,15 +78,15 @@ import java.util.List;
                 return list;
             }
         }
-        public String getDegereeOfPraise(String groupId){
+        public JSONObject getDegereeOfPraise(String productId){
             Session s=null;
             double k=0;
             JSONObject jsonObject=new JSONObject();
             try {
                 s = getCurrentSession();
-                Query q1 = s.createSQLQuery("SELECT * FROM `COMMENT` as a where a.group_id="+groupId);
+                Query q1 = s.createSQLQuery("SELECT * FROM `COMMENT` as a where a.product_id="+productId);
                 double k1= q1.list().size();
-                Query q2 = s.createSQLQuery("SELECT * FROM `COMMENT` as a where a.group_id="+groupId+" and a.star_level>3");
+                Query q2 = s.createSQLQuery("SELECT * FROM `COMMENT` as a where a.product_id="+productId+" and a.star_level>3");
                 double k2= q2.list().size();
                 long k3=Double.doubleToLongBits(k1);
                 if(k3!=0)
@@ -102,7 +102,7 @@ import java.util.List;
                     s.close();
                 jsonObject.put("favorableRate",String.valueOf(k*100)+"%");
                 jsonObject.put("favorableNums",k);
-                return jsonObject.toJSONString();
+                return jsonObject;
             }
 
         }

@@ -6,7 +6,6 @@ import com.skqtec.common.CommonMessage;
 import com.skqtec.common.ResponseData;
 import com.skqtec.entity.CommentEntity;
 import com.skqtec.entity.OrderEntity;
-import com.skqtec.entity.ProductEntity;
 import com.skqtec.entity.UserEntity;
 import com.skqtec.repository.CommentRepository;
 import com.skqtec.repository.OrderRepository;
@@ -43,7 +42,6 @@ public class comments {
         ResponseData responseData=new ResponseData();
         String page=request.getParameter("page");
         String productId=request.getParameter("productid");
-        ProductEntity product=productRepository.get(productId);
         try{
             List<CommentEntity>comments=new ArrayList<CommentEntity>();
             comments=commentRepository.query(page,productId);
@@ -72,10 +70,10 @@ public class comments {
                 j.put("payTime",payTime);
                 jsonObject.add(j);
             }
-            //String favorableInfo=commentRepository.getDegereeOfPraise(p)
+            JSONObject favorableInfo=commentRepository.getDegereeOfPraise(productId);
             JSONObject jsonObject1=new JSONObject();
             jsonObject1.put("commentList",jsonObject);
-            //jsonObject1.put("favorableInfo",favorableInfo);
+            jsonObject1.put("favorableInfo",favorableInfo);
             responseData.setData(jsonObject1);
         }catch(Exception e){
             logger.error(e.getMessage(),e);

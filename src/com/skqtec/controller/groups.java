@@ -154,7 +154,7 @@ public class groups {
             ProductEntity product=productRepository.get(group.getProductId());
             String product_name=product.getProductName();
             String product_first_image=CommonMessage.IMG_URL+product.getProductFistImg();
-            String degree_of_praise=commentRepository.getDegereeOfPraise(group.getId());
+            JSONObject degree_of_praise=commentRepository.getDegereeOfPraise(group.getProductId());
             Date date2=Datetools.timeStampToDate(group.getEndTime());
             String last_time[]=Datetools.time_diff(new Date(),date2);
             //String last_time_info=last_time[0]+"天"+last_time[1]+"小时"+last_time[2]+"分钟";
@@ -181,6 +181,8 @@ public class groups {
             jsonObject.put("last_time",last_time);
             jsonObject.put("product_state",product_state_info);
             jsonObject.put("group_type",group_type_info);
+            jsonObject.put("group_count",group.getGroupCount());
+            jsonObject.put("offered_count",group.getOfferedCount());
             i++;
             jsonobject.add(jsonObject);
         }

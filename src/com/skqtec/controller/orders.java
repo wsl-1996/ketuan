@@ -40,6 +40,8 @@ public class orders {
     private UserRepository userRepository;
     @Autowired
     private SendAddressRepository sendAddressRepository;
+    @Autowired
+    private GroupRepository groupRepository;
     //生成订单
     @RequestMapping(value="/createorder",method = RequestMethod.GET)
     public @ResponseBody ResponseData createOrder(HttpServletRequest request, HttpServletResponse response)
@@ -100,6 +102,12 @@ public class orders {
             //支付
             JSONObject jsonObject = payOrder(deduction, productId, totalPrice, openId, out_trade_no);
             responseData.setData(jsonObject);
+            //参团人数加1
+            GroupEntity group=groupRepository.get(groupId);
+            if(group.getOfferedCount()<group.getGroupCount()) {
+                group.setOfferedCount(group.getOfferedCount() + 1);
+                groupRepository.saveOrUpdate(group);
+            }
         }
         catch (Exception e){
             logger.error(e);
